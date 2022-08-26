@@ -26,14 +26,22 @@ class CBViewCreator {
         view.centerYAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
         view.backgroundColor = .CBTheme.secondary
     }
-    class TimerView {
+    class TimerView: UIView {
+        var solves =  [Solve]()
         var timerRunning = false
         let runningTimerLabel: UILabel = UILabel()
         var timeElapsed = 0.00
         let timerTextColor: UIColor = .CBTheme.secondary ?? .systemGray
         let timerTextFont: UIFont = .CBFonts.primary.withSize(32)
         
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            self.solves = UserDefaultsHelper.getAllObjects(named: "solves")
+        }
         
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
         func createTimerView(for viewController: CBBaseViewController, usingOptionsBar: Bool = false){
             let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: self.timerTextColor, .font: self.timerTextFont]
             
@@ -85,6 +93,10 @@ class CBViewCreator {
                     timer?.fire()
                     self.timerRunning = true
                 } else {
+                    let newSolve = Solve(scramble: scrambleLabel.text ?? "No scramble", time: runningTimerLabel.text ?? "No timer", puzzle: "3 x 3")
+                    self.solves.append(newSolve)
+                    UserDefaultsHelper.saveAllObjects(allObjects: solves, named: "solves")
+                    print(solves.count)
                     scrambleLabel.attributedText = NSAttributedString(string: CBBrain.getScramble(), attributes: textAttributes)
                     self.timerRunning = false
                     self.timeElapsed = 0.00

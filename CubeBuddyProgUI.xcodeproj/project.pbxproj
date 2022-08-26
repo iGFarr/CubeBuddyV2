@@ -30,6 +30,7 @@
 		6AAF303328B8AD3D00870A00 /* SolveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF303228B8AD3D00870A00 /* SolveModel.swift */; };
 		6AAF303628B8AE7C00870A00 /* SolveCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF303428B8AE7C00870A00 /* SolveCellModel.swift */; };
 		6AAF303928B8AF2600870A00 /* CBBaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF303828B8AF2600870A00 /* CBBaseTableViewController.swift */; };
+		6AAF303B28B8CAB800870A00 /* UserDefaultsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF303A28B8CAB800870A00 /* UserDefaultsHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 		6AAF303228B8AD3D00870A00 /* SolveModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolveModel.swift; sourceTree = "<group>"; };
 		6AAF303428B8AE7C00870A00 /* SolveCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolveCellModel.swift; sourceTree = "<group>"; };
 		6AAF303828B8AF2600870A00 /* CBBaseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBBaseTableViewController.swift; sourceTree = "<group>"; };
+		6AAF303A28B8CAB800870A00 /* UserDefaultsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,6 +197,7 @@
 				6A7CCE402870095800598C88 /* UIColor+Extension.swift */,
 				6AACD4FB28717EF3006FB54B /* UIFont+Extension.swift */,
 				6AACD5052872F778006FB54B /* UIView+Extensions.swift */,
+				6AAF303A28B8CAB800870A00 /* UserDefaultsHelper.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -380,6 +383,7 @@
 				6A7CCE0A286FFDB000598C88 /* AppDelegate.swift in Sources */,
 				6AACD4FE287191FB006FB54B /* SolvesViewController.swift in Sources */,
 				6A7CCE0C286FFDB000598C88 /* SceneDelegate.swift in Sources */,
+				6AAF303B28B8CAB800870A00 /* UserDefaultsHelper.swift in Sources */,
 				6AAF303928B8AF2600870A00 /* CBBaseTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class SolveCell: UITableViewCell {
+struct Solve: Codable {
     var scramble: String = "Test Scramble"
     var time: String = "00:00"
     var puzzle: String = "Standard 3x3"

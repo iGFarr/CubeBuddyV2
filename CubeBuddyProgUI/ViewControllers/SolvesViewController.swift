@@ -9,8 +9,10 @@ import UIKit
 
 class SolvesViewController: CBBaseTableViewController {
     
+    private var solves = [Solve]()
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.solves = UserDefaultsHelper.getAllObjects(named: "solves")
         self.title = "Solves"
         tableView.register(SolveCellModel.self, forCellReuseIdentifier: "solveCell")
         tableView.tableFooterView = UIView()
