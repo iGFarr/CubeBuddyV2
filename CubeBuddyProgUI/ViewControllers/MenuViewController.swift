@@ -8,15 +8,14 @@
 import UIKit
 
 class MenuViewController: CBBaseViewController {
-    let picker = UIPickerView()
-    lazy var stopwatchVC = TimerViewController()
-    lazy var solvesVC = SolvesViewController()
-    lazy var cubeNoobYoutubePlayerVC = CubeNoobYoutubePlayerVC()
+    private let picker = UIPickerView()
+    private let emptyRow = 1
+    private let emptyRowIndex = 0
     lazy var viewControllerTitles =
     [
-        "Stopwatch": stopwatchVC,
-        "Solves": solvesVC,
-        "Cube Noob": cubeNoobYoutubePlayerVC
+        "Stopwatch": TimerViewController(),
+        "Solves": SolvesViewController(),
+        "Cube Noob": CubeNoobYoutubePlayerVC()
     ]
     
     override func viewDidLoad() {
@@ -26,7 +25,7 @@ class MenuViewController: CBBaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        picker.selectRow(0, inComponent: 0, animated: true)
+        picker.selectRow(emptyRowIndex, inComponent: emptyRowIndex, animated: true)
     }
     
     func createPickerWheel(){
@@ -40,8 +39,8 @@ class MenuViewController: CBBaseViewController {
         NSLayoutConstraint.activate([
             picker.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             picker.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            picker.heightAnchor.constraint(equalToConstant: 250),
-            picker.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -32)
+            picker.heightAnchor.constraint(equalToConstant: CBConstants.UIConstants.defaultPickerViewHeight),
+            picker.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -CBConstants.UIConstants.defaultInsetX4)
         ])
     }
 }
@@ -53,11 +52,11 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return CBConstants.PickerRows.allCases.count + 1
+        return CBConstants.PickerRows.allCases.count + emptyRow
     }
     
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        if row == 0 {
+        if row == emptyRowIndex {
             return NSAttributedString(string: "")
         }
         let title = CBConstants.PickerRows.allCases[row - 1].rawValue
@@ -69,7 +68,7 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        guard row != 0 else { return }
+        guard row != emptyRowIndex else { return }
         let title = CBConstants.PickerRows.allCases[row - 1].rawValue
         
         if let vc = self.viewControllerTitles[title] {

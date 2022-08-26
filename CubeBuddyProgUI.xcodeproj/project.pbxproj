@@ -132,7 +132,7 @@
 				6AACD5012872F01F006FB54B /* Views */,
 				6A7CCE442870127300598C88 /* CBConstants */,
 				6A7CCE1A286FFDB100598C88 /* Info.plist */,
-				6A7CCE3F2870093900598C88 /* Extensions */,
+				6A7CCE3F2870093900598C88 /* ExtensionsAndHelpers */,
 				6A7CCE3D287008F200598C88 /* SupportingFiles */,
 				6A7CCE3E2870090300598C88 /* ViewControllers */,
 			);
@@ -191,7 +191,7 @@
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
-		6A7CCE3F2870093900598C88 /* Extensions */ = {
+		6A7CCE3F2870093900598C88 /* ExtensionsAndHelpers */ = {
 			isa = PBXGroup;
 			children = (
 				6A7CCE402870095800598C88 /* UIColor+Extension.swift */,
@@ -199,7 +199,7 @@
 				6AACD5052872F778006FB54B /* UIView+Extensions.swift */,
 				6AAF303A28B8CAB800870A00 /* UserDefaultsHelper.swift */,
 			);
-			path = Extensions;
+			path = ExtensionsAndHelpers;
 			sourceTree = "<group>";
 		};
 		6A7CCE442870127300598C88 /* CBConstants */ = {
@@ -230,10 +230,26 @@
 		6AACD5072876DDE7006FB54B /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				6AACD5082876DE07006FB54B /* CBBrain.swift */,
-				6AAF303228B8AD3D00870A00 /* SolveModel.swift */,
+				6AAF303D28B8D6E600870A00 /* Data */,
+				6AAF303C28B8D6DC00870A00 /* Functional */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		6AAF303C28B8D6DC00870A00 /* Functional */ = {
+			isa = PBXGroup;
+			children = (
+				6AACD5082876DE07006FB54B /* CBBrain.swift */,
+			);
+			path = Functional;
+			sourceTree = "<group>";
+		};
+		6AAF303D28B8D6E600870A00 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				6AAF303228B8AD3D00870A00 /* SolveModel.swift */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

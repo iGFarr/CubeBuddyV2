@@ -8,10 +8,10 @@
 import UIKit
 
 class CBBrain {
-    class func getScramble() -> String {
+    static func getScramble() -> String {
         let cubeMoves = ["U", "D", "R", "L", "F", "B"]
         let primeMoves = cubeMoves.map { $0 + "'" }
-        var numMoves = 20
+        let numMoves = 20
         var scrambleArray = [String]()
         for num in 0..<numMoves {
             var allMoves = cubeMoves + primeMoves

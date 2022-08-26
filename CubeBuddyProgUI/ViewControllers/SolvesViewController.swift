@@ -12,10 +12,15 @@ class SolvesViewController: CBBaseTableViewController {
     private var solves = [Solve]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.solves = UserDefaultsHelper.getAllObjects(named: "solves")
+        self.solves = UserDefaultsHelper.getAllObjects(named: .solves)
         self.title = "Solves"
         tableView.register(SolveCellModel.self, forCellReuseIdentifier: "solveCell")
         tableView.tableFooterView = UIView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.solves = UserDefaultsHelper.getAllObjects(named: .solves)
+        tableView.reloadData()
     }
 }
 
@@ -28,13 +33,42 @@ extension SolvesViewController {
         return UITableView.automaticDimension
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        20
+        self.solves.count + 1
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.row == 0 {
+            let cell = UITableViewCell()
+            cell.textLabel?.textAlignment = .center
+            cell.textLabel?.text = "Clear All"
+            cell.textLabel?.textColor = .systemRed
+            cell.addTapGestureRecognizer {
+                let alert = UIAlertController(title: "WARNING", message: "You are about to delete all your solves permanently.", preferredStyle: .alert)
+                
+                // add an action (button)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { action in
+                    self.deleteSolves()
+                    self.solves.removeAll()
+                    self.tableView.reloadData()
+                }))
+                
+                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
+                
+                // show the alert
+                self.present(alert, animated: true, completion: nil)
+            }
+            return cell
+        }
         let cell = tableView.dequeueReusableCell(withIdentifier: "solveCell", for: indexPath) as! SolveCellModel
-        cell.solveTimeLabel.text = "Time: " + String(format: "%.2f", 0.00 + Double(indexPath.row))
-        var scrambleTest =  CBBrain.getScramble()
-        cell.scrambleLabel.text = scrambleTest
+        let solve = solves[indexPath.row - 1]
+        cell.solveTimeLabel.text = solve.time
+        cell.scrambleLabel.text = solve.scramble
+        cell.puzzleLabel.text = solve.puzzle
         return cell
+    }
+    
+    func deleteSolves(){
+        let solves = [Solve]()
+        UserDefaultsHelper.saveAllObjects(allObjects: solves, named: .solves)
+        print(solves.count)
     }
 }

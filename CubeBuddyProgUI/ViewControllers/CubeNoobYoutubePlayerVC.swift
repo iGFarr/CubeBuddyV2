@@ -17,7 +17,7 @@ class CubeNoobYoutubePlayerVC: CBBaseViewController {
         self.title = "Cube Noob"
         webView.addObserver(self, forKeyPath: "URL", options: .new, context: nil)
         
-        if let url = URL(string: "https://www.youtube.com/channel/UCAHXaslH4yfGCCV_tleWioQ") {
+        if let url = URL(string: CBConstants.URLStrings.channelPage) {
             let request = URLRequest(url: url)
             webView.load(request)
         }
@@ -26,7 +26,7 @@ class CubeNoobYoutubePlayerVC: CBBaseViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        if let url = URL(string: "https://www.youtube.com/channel/UCAHXaslH4yfGCCV_tleWioQ") {
+        if let url = URL(string: CBConstants.URLStrings.channelPage) {
             let request = URLRequest(url: url)
             webView.load(request)
         }

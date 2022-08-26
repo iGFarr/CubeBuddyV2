@@ -11,9 +11,19 @@ class CBViewCreator {
     
     class func createOptionsBar() -> UIView {
         let optionsBar = UIView()
+        let testLabel = UILabel()
+        testLabel.text = "Options"
+        testLabel.translatesAutoresizingMaskIntoConstraints = false
+
         optionsBar.translatesAutoresizingMaskIntoConstraints = false
         optionsBar.isUserInteractionEnabled = true
         optionsBar.backgroundColor = .systemGray
+        
+        optionsBar.addSubview(testLabel)
+        NSLayoutConstraint.activate([
+            testLabel.centerXAnchor.constraint(equalTo: optionsBar.centerXAnchor),
+            testLabel.centerYAnchor.constraint(equalTo: optionsBar.centerYAnchor)
+        ])
         return optionsBar
     }
     
@@ -32,11 +42,11 @@ class CBViewCreator {
         let runningTimerLabel: UILabel = UILabel()
         var timeElapsed = 0.00
         let timerTextColor: UIColor = .CBTheme.secondary ?? .systemGray
-        let timerTextFont: UIFont = .CBFonts.primary.withSize(32)
+        let timerTextFont: UIFont = .CBFonts.returnCustomFont(size: 32)
         
         override init(frame: CGRect) {
             super.init(frame: frame)
-            self.solves = UserDefaultsHelper.getAllObjects(named: "solves")
+            self.solves = UserDefaultsHelper.getAllObjects(named: .solves)
         }
         
         required init?(coder: NSCoder) {
@@ -95,7 +105,7 @@ class CBViewCreator {
                 } else {
                     let newSolve = Solve(scramble: scrambleLabel.text ?? "No scramble", time: runningTimerLabel.text ?? "No timer", puzzle: "3 x 3")
                     self.solves.append(newSolve)
-                    UserDefaultsHelper.saveAllObjects(allObjects: solves, named: "solves")
+                    UserDefaultsHelper.saveAllObjects(allObjects: solves, named: .solves)
                     print(solves.count)
                     scrambleLabel.attributedText = NSAttributedString(string: CBBrain.getScramble(), attributes: textAttributes)
                     self.timerRunning = false
@@ -142,10 +152,10 @@ class CBViewCreator {
                 optionsBar.widthAnchor.constraint(equalTo: containerView.widthAnchor),
                 optionsBar.heightAnchor.constraint(equalToConstant: usingOptionsBar ? 60 : 0),
                 
-                scrambleLabel.topAnchor.constraint(equalTo: optionsBar.bottomAnchor, constant: 16),
-                scrambleLabel.bottomAnchor.constraint(lessThanOrEqualTo: runningTimerLabel.topAnchor, constant: -32),
-                scrambleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-                scrambleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+                scrambleLabel.topAnchor.constraint(equalTo: optionsBar.bottomAnchor, constant: CBConstants.UIConstants.doubleInset),
+                scrambleLabel.bottomAnchor.constraint(lessThanOrEqualTo: runningTimerLabel.topAnchor, constant: -CBConstants.UIConstants.defaultInsetX4),
+                scrambleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UIConstants.doubleInset),
+                scrambleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UIConstants.doubleInset),
                 
                 timerButtonView.topAnchor.constraint(equalTo: optionsBar.bottomAnchor),
                 timerButtonView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),

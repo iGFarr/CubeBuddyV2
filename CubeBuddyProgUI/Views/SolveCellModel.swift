@@ -11,6 +11,7 @@ class SolveCellModel: UITableViewCell {
 
     let solveTimeLabel = UILabel()
     let scrambleLabel = UILabel()
+    let puzzleLabel = UILabel()
     let stackView = UIStackView()
     let customSeparator = UIView()
     
@@ -37,6 +38,11 @@ class SolveCellModel: UITableViewCell {
         self.scrambleLabel.textColor = UIColor.CBTheme.secondary
         self.scrambleLabel.numberOfLines = 0
         
+        self.puzzleLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.puzzleLabel.font = UIFont.CBFonts.primary
+        self.puzzleLabel.textColor = UIColor.CBTheme.secondary
+        self.puzzleLabel.numberOfLines = 1
+        
         self.stackView.alignment = .leading
         self.stackView.distribution = .fill
         self.stackView.axis = .vertical
@@ -44,10 +50,14 @@ class SolveCellModel: UITableViewCell {
         self.stackView.spacing = CBConstants.UIConstants.defaultStackViewSpacing
         
         self.contentView.addSubview(self.stackView)
+        self.contentView.addSubview(self.puzzleLabel)
         self.stackView.addArrangedSubview(self.solveTimeLabel)
         self.stackView.addArrangedSubview(self.scrambleLabel)
         
         NSLayoutConstraint.activate([
+            self.puzzleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -CBConstants.UIConstants.doubleInset),
+            self.puzzleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: CBConstants.UIConstants.defaultInsets),
+
             self.stackView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: CBConstants.UIConstants.defaultInsets),
             self.stackView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -CBConstants.UIConstants.stackViewTrailingInset),
             self.stackView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: CBConstants.UIConstants.defaultInsets),

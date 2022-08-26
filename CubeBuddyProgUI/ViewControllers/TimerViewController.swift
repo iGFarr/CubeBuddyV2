@@ -15,4 +15,8 @@ class TimerViewController: CBBaseViewController {
         self.title = "Stopwatch"
         viewModel?.createTimerView(for: self, usingOptionsBar: false)
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        viewModel?.solves = UserDefaultsHelper.getAllObjects(named: .solves)
+    }
 }

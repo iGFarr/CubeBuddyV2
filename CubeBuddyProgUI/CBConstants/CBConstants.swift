@@ -20,10 +20,12 @@ struct CBConstants {
     }
     
     struct UIConstants {
+        static let cellSeparatorHeight: CGFloat = 2
         static let defaultInsets: CGFloat = 8
+        static let defaultInsetX4: CGFloat = 32
+        static let defaultPickerViewHeight: CGFloat = 250
+        static let defaultStackViewSpacing: CGFloat = 16
         static let doubleInset: CGFloat = 16
         static let stackViewTrailingInset: CGFloat = 48
-        static let defaultStackViewSpacing: CGFloat = 16
-        static let cellSeparatorHeight: CGFloat = 2
     }
 }
