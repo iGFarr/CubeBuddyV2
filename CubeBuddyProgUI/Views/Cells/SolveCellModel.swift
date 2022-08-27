@@ -17,7 +17,7 @@ class SolveCellModel: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.backgroundColor = UIColor.CBTheme.primary
+        self.backgroundColor = .clear
         // Set any attributes of your UI components here.
         setup()
         CBViewCreator.createCellSeparator(for: self)

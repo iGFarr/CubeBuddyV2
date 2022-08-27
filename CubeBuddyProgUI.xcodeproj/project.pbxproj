@@ -31,6 +31,9 @@
 		6AAF303628B8AE7C00870A00 /* SolveCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF303428B8AE7C00870A00 /* SolveCellModel.swift */; };
 		6AAF303928B8AF2600870A00 /* CBBaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF303828B8AF2600870A00 /* CBBaseTableViewController.swift */; };
 		6AAF303B28B8CAB800870A00 /* UserDefaultsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF303A28B8CAB800870A00 /* UserDefaultsHelper.swift */; };
+		6AAF304128B915F900870A00 /* CoreRubiksCube.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF304028B915F900870A00 /* CoreRubiksCube.swift */; };
+		6AAF304328B9BCAA00870A00 /* ScrambledCubeGraphicVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF304228B9BCAA00870A00 /* ScrambledCubeGraphicVC.swift */; };
+		6AAF304828B9D54A00870A00 /* NavigationController+TabBar+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF304728B9D54A00870A00 /* NavigationController+TabBar+Ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +82,9 @@
 		6AAF303428B8AE7C00870A00 /* SolveCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolveCellModel.swift; sourceTree = "<group>"; };
 		6AAF303828B8AF2600870A00 /* CBBaseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBBaseTableViewController.swift; sourceTree = "<group>"; };
 		6AAF303A28B8CAB800870A00 /* UserDefaultsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsHelper.swift; sourceTree = "<group>"; };
+		6AAF304028B915F900870A00 /* CoreRubiksCube.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreRubiksCube.swift; sourceTree = "<group>"; };
+		6AAF304228B9BCAA00870A00 /* ScrambledCubeGraphicVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambledCubeGraphicVC.swift; sourceTree = "<group>"; };
+		6AAF304728B9D54A00870A00 /* NavigationController+TabBar+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationController+TabBar+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,10 +187,9 @@
 		6A7CCE3E2870090300598C88 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				6A7CCE0D286FFDB000598C88 /* CBBaseViewController.swift */,
-				6AAF303828B8AF2600870A00 /* CBBaseTableViewController.swift */,
+				6AAF304528B9BD7200870A00 /* CBBaseClasses */,
+				6AAF304428B9BD4200870A00 /* TimerFlow */,
 				6A7CCE422870116700598C88 /* MenuViewController.swift */,
-				6A7CCE4728701E3400598C88 /* TimerViewController.swift */,
 				6AACD4FD287191FB006FB54B /* SolvesViewController.swift */,
 				6AACD4FF287196A5006FB54B /* CubeNoobYoutubePlayerVC.swift */,
 			);
@@ -198,6 +203,7 @@
 				6AACD4FB28717EF3006FB54B /* UIFont+Extension.swift */,
 				6AACD5052872F778006FB54B /* UIView+Extensions.swift */,
 				6AAF303A28B8CAB800870A00 /* UserDefaultsHelper.swift */,
+				6AAF304728B9D54A00870A00 /* NavigationController+TabBar+Ext.swift */,
 			);
 			path = ExtensionsAndHelpers;
 			sourceTree = "<group>";
@@ -213,7 +219,7 @@
 		6AACD5012872F01F006FB54B /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				6AAF303428B8AE7C00870A00 /* SolveCellModel.swift */,
+				6AAF304628B9BDA500870A00 /* Cells */,
 				6AACD5022872F05F006FB54B /* ViewFactories */,
 			);
 			path = Views;
@@ -239,6 +245,7 @@
 		6AAF303C28B8D6DC00870A00 /* Functional */ = {
 			isa = PBXGroup;
 			children = (
+				6AAF303F28B915E800870A00 /* RubiksCube */,
 				6AACD5082876DE07006FB54B /* CBBrain.swift */,
 			);
 			path = Functional;
@@ -250,6 +257,40 @@
 				6AAF303228B8AD3D00870A00 /* SolveModel.swift */,
 			);
 			path = Data;
+			sourceTree = "<group>";
+		};
+		6AAF303F28B915E800870A00 /* RubiksCube */ = {
+			isa = PBXGroup;
+			children = (
+				6AAF304028B915F900870A00 /* CoreRubiksCube.swift */,
+			);
+			path = RubiksCube;
+			sourceTree = "<group>";
+		};
+		6AAF304428B9BD4200870A00 /* TimerFlow */ = {
+			isa = PBXGroup;
+			children = (
+				6A7CCE4728701E3400598C88 /* TimerViewController.swift */,
+				6AAF304228B9BCAA00870A00 /* ScrambledCubeGraphicVC.swift */,
+			);
+			path = TimerFlow;
+			sourceTree = "<group>";
+		};
+		6AAF304528B9BD7200870A00 /* CBBaseClasses */ = {
+			isa = PBXGroup;
+			children = (
+				6A7CCE0D286FFDB000598C88 /* CBBaseViewController.swift */,
+				6AAF303828B8AF2600870A00 /* CBBaseTableViewController.swift */,
+			);
+			path = CBBaseClasses;
+			sourceTree = "<group>";
+		};
+		6AAF304628B9BDA500870A00 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				6AAF303428B8AE7C00870A00 /* SolveCellModel.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -385,9 +426,11 @@
 			files = (
 				6A7CCE0E286FFDB000598C88 /* CBBaseViewController.swift in Sources */,
 				6AACD500287196A6006FB54B /* CubeNoobYoutubePlayerVC.swift in Sources */,
+				6AAF304328B9BCAA00870A00 /* ScrambledCubeGraphicVC.swift in Sources */,
 				6A7CCE432870116700598C88 /* MenuViewController.swift in Sources */,
 				6AACD5092876DE07006FB54B /* CBBrain.swift in Sources */,
 				6A7CCE14286FFDB000598C88 /* CubeBuddyProgUI.xcdatamodeld in Sources */,
+				6AAF304128B915F900870A00 /* CoreRubiksCube.swift in Sources */,
 				6AAF303328B8AD3D00870A00 /* SolveModel.swift in Sources */,
 				6AACD4FC28717EF3006FB54B /* UIFont+Extension.swift in Sources */,
 				6AACD5062872F778006FB54B /* UIView+Extensions.swift in Sources */,
@@ -398,6 +441,7 @@
 				6A7CCE412870095800598C88 /* UIColor+Extension.swift in Sources */,
 				6A7CCE0A286FFDB000598C88 /* AppDelegate.swift in Sources */,
 				6AACD4FE287191FB006FB54B /* SolvesViewController.swift in Sources */,
+				6AAF304828B9D54A00870A00 /* NavigationController+TabBar+Ext.swift in Sources */,
 				6A7CCE0C286FFDB000598C88 /* SceneDelegate.swift in Sources */,
 				6AAF303B28B8CAB800870A00 /* UserDefaultsHelper.swift in Sources */,
 				6AAF303928B8AF2600870A00 /* CBBaseTableViewController.swift in Sources */,

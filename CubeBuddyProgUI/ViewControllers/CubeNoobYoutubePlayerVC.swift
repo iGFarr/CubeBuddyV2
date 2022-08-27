@@ -19,10 +19,12 @@ class CubeNoobYoutubePlayerVC: CBBaseViewController {
         
         if let url = URL(string: CBConstants.URLStrings.channelPage) {
             let request = URLRequest(url: url)
-            webView.load(request)
+            DispatchQueue.main.async {
+                self.webView.load(request)
+                self.constrainWebView()
+            }
         }
         
-        constrainWebView()
     }
     
     override func viewDidDisappear(_ animated: Bool) {

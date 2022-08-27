@@ -5,7 +5,7 @@
 //  Created by Isaac Farr on 7/7/22.
 //
 
-import UIKit
+import Foundation
 
 class CBBrain {
     static func getScramble() -> String {

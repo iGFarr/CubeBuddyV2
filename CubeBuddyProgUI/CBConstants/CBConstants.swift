@@ -20,12 +20,18 @@ struct CBConstants {
     }
     
     struct UIConstants {
+        static let buttonCornerRadius: CGFloat = 10
         static let cellSeparatorHeight: CGFloat = 2
         static let defaultInsets: CGFloat = 8
         static let defaultInsetX4: CGFloat = 32
         static let defaultPickerViewHeight: CGFloat = 250
         static let defaultStackViewSpacing: CGFloat = 16
         static let doubleInset: CGFloat = 16
-        static let stackViewTrailingInset: CGFloat = 48
+        static let stackViewTrailingInset: CGFloat = 24
+        static func makeTextAttributedWithCBStyle(text: String, size: CGFloat = 24, color: UIColor = .CBTheme.secondary ?? .systemGreen) -> NSAttributedString {
+            let font: UIFont = .CBFonts.returnCustomFont(size: size)
+            let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: color, .font: font]
+            return NSAttributedString(string: text, attributes: textAttributes)
+        }
     }
 }

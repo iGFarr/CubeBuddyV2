@@ -14,6 +14,7 @@ class SolvesViewController: CBBaseTableViewController {
         super.viewDidLoad()
         self.solves = UserDefaultsHelper.getAllObjects(named: .solves)
         self.title = "Solves"
+        tableView.allowsMultipleSelection = true
         tableView.register(SolveCellModel.self, forCellReuseIdentifier: "solveCell")
         tableView.tableFooterView = UIView()
     }
@@ -36,16 +37,19 @@ extension SolvesViewController {
         self.solves.count + 1
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell = UITableViewCell()
         if indexPath.row == 0 {
-            let cell = UITableViewCell()
             cell.textLabel?.textAlignment = .center
             cell.textLabel?.text = "Clear All"
             cell.textLabel?.textColor = .systemRed
+            cell.textLabel?.font = UIFont.CBFonts.returnCustomFont()
+            cell.backgroundColor = .clear
+            CBViewCreator.createCellSeparator(for: cell)
             cell.addTapGestureRecognizer {
                 let alert = UIAlertController(title: "WARNING", message: "You are about to delete all your solves permanently.", preferredStyle: .alert)
                 
                 // add an action (button)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { action in
+                alert.addAction(UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive, handler: { action in
                     self.deleteSolves()
                     self.solves.removeAll()
                     self.tableView.reloadData()
@@ -57,13 +61,21 @@ extension SolvesViewController {
                 self.present(alert, animated: true, completion: nil)
             }
             return cell
+        } else {
+            let mostRecentSolve = solves[solves.count - indexPath.row]
+        cell = mostRecentSolve.createSolveCell(for: tableView, at: indexPath)
         }
-        let cell = tableView.dequeueReusableCell(withIdentifier: "solveCell", for: indexPath) as! SolveCellModel
-        let solve = solves[indexPath.row - 1]
-        cell.solveTimeLabel.text = solve.time
-        cell.scrambleLabel.text = solve.scramble
-        cell.puzzleLabel.text = solve.puzzle
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+
+        if let indexPathForSelectedRow = tableView.indexPathForSelectedRow,
+            indexPathForSelectedRow == indexPath {
+            tableView.deselectRow(at: indexPath, animated: false)
+            return nil
+        }
+        return indexPath
     }
     
     func deleteSolves(){
