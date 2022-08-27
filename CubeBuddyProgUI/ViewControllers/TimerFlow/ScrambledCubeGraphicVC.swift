@@ -9,22 +9,18 @@ import UIKit
 
 class ScrambledCubeGraphicVC: CBBaseViewController {
     var scramble = ""
+    var cube = Cube()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         let value = UIInterfaceOrientation.landscapeLeft.rawValue
         UIDevice.current.setValue(value, forKey: "orientation")
-        var cube = Cube()
         let scrambleArray = scramble.dropFirst("Scramble\n\n".count).split(separator: " ")
         cube = cube.makeMoves(cube.convertStringToMoveList(scramble: scrambleArray.map({ move in
             String(move)
         })))
-        CBViewCreator.createCubeGraphicView(for: self, with: cube)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        let value = UIInterfaceOrientation.portrait.rawValue
-        UIDevice.current.setValue(value, forKey: "orientation")
+        updateCubeGraphic(with: cube)
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -33,5 +29,9 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
 
     override var shouldAutorotate: Bool {
         return true
+    }
+    
+    func updateCubeGraphic(with cube: Cube){
+        CBViewCreator.createCubeGraphicView(for: self, with: cube)
     }
 }

@@ -8,7 +8,7 @@
 import UIKit
 
 class CBViewCreator {
-    class func createCellSeparator(for cell: UITableViewCell) {
+    static func createCellSeparator(for cell: UITableViewCell) {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         cell.addSubview(view)
@@ -180,7 +180,7 @@ class CBViewCreator {
         }
     }
     
-    class func createCubeGraphicView(for viewController: CBBaseViewController, with cube: Cube) {
+    static func createCubeGraphicView(for viewController: ScrambledCubeGraphicVC, with cube: Cube) {
         var cubeCopy = cube
         let containerView = UIView()
         
@@ -218,12 +218,14 @@ class CBViewCreator {
                 case 2:
                     if square == 1 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.up.d)
+                        createLetterForCenterTile(for: tileSquare, letter: "U'")
                     }
                     if square == 2 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.up.e)
                     }
                     if square == 3 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.up.f)
+                        createLetterForCenterTile(for: tileSquare, letter: "U")
                     }
                 case 3:
                     if square == 1 {
@@ -243,7 +245,27 @@ class CBViewCreator {
             upFaceStack.heightAnchor.constraint(equalToConstant: 25).isActive = true
             upFaceVStack.addArrangedSubview(upFaceStack)
         }
-        let separator = UIView()
+        var leftTapView = UIView()
+        leftTapView.translatesAutoresizingMaskIntoConstraints = false
+        upFaceVStack.addSubview(leftTapView)
+        leftTapView.leadingAnchor.constraint(equalTo: upFaceVStack.leadingAnchor).isActive = true
+        leftTapView.heightAnchor.constraint(equalTo: upFaceVStack.heightAnchor).isActive = true
+        leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        leftTapView.addTapGestureRecognizer {
+            cubeCopy = cubeCopy.makeUp(.counterclockwise)
+            viewController.updateCubeGraphic(with: cubeCopy)
+        }
+        var rightTapView = UIView()
+        rightTapView.translatesAutoresizingMaskIntoConstraints = false
+        upFaceVStack.addSubview(rightTapView)
+        rightTapView.trailingAnchor.constraint(equalTo: upFaceVStack.trailingAnchor).isActive = true
+        rightTapView.heightAnchor.constraint(equalTo: upFaceVStack.heightAnchor).isActive = true
+        rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        rightTapView.addTapGestureRecognizer {
+            cubeCopy = cubeCopy.makeUp(.clockwise)
+            viewController.updateCubeGraphic(with: cubeCopy)
+        }
+        var separator = UIView()
         separator.translatesAutoresizingMaskIntoConstraints = false
         upFaceVStack.addSubview(separator)
         separator.heightAnchor.constraint(equalToConstant: CBConstants.UIConstants.cellSeparatorHeight).isActive = true
@@ -278,6 +300,7 @@ class CBViewCreator {
                     }
                     if square == 2 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.b)
+
                     }
                     if square == 3 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.c)
@@ -285,12 +308,14 @@ class CBViewCreator {
                 case 2:
                     if square == 1 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.d)
+                        createLetterForCenterTile(for: tileSquare, letter: "F'")
                     }
                     if square == 2 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.e)
                     }
                     if square == 3 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.f)
+                        createLetterForCenterTile(for: tileSquare, letter: "F")
                     }
                 case 3:
                     if square == 1 {
@@ -310,20 +335,221 @@ class CBViewCreator {
             frontFaceStack.heightAnchor.constraint(equalToConstant: 25).isActive = true
             frontFaceVStack.addArrangedSubview(frontFaceStack)
         }
-        let middleSeparator = UIView()
-        middleSeparator.translatesAutoresizingMaskIntoConstraints = false
-        frontFaceVStack.addSubview(middleSeparator)
-        middleSeparator.heightAnchor.constraint(equalToConstant: CBConstants.UIConstants.cellSeparatorHeight).isActive = true
-        middleSeparator.topAnchor.constraint(equalTo: frontFaceVStack.bottomAnchor, constant: 2).isActive = true
-        middleSeparator.widthAnchor.constraint(equalTo: frontFaceVStack.widthAnchor).isActive = true
-        middleSeparator.backgroundColor = .CBTheme.secondary
+        leftTapView = UIView()
+        leftTapView.translatesAutoresizingMaskIntoConstraints = false
+        frontFaceVStack.addSubview(leftTapView)
+        leftTapView.leadingAnchor.constraint(equalTo: frontFaceVStack.leadingAnchor).isActive = true
+        leftTapView.heightAnchor.constraint(equalTo: frontFaceVStack.heightAnchor).isActive = true
+        leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        leftTapView.addTapGestureRecognizer {
+            cubeCopy = cubeCopy.makeFront(.counterclockwise)
+            viewController.updateCubeGraphic(with: cubeCopy)
+        }
+        rightTapView = UIView()
+        rightTapView.translatesAutoresizingMaskIntoConstraints = false
+        frontFaceVStack.addSubview(rightTapView)
+        rightTapView.trailingAnchor.constraint(equalTo: frontFaceVStack.trailingAnchor).isActive = true
+        rightTapView.heightAnchor.constraint(equalTo: frontFaceVStack.heightAnchor).isActive = true
+        rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        rightTapView.addTapGestureRecognizer {
+            cubeCopy = cubeCopy.makeFront(.clockwise)
+            viewController.updateCubeGraphic(with: cubeCopy)
+        }
+        separator = UIView()
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        frontFaceVStack.addSubview(separator)
+        separator.heightAnchor.constraint(equalToConstant: CBConstants.UIConstants.cellSeparatorHeight).isActive = true
+        separator.topAnchor.constraint(equalTo: frontFaceVStack.bottomAnchor, constant: 2).isActive = true
+        separator.widthAnchor.constraint(equalTo: frontFaceVStack.widthAnchor).isActive = true
+        separator.backgroundColor = .CBTheme.secondary
+        
+        // Down FACE STACKS
+        let downFaceVStack = UIStackView()
+        downFaceVStack.axis = .vertical
+        downFaceVStack.distribution = .equalSpacing
+        downFaceVStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        for stack in 1...3 {
+            let downFaceStack = UIStackView()
+            downFaceStack.translatesAutoresizingMaskIntoConstraints = false
+            downFaceStack.axis = .horizontal
+            downFaceStack.distribution = .equalSpacing
+            for square in 1...3 {
+                let tileSquare = UIView()
+                tileSquare.backgroundColor = .blue
+                tileSquare.translatesAutoresizingMaskIntoConstraints = false
+                tileSquare.widthAnchor.constraint(equalToConstant: 25).isActive = true
+                tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
+                tileSquare.layer.borderWidth = 2
+                tileSquare.layer.cornerRadius = 4
+                switch stack {
+                case 1:
+                    if square == 1 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.a)
+                    }
+                    if square == 2 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.b)
+
+                    }
+                    if square == 3 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.c)
+                    }
+                case 2:
+                    if square == 1 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.d)
+                        createLetterForCenterTile(for: tileSquare, letter: "D'")
+                    }
+                    if square == 2 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.e)
+                    }
+                    if square == 3 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.f)
+                        createLetterForCenterTile(for: tileSquare, letter: "D")
+                    }
+                case 3:
+                    if square == 1 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.g)
+                    }
+                    if square == 2 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.h)
+                    }
+                    if square == 3 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.i)
+                    }
+                default:
+                    print("invalid")
+                }
+                downFaceStack.addArrangedSubview(tileSquare)
+            }
+            downFaceStack.heightAnchor.constraint(equalToConstant: 25).isActive = true
+            downFaceVStack.addArrangedSubview(downFaceStack)
+        }
+        leftTapView = UIView()
+        leftTapView.translatesAutoresizingMaskIntoConstraints = false
+        downFaceVStack.addSubview(leftTapView)
+        leftTapView.leadingAnchor.constraint(equalTo: downFaceVStack.leadingAnchor).isActive = true
+        leftTapView.heightAnchor.constraint(equalTo: downFaceVStack.heightAnchor).isActive = true
+        leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        leftTapView.addTapGestureRecognizer {
+            cubeCopy = cubeCopy.makeDown(.counterclockwise)
+            viewController.updateCubeGraphic(with: cubeCopy)
+        }
+        rightTapView = UIView()
+        rightTapView.translatesAutoresizingMaskIntoConstraints = false
+        downFaceVStack.addSubview(rightTapView)
+        rightTapView.trailingAnchor.constraint(equalTo: downFaceVStack.trailingAnchor).isActive = true
+        rightTapView.heightAnchor.constraint(equalTo: downFaceVStack.heightAnchor).isActive = true
+        rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        rightTapView.addTapGestureRecognizer {
+            cubeCopy = cubeCopy.makeDown(.clockwise)
+            viewController.updateCubeGraphic(with: cubeCopy)
+        }
+        separator = UIView()
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        downFaceVStack.addSubview(separator)
+        separator.heightAnchor.constraint(equalToConstant: CBConstants.UIConstants.cellSeparatorHeight).isActive = true
+        separator.topAnchor.constraint(equalTo: downFaceVStack.bottomAnchor, constant: 2).isActive = true
+        separator.widthAnchor.constraint(equalTo: downFaceVStack.widthAnchor).isActive = true
+        separator.backgroundColor = .CBTheme.secondary
+        
+        // LEFT FACE STACKS
+        let leftFaceVStack = UIStackView()
+        leftFaceVStack.axis = .vertical
+        leftFaceVStack.distribution = .equalSpacing
+        leftFaceVStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        for stack in 1...3 {
+            let leftFaceStack = UIStackView()
+            leftFaceStack.translatesAutoresizingMaskIntoConstraints = false
+            leftFaceStack.axis = .horizontal
+            leftFaceStack.distribution = .equalSpacing
+            for square in 1...3 {
+                let tileSquare = UIView()
+                tileSquare.backgroundColor = .blue
+                tileSquare.translatesAutoresizingMaskIntoConstraints = false
+                tileSquare.widthAnchor.constraint(equalToConstant: 25).isActive = true
+                tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
+                tileSquare.layer.borderWidth = 2
+                tileSquare.layer.cornerRadius = 4
+                switch stack {
+                case 1:
+                    if square == 1 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.a)
+                    }
+                    if square == 2 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.b)
+
+                    }
+                    if square == 3 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.c)
+                    }
+                case 2:
+                    if square == 1 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.d)
+                        createLetterForCenterTile(for: tileSquare, letter: "L'")
+                    }
+                    if square == 2 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.e)
+                    }
+                    if square == 3 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.f)
+                        createLetterForCenterTile(for: tileSquare, letter: "L")
+                    }
+                case 3:
+                    if square == 1 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.g)
+                    }
+                    if square == 2 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.h)
+                    }
+                    if square == 3 {
+                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.i)
+                    }
+                default:
+                    print("invalid")
+                }
+                leftFaceStack.addArrangedSubview(tileSquare)
+            }
+            leftFaceStack.heightAnchor.constraint(equalToConstant: 25).isActive = true
+            leftFaceVStack.addArrangedSubview(leftFaceStack)
+        }
+        leftTapView = UIView()
+        leftTapView.translatesAutoresizingMaskIntoConstraints = false
+        leftFaceVStack.addSubview(leftTapView)
+        leftTapView.leadingAnchor.constraint(equalTo: leftFaceVStack.leadingAnchor).isActive = true
+        leftTapView.heightAnchor.constraint(equalTo: leftFaceVStack.heightAnchor).isActive = true
+        leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        leftTapView.addTapGestureRecognizer {
+            cubeCopy = cubeCopy.makeLeft(.counterclockwise)
+            viewController.updateCubeGraphic(with: cubeCopy)
+        }
+        rightTapView = UIView()
+        rightTapView.translatesAutoresizingMaskIntoConstraints = false
+        leftFaceVStack.addSubview(rightTapView)
+        rightTapView.trailingAnchor.constraint(equalTo: leftFaceVStack.trailingAnchor).isActive = true
+        rightTapView.heightAnchor.constraint(equalTo: leftFaceVStack.heightAnchor).isActive = true
+        rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        rightTapView.addTapGestureRecognizer {
+            cubeCopy = cubeCopy.makeLeft(.clockwise)
+            viewController.updateCubeGraphic(with: cubeCopy)
+        }
+        separator = UIView()
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        leftFaceVStack.addSubview(separator)
+        separator.widthAnchor.constraint(equalToConstant: CBConstants.UIConstants.cellSeparatorHeight).isActive = true
+        separator.trailingAnchor.constraint(equalTo: leftFaceVStack.trailingAnchor, constant: 4).isActive = true
+        separator.heightAnchor.constraint(equalTo: leftFaceVStack.heightAnchor).isActive = true
+        separator.backgroundColor = .CBTheme.secondary
         
         containerView.translatesAutoresizingMaskIntoConstraints = false
         guard let view = viewController.view else { return }
 
+        
         view.addSubview(containerView)
         containerView.addSubview(upFaceVStack)
         containerView.addSubview(frontFaceVStack)
+        containerView.addSubview(downFaceVStack)
+        containerView.addSubview(leftFaceVStack)
         NSLayoutConstraint.activate(
         [
             containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -339,7 +565,26 @@ class CBViewCreator {
             frontFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
             frontFaceVStack.widthAnchor.constraint(equalToConstant: 90),
             frontFaceVStack.heightAnchor.constraint(equalToConstant: 90),
-            frontFaceVStack.topAnchor.constraint(equalTo: upFaceVStack.bottomAnchor, constant: 6)
+            frontFaceVStack.topAnchor.constraint(equalTo: upFaceVStack.bottomAnchor, constant: 6),
+            
+            downFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            downFaceVStack.widthAnchor.constraint(equalToConstant: 90),
+            downFaceVStack.heightAnchor.constraint(equalToConstant: 90),
+            downFaceVStack.topAnchor.constraint(equalTo: frontFaceVStack.bottomAnchor, constant: 6),
+            
+            leftFaceVStack.trailingAnchor.constraint(equalTo: frontFaceVStack.leadingAnchor, constant: -6),
+            leftFaceVStack.widthAnchor.constraint(equalToConstant: 90),
+            leftFaceVStack.heightAnchor.constraint(equalToConstant: 90),
+            leftFaceVStack.centerYAnchor.constraint(equalTo: frontFaceVStack.centerYAnchor)
         ])
     }
+    static func createLetterForCenterTile(for view: UIView, letter: String) {
+        let letterView = UILabel()
+        letterView.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: letter, size: 16, color: .black)
+        letterView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(letterView)
+        letterView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        letterView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    }
+    
 }
