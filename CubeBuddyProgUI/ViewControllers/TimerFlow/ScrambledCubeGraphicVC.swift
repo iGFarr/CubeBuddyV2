@@ -10,14 +10,10 @@ import UIKit
 class ScrambledCubeGraphicVC: CBBaseViewController {
     var scramble = ""
     var cube = Cube()
-    
+    var rootVC: CBBaseViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let scrambleArray = scramble.dropFirst("Scramble\n\n".count).split(separator: " ")
-        cube = cube.makeMoves(cube.convertStringToMoveList(scramble: scrambleArray.map({ move in
-            String(move)
-        })))
         updateCubeGraphic(with: cube)
     }
     

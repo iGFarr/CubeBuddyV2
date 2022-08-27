@@ -33,7 +33,7 @@ class CBViewCreator {
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
-        func createTimerView(for viewController: CBBaseViewController, usingOptionsBar: Bool = false){
+        func createTimerView(for viewController: TimerViewController, usingOptionsBar: Bool = false){
             let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: self.timerTextColor, .font: self.timerTextFont]
             
             func timerUpdatesUI(){
@@ -67,7 +67,7 @@ class CBViewCreator {
                 let formattedTimerString = "Time: \(useHours ? (hourString + ":"): "")\(useMinutes ? (minuteString + ":") : "")\(secondString):\(milliString)"
                 self.runningTimerLabel.attributedText = NSAttributedString(string: formattedTimerString, attributes: textAttributes)
             }
-    
+            
             let scrambleLabel = UILabel()
             let scrambleText = NSAttributedString(string: CBBrain.getScramble(), attributes: textAttributes)
             scrambleLabel.attributedText = scrambleText
@@ -91,14 +91,15 @@ class CBViewCreator {
                     scrambleLabel.attributedText = NSAttributedString(string: CBBrain.getScramble(), attributes: textAttributes)
                     self.timerRunning = false
                     self.timeElapsed = 0.00
+                    viewController.cube = Cube()
                 }
             }
             
-            func createOptionsBar(for vc: CBBaseViewController) -> UIView {
+            func createOptionsBar(for vc: TimerViewController) -> UIView {
                 let optionsBar = UIView()
                 let showButton = UIButton()
                 let buttonText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Show me the cube!", size: 32)
-
+                
                 showButton.layer.cornerRadius = CBConstants.UIConstants.buttonCornerRadius
                 showButton.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
                 showButton.layer.borderWidth = 2
@@ -108,13 +109,25 @@ class CBViewCreator {
                 }
                 showButton.addTapGestureRecognizer {
                     let cubeGraphicVC = ScrambledCubeGraphicVC()
+                    var cube = vc.cube
+                    if let text = scrambleLabel.text, vc.cube == Cube() {
+                        cube = cube.makeMoves(cube.convertStringToMoveList(scramble: text.dropFirst("Scramble\n\n".count).split(separator: " ").map { move in
+                            String(move)
+                        }))
+                    } else {
+                        cube = vc.cube
+                    }
+                    vc.cube = cube
+                    
                     cubeGraphicVC.scramble = scrambleLabel.text ?? ""
+                    cubeGraphicVC.cube = cube
+                    cubeGraphicVC.rootVC = viewController
                     vc.modalPresentationStyle = .fullScreen
                     vc.navigationController?.pushViewController(cubeGraphicVC, animated: true)
                 }
                 
                 showButton.translatesAutoresizingMaskIntoConstraints = false
-
+                
                 optionsBar.translatesAutoresizingMaskIntoConstraints = false
                 optionsBar.isUserInteractionEnabled = true
                 optionsBar.backgroundColor = .clear
@@ -128,7 +141,7 @@ class CBViewCreator {
             }
             
             guard let view = viewController.view else { return }
-
+            
             let containerView = UIView()
             var optionsBar = UIView()
             let timerButtonView = UIView()
@@ -155,32 +168,33 @@ class CBViewCreator {
             timerButtonView.addSubview(runningTimerLabel)
             
             NSLayoutConstraint.activate(
-            [
-                containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-                containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-                containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-                containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-                
-                optionsBar.topAnchor.constraint(equalTo: containerView.topAnchor),
-                optionsBar.widthAnchor.constraint(equalTo: containerView.widthAnchor),
-                optionsBar.heightAnchor.constraint(equalToConstant: usingOptionsBar ? 60 : 0),
-                
-                scrambleLabel.topAnchor.constraint(equalTo: optionsBar.bottomAnchor, constant: CBConstants.UIConstants.doubleInset),
-                scrambleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UIConstants.doubleInset),
-                scrambleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UIConstants.doubleInset),
-                
-                timerButtonView.topAnchor.constraint(equalTo: optionsBar.bottomAnchor),
-                timerButtonView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-                timerButtonView.widthAnchor.constraint(equalTo: containerView.widthAnchor),
-                
-                runningTimerLabel.centerXAnchor.constraint(equalTo: timerButtonView.centerXAnchor),
-                runningTimerLabel.topAnchor.constraint(equalTo: scrambleLabel.bottomAnchor, constant: 8)
-            ])
+                [
+                    containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                    containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                    containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                    containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                    
+                    optionsBar.topAnchor.constraint(equalTo: containerView.topAnchor),
+                    optionsBar.widthAnchor.constraint(equalTo: containerView.widthAnchor),
+                    optionsBar.heightAnchor.constraint(equalToConstant: usingOptionsBar ? 60 : 0),
+                    
+                    scrambleLabel.topAnchor.constraint(equalTo: optionsBar.bottomAnchor, constant: CBConstants.UIConstants.doubleInset),
+                    scrambleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UIConstants.doubleInset),
+                    scrambleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UIConstants.doubleInset),
+                    
+                    timerButtonView.topAnchor.constraint(equalTo: optionsBar.bottomAnchor),
+                    timerButtonView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+                    timerButtonView.widthAnchor.constraint(equalTo: containerView.widthAnchor),
+                    
+                    runningTimerLabel.centerXAnchor.constraint(equalTo: timerButtonView.centerXAnchor),
+                    runningTimerLabel.topAnchor.constraint(equalTo: scrambleLabel.bottomAnchor, constant: 8)
+                ])
         }
     }
     
     static func createCubeGraphicView(for viewController: ScrambledCubeGraphicVC, with cube: Cube) {
-        var cubeCopy = cube
+        let presentingVC = viewController.presentingViewController as? TimerViewController
+        var cubeCopy = presentingVC?.cube ?? cube
         let containerView = UIView()
         
         
@@ -252,6 +266,9 @@ class CBViewCreator {
         leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
         leftTapView.addTapGestureRecognizer {
             cubeCopy = cubeCopy.makeUp(.counterclockwise)
+            viewController.cube = cubeCopy
+            let timerVC = viewController.rootVC as! TimerViewController
+            timerVC.cube = cubeCopy
             viewController.updateCubeGraphic(with: cubeCopy)
         }
         var rightTapView = UIView()
@@ -262,6 +279,9 @@ class CBViewCreator {
         rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
         rightTapView.addTapGestureRecognizer {
             cubeCopy = cubeCopy.makeUp(.clockwise)
+            viewController.cube = cubeCopy
+            let timerVC = viewController.rootVC as! TimerViewController
+            timerVC.cube = cubeCopy
             viewController.updateCubeGraphic(with: cubeCopy)
         }
         var separator = UIView()
@@ -300,7 +320,7 @@ class CBViewCreator {
                     }
                     if square == 2 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.b)
-
+                        
                     }
                     if square == 3 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.c)
@@ -343,6 +363,9 @@ class CBViewCreator {
         leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
         leftTapView.addTapGestureRecognizer {
             cubeCopy = cubeCopy.makeFront(.counterclockwise)
+            viewController.cube = cubeCopy
+            let timerVC = viewController.rootVC as! TimerViewController
+            timerVC.cube = cubeCopy
             viewController.updateCubeGraphic(with: cubeCopy)
         }
         rightTapView = UIView()
@@ -353,6 +376,9 @@ class CBViewCreator {
         rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
         rightTapView.addTapGestureRecognizer {
             cubeCopy = cubeCopy.makeFront(.clockwise)
+            viewController.cube = cubeCopy
+            let timerVC = viewController.rootVC as! TimerViewController
+            timerVC.cube = cubeCopy
             viewController.updateCubeGraphic(with: cubeCopy)
         }
         separator = UIView()
@@ -390,7 +416,7 @@ class CBViewCreator {
                     }
                     if square == 2 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.b)
-
+                        
                     }
                     if square == 3 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.c)
@@ -433,6 +459,9 @@ class CBViewCreator {
         leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
         leftTapView.addTapGestureRecognizer {
             cubeCopy = cubeCopy.makeDown(.counterclockwise)
+            viewController.cube = cubeCopy
+            let timerVC = viewController.rootVC as! TimerViewController
+            timerVC.cube = cubeCopy
             viewController.updateCubeGraphic(with: cubeCopy)
         }
         rightTapView = UIView()
@@ -443,6 +472,9 @@ class CBViewCreator {
         rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
         rightTapView.addTapGestureRecognizer {
             cubeCopy = cubeCopy.makeDown(.clockwise)
+            viewController.cube = cubeCopy
+            let timerVC = viewController.rootVC as! TimerViewController
+            timerVC.cube = cubeCopy
             viewController.updateCubeGraphic(with: cubeCopy)
         }
         
@@ -472,7 +504,7 @@ class CBViewCreator {
                     }
                     if square == 2 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.b)
-
+                        
                     }
                     if square == 3 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.c)
@@ -515,6 +547,9 @@ class CBViewCreator {
         leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
         leftTapView.addTapGestureRecognizer {
             cubeCopy = cubeCopy.makeLeft(.counterclockwise)
+            viewController.cube = cubeCopy
+            let timerVC = viewController.rootVC as! TimerViewController
+            timerVC.cube = cubeCopy
             viewController.updateCubeGraphic(with: cubeCopy)
         }
         rightTapView = UIView()
@@ -525,6 +560,9 @@ class CBViewCreator {
         rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
         rightTapView.addTapGestureRecognizer {
             cubeCopy = cubeCopy.makeLeft(.clockwise)
+            viewController.cube = cubeCopy
+            let timerVC = viewController.rootVC as! TimerViewController
+            timerVC.cube = cubeCopy
             viewController.updateCubeGraphic(with: cubeCopy)
         }
         separator = UIView()
@@ -562,7 +600,7 @@ class CBViewCreator {
                     }
                     if square == 2 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.right.b)
-
+                        
                     }
                     if square == 3 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.right.c)
@@ -605,6 +643,9 @@ class CBViewCreator {
         leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
         leftTapView.addTapGestureRecognizer {
             cubeCopy = cubeCopy.makeRight(.counterclockwise)
+            viewController.cube = cubeCopy
+            let timerVC = viewController.rootVC as! TimerViewController
+            timerVC.cube = cubeCopy
             viewController.updateCubeGraphic(with: cubeCopy)
         }
         rightTapView = UIView()
@@ -615,6 +656,9 @@ class CBViewCreator {
         rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
         rightTapView.addTapGestureRecognizer {
             cubeCopy = cubeCopy.makeRight(.clockwise)
+            viewController.cube = cubeCopy
+            let timerVC = viewController.rootVC as! TimerViewController
+            timerVC.cube = cubeCopy
             viewController.updateCubeGraphic(with: cubeCopy)
         }
         separator = UIView()
@@ -627,7 +671,7 @@ class CBViewCreator {
         separator.backgroundColor = .CBTheme.secondary
         containerView.translatesAutoresizingMaskIntoConstraints = false
         guard let view = viewController.view else { return }
-
+        
         // BACK FACE STACKS
         let backFaceVStack = UIStackView()
         backFaceVStack.axis = .vertical
@@ -654,7 +698,7 @@ class CBViewCreator {
                     }
                     if square == 2 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.back.b)
-
+                        
                     }
                     if square == 3 {
                         tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.back.c)
@@ -697,6 +741,9 @@ class CBViewCreator {
         leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
         leftTapView.addTapGestureRecognizer {
             cubeCopy = cubeCopy.makeBack(.counterclockwise)
+            viewController.cube = cubeCopy
+            let timerVC = viewController.rootVC as! TimerViewController
+            timerVC.cube = cubeCopy
             viewController.updateCubeGraphic(with: cubeCopy)
         }
         rightTapView = UIView()
@@ -706,7 +753,10 @@ class CBViewCreator {
         rightTapView.heightAnchor.constraint(equalTo: backFaceVStack.heightAnchor).isActive = true
         rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
         rightTapView.addTapGestureRecognizer {
-            cubeCopy = cubeCopy.makeRight(.clockwise)
+            cubeCopy = cubeCopy.makeBack(.clockwise)
+            viewController.cube = cubeCopy
+            let timerVC = viewController.rootVC as! TimerViewController
+            timerVC.cube = cubeCopy
             viewController.updateCubeGraphic(with: cubeCopy)
         }
         
@@ -718,42 +768,42 @@ class CBViewCreator {
         containerView.addSubview(rightFaceVStack)
         containerView.addSubview(backFaceVStack)
         NSLayoutConstraint.activate(
-        [
-            containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: CBConstants.UIConstants.defaultInsets),
-            containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -CBConstants.UIConstants.defaultInsets),
-            
-            upFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            upFaceVStack.widthAnchor.constraint(equalToConstant: 90),
-            upFaceVStack.heightAnchor.constraint(equalToConstant: 90),
-            upFaceVStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
-            
-            frontFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            frontFaceVStack.widthAnchor.constraint(equalToConstant: 90),
-            frontFaceVStack.heightAnchor.constraint(equalToConstant: 90),
-            frontFaceVStack.topAnchor.constraint(equalTo: upFaceVStack.bottomAnchor, constant: 6),
-            
-            downFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            downFaceVStack.widthAnchor.constraint(equalToConstant: 90),
-            downFaceVStack.heightAnchor.constraint(equalToConstant: 90),
-            downFaceVStack.topAnchor.constraint(equalTo: frontFaceVStack.bottomAnchor, constant: 6),
-            
-            leftFaceVStack.trailingAnchor.constraint(equalTo: frontFaceVStack.leadingAnchor, constant: -6),
-            leftFaceVStack.widthAnchor.constraint(equalToConstant: 90),
-            leftFaceVStack.heightAnchor.constraint(equalToConstant: 90),
-            leftFaceVStack.centerYAnchor.constraint(equalTo: frontFaceVStack.centerYAnchor),
-            
-            rightFaceVStack.leadingAnchor.constraint(equalTo: frontFaceVStack.trailingAnchor, constant: 6),
-            rightFaceVStack.widthAnchor.constraint(equalToConstant: 90),
-            rightFaceVStack.heightAnchor.constraint(equalToConstant: 90),
-            rightFaceVStack.centerYAnchor.constraint(equalTo: frontFaceVStack.centerYAnchor),
-            
-            backFaceVStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UIConstants.doubleInset),
-            backFaceVStack.widthAnchor.constraint(equalToConstant: 90),
-            backFaceVStack.heightAnchor.constraint(equalToConstant: 90),
-            backFaceVStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -CBConstants.UIConstants.doubleInset)
-        ])
+            [
+                containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: CBConstants.UIConstants.defaultInsets),
+                containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -CBConstants.UIConstants.defaultInsets),
+                
+                upFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                upFaceVStack.widthAnchor.constraint(equalToConstant: 90),
+                upFaceVStack.heightAnchor.constraint(equalToConstant: 90),
+                upFaceVStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
+                
+                frontFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                frontFaceVStack.widthAnchor.constraint(equalToConstant: 90),
+                frontFaceVStack.heightAnchor.constraint(equalToConstant: 90),
+                frontFaceVStack.topAnchor.constraint(equalTo: upFaceVStack.bottomAnchor, constant: 6),
+                
+                downFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                downFaceVStack.widthAnchor.constraint(equalToConstant: 90),
+                downFaceVStack.heightAnchor.constraint(equalToConstant: 90),
+                downFaceVStack.topAnchor.constraint(equalTo: frontFaceVStack.bottomAnchor, constant: 6),
+                
+                leftFaceVStack.trailingAnchor.constraint(equalTo: frontFaceVStack.leadingAnchor, constant: -6),
+                leftFaceVStack.widthAnchor.constraint(equalToConstant: 90),
+                leftFaceVStack.heightAnchor.constraint(equalToConstant: 90),
+                leftFaceVStack.centerYAnchor.constraint(equalTo: frontFaceVStack.centerYAnchor),
+                
+                rightFaceVStack.leadingAnchor.constraint(equalTo: frontFaceVStack.trailingAnchor, constant: 6),
+                rightFaceVStack.widthAnchor.constraint(equalToConstant: 90),
+                rightFaceVStack.heightAnchor.constraint(equalToConstant: 90),
+                rightFaceVStack.centerYAnchor.constraint(equalTo: frontFaceVStack.centerYAnchor),
+                
+                backFaceVStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UIConstants.doubleInset),
+                backFaceVStack.widthAnchor.constraint(equalToConstant: 90),
+                backFaceVStack.heightAnchor.constraint(equalToConstant: 90),
+                backFaceVStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -CBConstants.UIConstants.doubleInset)
+            ])
     }
     static func createLetterForCenterTile(for view: UIView, letter: String) {
         let letterView = UILabel()

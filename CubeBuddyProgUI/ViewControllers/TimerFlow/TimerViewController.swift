@@ -9,6 +9,7 @@ import UIKit
 
 class TimerViewController: CBBaseViewController {
     var viewModel: CBViewCreator.TimerView?
+    var cube = Cube()
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel = CBViewCreator.TimerView()
