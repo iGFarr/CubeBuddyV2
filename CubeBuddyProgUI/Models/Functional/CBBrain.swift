@@ -8,10 +8,9 @@
 import Foundation
 
 class CBBrain {
-    static func getScramble() -> String {
+    static func getScramble(length numMoves: Int = 20) -> String {
         let cubeMoves = ["U", "D", "R", "L", "F", "B"]
         let primeMoves = cubeMoves.map { $0 + "'" }
-        let numMoves = 20
         var scrambleArray = [String]()
         for num in 0..<numMoves {
             var allMoves = cubeMoves + primeMoves
@@ -26,6 +25,7 @@ class CBBrain {
                 prime = true
             }
             
+            // prevents inverse moves from being adjacent to each other
             let oppositeMove = prime ? (previousMove.dropLast()) : (previousMove + "'")
             allMoves.removeAll { $0 == oppositeMove }
             
@@ -42,5 +42,36 @@ class CBBrain {
         var scrambleString = scrambleArray.joined(separator: " ")
         scrambleString = "Scramble:\n" + scrambleString
         return scrambleString
+    }
+    
+    static func formatTimeForTimerLabel(timeElapsed: Double) -> String {
+        let hours = Int(timeElapsed) / 3600
+        let hourString = String(hours)
+        
+        let minutes = Int(timeElapsed) / 60
+        var minuteString = String(minutes)
+        
+        let seconds = Int(timeElapsed) % 60
+        var secondString = String(seconds)
+        
+        let useHours = hours != 0
+        let useMinutes = useHours || (minutes != 0)
+        
+        let milliseconds = Int(timeElapsed * 100)
+        let msToHundredths = milliseconds % 100
+        var milliString = String(msToHundredths)
+        
+        if minutes < 10 {
+            minuteString = "0" + minuteString
+        }
+        if seconds < 10 {
+            secondString = "0" + secondString
+        }
+        if msToHundredths < 10 {
+            milliString = "0" + String(msToHundredths)
+        }
+        
+        let formattedTimerString = "Time: \(useHours ? (hourString + ":"): "")\(useMinutes ? (minuteString + ":") : "")\(secondString):\(milliString)"
+        return formattedTimerString
     }
 }

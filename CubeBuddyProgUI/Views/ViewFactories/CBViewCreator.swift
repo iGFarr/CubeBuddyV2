@@ -20,10 +20,12 @@ class CBViewCreator {
     class TimerView: UIView {
         var solves =  [Solve]()
         var timerRunning = false
+        let scrambleLengthLabel = UILabel()
+        let scrambleLabel = UILabel()
         let runningTimerLabel: UILabel = UILabel()
+        let scrambleLengthSlider = UISlider()
         var timeElapsed = 0.00
-        let timerTextColor: UIColor = .CBTheme.secondary ?? .systemGray
-        let timerTextFont: UIFont = .CBFonts.returnCustomFont(size: 32)
+        let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.CBTheme.secondary ?? .systemGray, .font: UIFont.CBFonts.returnCustomFont(size: 32)]
         
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -33,43 +35,37 @@ class CBViewCreator {
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
+        
+        @objc func sliderValueChanged(){
+            scrambleLengthLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: 16)
+            UserDefaults.standard.setValue(scrambleLengthSlider.value, forKey: UserDefaultsHelper.defaultKeys.scrambleLength.rawValue)
+            let scrambleText = NSAttributedString(string: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), attributes: textAttributes)
+            scrambleLabel.attributedText = scrambleText
+        }
+        
         func createTimerView(for viewController: TimerViewController, usingOptionsBar: Bool = false){
-            let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: self.timerTextColor, .font: self.timerTextFont]
             
             func timerUpdatesUI(){
                 self.timeElapsed += 0.01
-                let hours = Int(self.timeElapsed) / 3600
-                let hourString = String(hours)
-                
-                let minutes = Int(self.timeElapsed) / 60
-                var minuteString = String(minutes)
-                
-                let seconds = Int(self.timeElapsed) % 60
-                var secondString = String(seconds)
-                
-                let useHours = hours != 0
-                let useMinutes = useHours || (minutes != 0)
-                
-                let milliseconds = Int(self.timeElapsed * 100)
-                let msToHundredths = milliseconds % 100
-                var milliString = String(msToHundredths)
-                
-                if minutes < 10 {
-                    minuteString = "0" + minuteString
-                }
-                if seconds < 10 {
-                    secondString = "0" + secondString
-                }
-                if msToHundredths < 10 {
-                    milliString = "0" + String(msToHundredths)
-                }
-                
-                let formattedTimerString = "Time: \(useHours ? (hourString + ":"): "")\(useMinutes ? (minuteString + ":") : "")\(secondString):\(milliString)"
+                let formattedTimerString = CBBrain.formatTimeForTimerLabel(timeElapsed: self.timeElapsed)
                 self.runningTimerLabel.attributedText = NSAttributedString(string: formattedTimerString, attributes: textAttributes)
             }
             
-            let scrambleLabel = UILabel()
-            let scrambleText = NSAttributedString(string: CBBrain.getScramble(), attributes: textAttributes)
+            scrambleLengthSlider.translatesAutoresizingMaskIntoConstraints = false
+            scrambleLengthSlider.maximumValue = 40
+            scrambleLengthSlider.minimumValue = 3
+            var scrambleLength = UserDefaults.standard.float(forKey: UserDefaultsHelper.defaultKeys.scrambleLength.rawValue)
+            if scrambleLength == 0.0 {
+                UserDefaults.standard.setValue(20.0, forKey: UserDefaultsHelper.defaultKeys.scrambleLength.rawValue)
+                scrambleLength = 20.0
+            }
+            scrambleLengthSlider.setValue(scrambleLength, animated: false)
+            scrambleLengthSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
+            
+            scrambleLengthLabel.translatesAutoresizingMaskIntoConstraints = false
+            scrambleLengthLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: 16)
+            
+            let scrambleText = NSAttributedString(string: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), attributes: textAttributes)
             scrambleLabel.attributedText = scrambleText
             scrambleLabel.numberOfLines = 0
             scrambleLabel.lineBreakMode = .byWordWrapping
@@ -88,7 +84,7 @@ class CBViewCreator {
                     self.solves.append(newSolve)
                     UserDefaultsHelper.saveAllObjects(allObjects: solves, named: .solves)
                     print(solves.count)
-                    scrambleLabel.attributedText = NSAttributedString(string: CBBrain.getScramble(), attributes: textAttributes)
+                    scrambleLabel.attributedText = NSAttributedString(string: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), attributes: textAttributes)
                     self.timerRunning = false
                     self.timeElapsed = 0.00
                     viewController.cube = Cube()
@@ -110,7 +106,7 @@ class CBViewCreator {
                 showButton.addTapGestureRecognizer {
                     let cubeGraphicVC = ScrambledCubeGraphicVC()
                     var cube = vc.cube
-                    if let text = scrambleLabel.text, vc.cube == Cube() {
+                    if let text = self.scrambleLabel.text, vc.cube == Cube() {
                         cube = cube.makeMoves(cube.convertStringToMoveList(scramble: text.dropFirst("Scramble\n\n".count).split(separator: " ").map { move in
                             String(move)
                         }))
@@ -119,7 +115,7 @@ class CBViewCreator {
                     }
                     vc.cube = cube
                     
-                    cubeGraphicVC.scramble = scrambleLabel.text ?? ""
+                    cubeGraphicVC.scramble = self.scrambleLabel.text ?? ""
                     cubeGraphicVC.cube = cube
                     cubeGraphicVC.rootVC = viewController
                     vc.modalPresentationStyle = .fullScreen
@@ -165,6 +161,8 @@ class CBViewCreator {
             containerView.addSubview(optionsBar)
             containerView.addSubview(timerButtonView)
             containerView.addSubview(scrambleLabel)
+            containerView.addSubview(scrambleLengthSlider)
+            containerView.addSubview(scrambleLengthLabel)
             timerButtonView.addSubview(runningTimerLabel)
             
             NSLayoutConstraint.activate(
@@ -176,18 +174,26 @@ class CBViewCreator {
                     
                     optionsBar.topAnchor.constraint(equalTo: containerView.topAnchor),
                     optionsBar.widthAnchor.constraint(equalTo: containerView.widthAnchor),
-                    optionsBar.heightAnchor.constraint(equalToConstant: usingOptionsBar ? 60 : 0),
+                    optionsBar.heightAnchor.constraint(lessThanOrEqualToConstant: usingOptionsBar ? 100 : 0),
                     
                     scrambleLabel.topAnchor.constraint(equalTo: optionsBar.bottomAnchor, constant: CBConstants.UIConstants.doubleInset),
                     scrambleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UIConstants.doubleInset),
                     scrambleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UIConstants.doubleInset),
                     
-                    timerButtonView.topAnchor.constraint(equalTo: optionsBar.bottomAnchor),
+                    timerButtonView.topAnchor.constraint(equalTo: scrambleLabel.bottomAnchor, constant: CBConstants.UIConstants.doubleInset),
                     timerButtonView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
                     timerButtonView.widthAnchor.constraint(equalTo: containerView.widthAnchor),
                     
                     runningTimerLabel.centerXAnchor.constraint(equalTo: timerButtonView.centerXAnchor),
-                    runningTimerLabel.topAnchor.constraint(equalTo: scrambleLabel.bottomAnchor, constant: 8)
+                    runningTimerLabel.topAnchor.constraint(equalTo: scrambleLabel.bottomAnchor, constant: 8),
+                    
+                    scrambleLengthLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                    scrambleLengthLabel.bottomAnchor.constraint(equalTo: scrambleLengthSlider.topAnchor, constant: -CBConstants.UIConstants.defaultInsets),
+                    
+                    scrambleLengthSlider.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UIConstants.doubleInset),
+                    scrambleLengthSlider.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UIConstants.doubleInset),
+                    scrambleLengthSlider.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -CBConstants.UIConstants.doubleInset),
+                    scrambleLengthSlider.heightAnchor.constraint(equalToConstant: 30)
                 ])
         }
     }
@@ -197,93 +203,160 @@ class CBViewCreator {
         var cubeCopy = presentingVC?.cube ?? cube
         let containerView = UIView()
         
-        
-        // UP FACE STACKS
-        let upFaceVStack = UIStackView()
-        upFaceVStack.axis = .vertical
-        upFaceVStack.distribution = .equalSpacing
-        upFaceVStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        for stack in 1...3 {
-            let upFaceStack = UIStackView()
-            upFaceStack.translatesAutoresizingMaskIntoConstraints = false
-            upFaceStack.axis = .horizontal
-            upFaceStack.distribution = .equalSpacing
-            for square in 1...3 {
-                let tileSquare = UIView()
-                tileSquare.backgroundColor = .black
-                tileSquare.translatesAutoresizingMaskIntoConstraints = false
-                tileSquare.widthAnchor.constraint(equalToConstant: 25).isActive = true
-                tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
-                tileSquare.layer.borderWidth = 2
-                tileSquare.layer.cornerRadius = 4
-                switch stack {
-                case 1:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.up.a)
+        func configureStackViewForFace(face: Surface, letter: String) -> UIStackView {
+            let stackView = UIStackView()
+            
+            stackView.axis = .vertical
+            stackView.distribution = .equalSpacing
+            stackView.translatesAutoresizingMaskIntoConstraints = false
+            
+            for stack in 1...3 {
+                let hStack = UIStackView()
+                hStack.translatesAutoresizingMaskIntoConstraints = false
+                hStack.axis = .horizontal
+                hStack.distribution = .equalSpacing
+                for square in 1...3 {
+                    let tileSquare = UIView()
+                    tileSquare.backgroundColor = .black
+                    tileSquare.translatesAutoresizingMaskIntoConstraints = false
+                    tileSquare.widthAnchor.constraint(equalToConstant: 25).isActive = true
+                    tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
+                    tileSquare.layer.borderWidth = 2
+                    tileSquare.layer.cornerRadius = 4
+                    switch stack {
+                    case 1:
+                        if square == 1 {
+                            tileSquare.backgroundColor = getColorForTile(tile: face.a)
+                        }
+                        if square == 2 {
+                            tileSquare.backgroundColor = getColorForTile(tile: face.b)
+                        }
+                        if square == 3 {
+                            tileSquare.backgroundColor = getColorForTile(tile: face.c)
+                        }
+                    case 2:
+                        if square == 1 {
+                            tileSquare.backgroundColor = getColorForTile(tile: face.d)
+                            createLetterForCenterTile(for: tileSquare, letter: letter + "'")
+                        }
+                        if square == 2 {
+                            tileSquare.backgroundColor = getColorForTile(tile: face.e)
+                        }
+                        if square == 3 {
+                            tileSquare.backgroundColor = getColorForTile(tile: face.f)
+                            createLetterForCenterTile(for: tileSquare, letter: letter)
+                        }
+                    case 3:
+                        if square == 1 {
+                            tileSquare.backgroundColor = getColorForTile(tile: face.g)
+                        }
+                        if square == 2 {
+                            tileSquare.backgroundColor = getColorForTile(tile: face.h)
+                        }
+                        if square == 3 {
+                            tileSquare.backgroundColor = getColorForTile(tile: face.i)
+                        }
+                    default:
+                        print("invalid")
                     }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.up.b)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.up.c)
-                    }
-                case 2:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.up.d)
-                        createLetterForCenterTile(for: tileSquare, letter: "U'")
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.up.e)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.up.f)
-                        createLetterForCenterTile(for: tileSquare, letter: "U")
-                    }
-                case 3:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.up.g)
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.up.h)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.up.i)
-                    }
-                default:
-                    print("invalid")
+                    hStack.addArrangedSubview(tileSquare)
                 }
-                upFaceStack.addArrangedSubview(tileSquare)
+                hStack.heightAnchor.constraint(equalToConstant: 25).isActive = true
+                stackView.addArrangedSubview(hStack)
             }
-            upFaceStack.heightAnchor.constraint(equalToConstant: 25).isActive = true
-            upFaceVStack.addArrangedSubview(upFaceStack)
+            
+            return stackView
         }
-        var leftTapView = UIView()
-        leftTapView.translatesAutoresizingMaskIntoConstraints = false
-        upFaceVStack.addSubview(leftTapView)
-        leftTapView.leadingAnchor.constraint(equalTo: upFaceVStack.leadingAnchor).isActive = true
-        leftTapView.heightAnchor.constraint(equalTo: upFaceVStack.heightAnchor).isActive = true
-        leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        leftTapView.addTapGestureRecognizer {
-            cubeCopy = cubeCopy.makeUp(.counterclockwise)
-            viewController.cube = cubeCopy
-            let timerVC = viewController.rootVC as! TimerViewController
-            timerVC.cube = cubeCopy
-            viewController.updateCubeGraphic(with: cubeCopy)
+        
+        enum CubeFace: String {
+            case up = "U"
+            case down = "D"
+            case back = "B"
+            case front = "F"
+            case left = "L"
+            case right = "R"
         }
-        var rightTapView = UIView()
-        rightTapView.translatesAutoresizingMaskIntoConstraints = false
-        upFaceVStack.addSubview(rightTapView)
-        rightTapView.trailingAnchor.constraint(equalTo: upFaceVStack.trailingAnchor).isActive = true
-        rightTapView.heightAnchor.constraint(equalTo: upFaceVStack.heightAnchor).isActive = true
-        rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        rightTapView.addTapGestureRecognizer {
-            cubeCopy = cubeCopy.makeUp(.clockwise)
-            viewController.cube = cubeCopy
-            let timerVC = viewController.rootVC as! TimerViewController
-            timerVC.cube = cubeCopy
-            viewController.updateCubeGraphic(with: cubeCopy)
+        
+        func configureTappableViewsForStack(stack: UIStackView, faceToTurn: CubeFace) {
+            let leftTapView = UIView()
+            leftTapView.translatesAutoresizingMaskIntoConstraints = false
+            stack.addSubview(leftTapView)
+            leftTapView.leadingAnchor.constraint(equalTo: stack.leadingAnchor).isActive = true
+            leftTapView.heightAnchor.constraint(equalTo: stack.heightAnchor).isActive = true
+            leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
+            leftTapView.addTapGestureRecognizer {
+                switch faceToTurn {
+                case .up:
+                    cubeCopy = cubeCopy.makeUp(.counterclockwise)
+                case .down:
+                    cubeCopy = cubeCopy.makeDown(.counterclockwise)
+                case .left:
+                    cubeCopy = cubeCopy.makeLeft(.counterclockwise)
+                case .right:
+                    cubeCopy = cubeCopy.makeRight(.counterclockwise)
+                case .front:
+                    cubeCopy = cubeCopy.makeFront(.counterclockwise)
+                case .back:
+                    cubeCopy = cubeCopy.makeBack(.counterclockwise)
+                }
+                if cubeCopy == Cube() {
+                    print("SOLVED")
+                }
+                viewController.cube = cubeCopy
+                let timerVC = viewController.rootVC
+                timerVC?.cube = cubeCopy
+                viewController.updateCubeGraphic(with: cubeCopy)
+            }
+            let rightTapView = UIView()
+            rightTapView.translatesAutoresizingMaskIntoConstraints = false
+            stack.addSubview(rightTapView)
+            rightTapView.trailingAnchor.constraint(equalTo: stack.trailingAnchor).isActive = true
+            rightTapView.heightAnchor.constraint(equalTo: stack.heightAnchor).isActive = true
+            rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
+            rightTapView.addTapGestureRecognizer {
+                switch faceToTurn {
+                case .up:
+                    cubeCopy = cubeCopy.makeUp(.clockwise)
+                case .down:
+                    cubeCopy = cubeCopy.makeDown(.clockwise)
+                case .left:
+                    cubeCopy = cubeCopy.makeLeft(.clockwise)
+                case .right:
+                    cubeCopy = cubeCopy.makeRight(.clockwise)
+                case .front:
+                    cubeCopy = cubeCopy.makeFront(.clockwise)
+                case .back:
+                    cubeCopy = cubeCopy.makeBack(.clockwise)
+                }
+                if cubeCopy == Cube() {
+                    print("SOLVED")
+                }
+                viewController.cube = cubeCopy
+                let timerVC = viewController.rootVC
+                timerVC?.cube = cubeCopy
+                viewController.updateCubeGraphic(with: cubeCopy)
+            }
         }
+        
+        // FACE STACKS
+        let upFaceVStack = configureStackViewForFace(face: cubeCopy.up, letter: "U")
+        configureTappableViewsForStack(stack: upFaceVStack, faceToTurn: .up)
+        
+        let frontFaceVStack = configureStackViewForFace(face: cubeCopy.front, letter: "F")
+        configureTappableViewsForStack(stack: frontFaceVStack, faceToTurn: .front)
+        
+        let downFaceVStack = configureStackViewForFace(face: cubeCopy.down, letter: "D")
+        configureTappableViewsForStack(stack: downFaceVStack, faceToTurn: .down)
+        
+        let leftFaceVStack = configureStackViewForFace(face: cubeCopy.left, letter: "L")
+        configureTappableViewsForStack(stack: leftFaceVStack, faceToTurn: .left)
+        
+        let rightFaceVStack = configureStackViewForFace(face: cubeCopy.right, letter: "R")
+        configureTappableViewsForStack(stack: rightFaceVStack, faceToTurn: .right)
+        
+        let backFaceVStack = configureStackViewForFace(face: cubeCopy.back, letter: "B")
+        configureTappableViewsForStack(stack: backFaceVStack, faceToTurn: .back)
+        
         var separator = UIView()
         separator.translatesAutoresizingMaskIntoConstraints = false
         upFaceVStack.addSubview(separator)
@@ -293,94 +366,6 @@ class CBViewCreator {
         separator.centerXAnchor.constraint(equalTo: upFaceVStack.centerXAnchor).isActive = true
         separator.backgroundColor = .CBTheme.secondary
         
-        
-        // FRONT FACE STACKS
-        let frontFaceVStack = UIStackView()
-        frontFaceVStack.axis = .vertical
-        frontFaceVStack.distribution = .equalSpacing
-        frontFaceVStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        for stack in 1...3 {
-            let frontFaceStack = UIStackView()
-            frontFaceStack.translatesAutoresizingMaskIntoConstraints = false
-            frontFaceStack.axis = .horizontal
-            frontFaceStack.distribution = .equalSpacing
-            for square in 1...3 {
-                let tileSquare = UIView()
-                tileSquare.backgroundColor = .blue
-                tileSquare.translatesAutoresizingMaskIntoConstraints = false
-                tileSquare.widthAnchor.constraint(equalToConstant: 25).isActive = true
-                tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
-                tileSquare.layer.borderWidth = 2
-                tileSquare.layer.cornerRadius = 4
-                switch stack {
-                case 1:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.a)
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.b)
-                        
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.c)
-                    }
-                case 2:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.d)
-                        createLetterForCenterTile(for: tileSquare, letter: "F'")
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.e)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.f)
-                        createLetterForCenterTile(for: tileSquare, letter: "F")
-                    }
-                case 3:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.g)
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.h)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.front.i)
-                    }
-                default:
-                    print("invalid")
-                }
-                frontFaceStack.addArrangedSubview(tileSquare)
-            }
-            frontFaceStack.heightAnchor.constraint(equalToConstant: 25).isActive = true
-            frontFaceVStack.addArrangedSubview(frontFaceStack)
-        }
-        leftTapView = UIView()
-        leftTapView.translatesAutoresizingMaskIntoConstraints = false
-        frontFaceVStack.addSubview(leftTapView)
-        leftTapView.leadingAnchor.constraint(equalTo: frontFaceVStack.leadingAnchor).isActive = true
-        leftTapView.heightAnchor.constraint(equalTo: frontFaceVStack.heightAnchor).isActive = true
-        leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        leftTapView.addTapGestureRecognizer {
-            cubeCopy = cubeCopy.makeFront(.counterclockwise)
-            viewController.cube = cubeCopy
-            let timerVC = viewController.rootVC as! TimerViewController
-            timerVC.cube = cubeCopy
-            viewController.updateCubeGraphic(with: cubeCopy)
-        }
-        rightTapView = UIView()
-        rightTapView.translatesAutoresizingMaskIntoConstraints = false
-        frontFaceVStack.addSubview(rightTapView)
-        rightTapView.trailingAnchor.constraint(equalTo: frontFaceVStack.trailingAnchor).isActive = true
-        rightTapView.heightAnchor.constraint(equalTo: frontFaceVStack.heightAnchor).isActive = true
-        rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        rightTapView.addTapGestureRecognizer {
-            cubeCopy = cubeCopy.makeFront(.clockwise)
-            viewController.cube = cubeCopy
-            let timerVC = viewController.rootVC as! TimerViewController
-            timerVC.cube = cubeCopy
-            viewController.updateCubeGraphic(with: cubeCopy)
-        }
         separator = UIView()
         separator.translatesAutoresizingMaskIntoConstraints = false
         frontFaceVStack.addSubview(separator)
@@ -390,181 +375,6 @@ class CBViewCreator {
         separator.centerXAnchor.constraint(equalTo: frontFaceVStack.centerXAnchor).isActive = true
         separator.backgroundColor = .CBTheme.secondary
         
-        // Down FACE STACKS
-        let downFaceVStack = UIStackView()
-        downFaceVStack.axis = .vertical
-        downFaceVStack.distribution = .equalSpacing
-        downFaceVStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        for stack in 1...3 {
-            let downFaceStack = UIStackView()
-            downFaceStack.translatesAutoresizingMaskIntoConstraints = false
-            downFaceStack.axis = .horizontal
-            downFaceStack.distribution = .equalSpacing
-            for square in 1...3 {
-                let tileSquare = UIView()
-                tileSquare.backgroundColor = .blue
-                tileSquare.translatesAutoresizingMaskIntoConstraints = false
-                tileSquare.widthAnchor.constraint(equalToConstant: 25).isActive = true
-                tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
-                tileSquare.layer.borderWidth = 2
-                tileSquare.layer.cornerRadius = 4
-                switch stack {
-                case 1:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.a)
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.b)
-                        
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.c)
-                    }
-                case 2:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.d)
-                        createLetterForCenterTile(for: tileSquare, letter: "D'")
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.e)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.f)
-                        createLetterForCenterTile(for: tileSquare, letter: "D")
-                    }
-                case 3:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.g)
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.h)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.down.i)
-                    }
-                default:
-                    print("invalid")
-                }
-                downFaceStack.addArrangedSubview(tileSquare)
-            }
-            downFaceStack.heightAnchor.constraint(equalToConstant: 25).isActive = true
-            downFaceVStack.addArrangedSubview(downFaceStack)
-        }
-        leftTapView = UIView()
-        leftTapView.translatesAutoresizingMaskIntoConstraints = false
-        downFaceVStack.addSubview(leftTapView)
-        leftTapView.leadingAnchor.constraint(equalTo: downFaceVStack.leadingAnchor).isActive = true
-        leftTapView.heightAnchor.constraint(equalTo: downFaceVStack.heightAnchor).isActive = true
-        leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        leftTapView.addTapGestureRecognizer {
-            cubeCopy = cubeCopy.makeDown(.counterclockwise)
-            viewController.cube = cubeCopy
-            let timerVC = viewController.rootVC as! TimerViewController
-            timerVC.cube = cubeCopy
-            viewController.updateCubeGraphic(with: cubeCopy)
-        }
-        rightTapView = UIView()
-        rightTapView.translatesAutoresizingMaskIntoConstraints = false
-        downFaceVStack.addSubview(rightTapView)
-        rightTapView.trailingAnchor.constraint(equalTo: downFaceVStack.trailingAnchor).isActive = true
-        rightTapView.heightAnchor.constraint(equalTo: downFaceVStack.heightAnchor).isActive = true
-        rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        rightTapView.addTapGestureRecognizer {
-            cubeCopy = cubeCopy.makeDown(.clockwise)
-            viewController.cube = cubeCopy
-            let timerVC = viewController.rootVC as! TimerViewController
-            timerVC.cube = cubeCopy
-            viewController.updateCubeGraphic(with: cubeCopy)
-        }
-        
-        // LEFT FACE STACKS
-        let leftFaceVStack = UIStackView()
-        leftFaceVStack.axis = .vertical
-        leftFaceVStack.distribution = .equalSpacing
-        leftFaceVStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        for stack in 1...3 {
-            let leftFaceStack = UIStackView()
-            leftFaceStack.translatesAutoresizingMaskIntoConstraints = false
-            leftFaceStack.axis = .horizontal
-            leftFaceStack.distribution = .equalSpacing
-            for square in 1...3 {
-                let tileSquare = UIView()
-                tileSquare.backgroundColor = .blue
-                tileSquare.translatesAutoresizingMaskIntoConstraints = false
-                tileSquare.widthAnchor.constraint(equalToConstant: 25).isActive = true
-                tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
-                tileSquare.layer.borderWidth = 2
-                tileSquare.layer.cornerRadius = 4
-                switch stack {
-                case 1:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.a)
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.b)
-                        
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.c)
-                    }
-                case 2:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.d)
-                        createLetterForCenterTile(for: tileSquare, letter: "L'")
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.e)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.f)
-                        createLetterForCenterTile(for: tileSquare, letter: "L")
-                    }
-                case 3:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.g)
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.h)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.left.i)
-                    }
-                default:
-                    print("invalid")
-                }
-                leftFaceStack.addArrangedSubview(tileSquare)
-            }
-            leftFaceStack.heightAnchor.constraint(equalToConstant: 25).isActive = true
-            leftFaceVStack.addArrangedSubview(leftFaceStack)
-        }
-        leftTapView = UIView()
-        leftTapView.translatesAutoresizingMaskIntoConstraints = false
-        leftFaceVStack.addSubview(leftTapView)
-        leftTapView.leadingAnchor.constraint(equalTo: leftFaceVStack.leadingAnchor).isActive = true
-        leftTapView.heightAnchor.constraint(equalTo: leftFaceVStack.heightAnchor).isActive = true
-        leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        leftTapView.addTapGestureRecognizer {
-            cubeCopy = cubeCopy.makeLeft(.counterclockwise)
-            viewController.cube = cubeCopy
-            let timerVC = viewController.rootVC as! TimerViewController
-            timerVC.cube = cubeCopy
-            viewController.updateCubeGraphic(with: cubeCopy)
-        }
-        rightTapView = UIView()
-        rightTapView.translatesAutoresizingMaskIntoConstraints = false
-        leftFaceVStack.addSubview(rightTapView)
-        rightTapView.trailingAnchor.constraint(equalTo: leftFaceVStack.trailingAnchor).isActive = true
-        rightTapView.heightAnchor.constraint(equalTo: leftFaceVStack.heightAnchor).isActive = true
-        rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        rightTapView.addTapGestureRecognizer {
-            cubeCopy = cubeCopy.makeLeft(.clockwise)
-            viewController.cube = cubeCopy
-            let timerVC = viewController.rootVC as! TimerViewController
-            timerVC.cube = cubeCopy
-            viewController.updateCubeGraphic(with: cubeCopy)
-        }
         separator = UIView()
         separator.translatesAutoresizingMaskIntoConstraints = false
         leftFaceVStack.addSubview(separator)
@@ -574,93 +384,6 @@ class CBViewCreator {
         separator.centerYAnchor.constraint(equalTo: leftFaceVStack.centerYAnchor).isActive = true
         separator.backgroundColor = .CBTheme.secondary
         
-        // RIGHT FACE STACKS
-        let rightFaceVStack = UIStackView()
-        rightFaceVStack.axis = .vertical
-        rightFaceVStack.distribution = .equalSpacing
-        rightFaceVStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        for stack in 1...3 {
-            let rightFaceStack = UIStackView()
-            rightFaceStack.translatesAutoresizingMaskIntoConstraints = false
-            rightFaceStack.axis = .horizontal
-            rightFaceStack.distribution = .equalSpacing
-            for square in 1...3 {
-                let tileSquare = UIView()
-                tileSquare.backgroundColor = .blue
-                tileSquare.translatesAutoresizingMaskIntoConstraints = false
-                tileSquare.widthAnchor.constraint(equalToConstant: 25).isActive = true
-                tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
-                tileSquare.layer.borderWidth = 2
-                tileSquare.layer.cornerRadius = 4
-                switch stack {
-                case 1:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.right.a)
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.right.b)
-                        
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.right.c)
-                    }
-                case 2:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.right.d)
-                        createLetterForCenterTile(for: tileSquare, letter: "R'")
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.right.e)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.right.f)
-                        createLetterForCenterTile(for: tileSquare, letter: "R")
-                    }
-                case 3:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.right.g)
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.right.h)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.right.i)
-                    }
-                default:
-                    print("invalid")
-                }
-                rightFaceStack.addArrangedSubview(tileSquare)
-            }
-            rightFaceStack.heightAnchor.constraint(equalToConstant: 25).isActive = true
-            rightFaceVStack.addArrangedSubview(rightFaceStack)
-        }
-        leftTapView = UIView()
-        leftTapView.translatesAutoresizingMaskIntoConstraints = false
-        rightFaceVStack.addSubview(leftTapView)
-        leftTapView.leadingAnchor.constraint(equalTo: rightFaceVStack.leadingAnchor).isActive = true
-        leftTapView.heightAnchor.constraint(equalTo: rightFaceVStack.heightAnchor).isActive = true
-        leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        leftTapView.addTapGestureRecognizer {
-            cubeCopy = cubeCopy.makeRight(.counterclockwise)
-            viewController.cube = cubeCopy
-            let timerVC = viewController.rootVC as! TimerViewController
-            timerVC.cube = cubeCopy
-            viewController.updateCubeGraphic(with: cubeCopy)
-        }
-        rightTapView = UIView()
-        rightTapView.translatesAutoresizingMaskIntoConstraints = false
-        rightFaceVStack.addSubview(rightTapView)
-        rightTapView.trailingAnchor.constraint(equalTo: rightFaceVStack.trailingAnchor).isActive = true
-        rightTapView.heightAnchor.constraint(equalTo: rightFaceVStack.heightAnchor).isActive = true
-        rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        rightTapView.addTapGestureRecognizer {
-            cubeCopy = cubeCopy.makeRight(.clockwise)
-            viewController.cube = cubeCopy
-            let timerVC = viewController.rootVC as! TimerViewController
-            timerVC.cube = cubeCopy
-            viewController.updateCubeGraphic(with: cubeCopy)
-        }
         separator = UIView()
         separator.translatesAutoresizingMaskIntoConstraints = false
         rightFaceVStack.addSubview(separator)
@@ -671,94 +394,6 @@ class CBViewCreator {
         separator.backgroundColor = .CBTheme.secondary
         containerView.translatesAutoresizingMaskIntoConstraints = false
         guard let view = viewController.view else { return }
-        
-        // BACK FACE STACKS
-        let backFaceVStack = UIStackView()
-        backFaceVStack.axis = .vertical
-        backFaceVStack.distribution = .equalSpacing
-        backFaceVStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        for stack in 1...3 {
-            let backFaceStack = UIStackView()
-            backFaceStack.translatesAutoresizingMaskIntoConstraints = false
-            backFaceStack.axis = .horizontal
-            backFaceStack.distribution = .equalSpacing
-            for square in 1...3 {
-                let tileSquare = UIView()
-                tileSquare.backgroundColor = .blue
-                tileSquare.translatesAutoresizingMaskIntoConstraints = false
-                tileSquare.widthAnchor.constraint(equalToConstant: 25).isActive = true
-                tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
-                tileSquare.layer.borderWidth = 2
-                tileSquare.layer.cornerRadius = 4
-                switch stack {
-                case 1:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.back.a)
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.back.b)
-                        
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.back.c)
-                    }
-                case 2:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.back.d)
-                        createLetterForCenterTile(for: tileSquare, letter: "B'")
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.back.e)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.back.f)
-                        createLetterForCenterTile(for: tileSquare, letter: "B")
-                    }
-                case 3:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.back.g)
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.back.h)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: cubeCopy.back.i)
-                    }
-                default:
-                    print("invalid")
-                }
-                backFaceStack.addArrangedSubview(tileSquare)
-            }
-            backFaceStack.heightAnchor.constraint(equalToConstant: 25).isActive = true
-            backFaceVStack.addArrangedSubview(backFaceStack)
-        }
-        leftTapView = UIView()
-        leftTapView.translatesAutoresizingMaskIntoConstraints = false
-        backFaceVStack.addSubview(leftTapView)
-        leftTapView.leadingAnchor.constraint(equalTo: backFaceVStack.leadingAnchor).isActive = true
-        leftTapView.heightAnchor.constraint(equalTo: backFaceVStack.heightAnchor).isActive = true
-        leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        leftTapView.addTapGestureRecognizer {
-            cubeCopy = cubeCopy.makeBack(.counterclockwise)
-            viewController.cube = cubeCopy
-            let timerVC = viewController.rootVC as! TimerViewController
-            timerVC.cube = cubeCopy
-            viewController.updateCubeGraphic(with: cubeCopy)
-        }
-        rightTapView = UIView()
-        rightTapView.translatesAutoresizingMaskIntoConstraints = false
-        backFaceVStack.addSubview(rightTapView)
-        rightTapView.trailingAnchor.constraint(equalTo: backFaceVStack.trailingAnchor).isActive = true
-        rightTapView.heightAnchor.constraint(equalTo: backFaceVStack.heightAnchor).isActive = true
-        rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        rightTapView.addTapGestureRecognizer {
-            cubeCopy = cubeCopy.makeBack(.clockwise)
-            viewController.cube = cubeCopy
-            let timerVC = viewController.rootVC as! TimerViewController
-            timerVC.cube = cubeCopy
-            viewController.updateCubeGraphic(with: cubeCopy)
-        }
         
         view.addSubview(containerView)
         containerView.addSubview(upFaceVStack)

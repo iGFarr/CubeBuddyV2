@@ -24,7 +24,6 @@ class CubeNoobYoutubePlayerVC: CBBaseViewController {
                 self.constrainWebView()
             }
         }
-        
     }
     
     override func viewDidDisappear(_ animated: Bool) {

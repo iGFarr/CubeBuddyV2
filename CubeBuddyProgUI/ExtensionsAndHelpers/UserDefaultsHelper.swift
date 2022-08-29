@@ -10,6 +10,7 @@ import Foundation
 class UserDefaultsHelper {
     enum defaultKeys: String {
         case solves = "solves"
+        case scrambleLength = "scramble length"
     }
     
     static func getAllObjects<T: Codable>(named name: defaultKeys) -> [T] {
