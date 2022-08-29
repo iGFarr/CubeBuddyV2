@@ -9,8 +9,7 @@ import UIKit
 
 class CBViewCreator {
     static func createCellSeparator(for cell: UITableViewCell) {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
+        let view = CBView()
         cell.addSubview(view)
         view.heightAnchor.constraint(equalToConstant: CBConstants.UIConstants.cellSeparatorHeight).isActive = true
         view.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width - CBConstants.UIConstants.doubleInset).isActive = true
@@ -21,12 +20,11 @@ class CBViewCreator {
     class TimerView: UIView {
         var solves =  [Solve]()
         var timerRunning = false
-        let scrambleLengthLabel = UILabel()
-        let scrambleLabel = UILabel()
-        let runningTimerLabel: UILabel = UILabel()
+        let scrambleLengthLabel = CBLabel()
+        let scrambleLabel = CBLabel()
+        let runningTimerLabel = CBLabel()
         let scrambleLengthSlider = UISlider()
         var timeElapsed = 0.00
-        let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.CBTheme.secondary ?? .systemGray, .font: UIFont.CBFonts.returnCustomFont(size: .large)]
         
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -37,24 +35,24 @@ class CBViewCreator {
             fatalError("init(coder:) has not been implemented")
         }
         
-        @objc func sliderValueChanged(){
+        @objc func sliderValueChanged() {
             scrambleLengthLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: .small)
             UserDefaults.standard.setValue(scrambleLengthSlider.value, forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
-            let scrambleText = NSAttributedString(string: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), attributes: textAttributes)
+            let scrambleText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), size: .large)
             scrambleLabel.attributedText = scrambleText
         }
         
-        func createTimerView(for viewController: TimerViewController, usingOptionsBar: Bool = false){
+        func createTimerView(for viewController: TimerViewController, usingOptionsBar: Bool = false) {
             
             func timerUpdatesUI(){
                 self.timeElapsed += 0.01
                 let formattedTimerString = CBBrain.formatTimeForTimerLabel(timeElapsed: self.timeElapsed)
-                self.runningTimerLabel.attributedText = NSAttributedString(string: formattedTimerString, attributes: textAttributes)
+                self.runningTimerLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: formattedTimerString, size: .large)
             }
             
             scrambleLengthSlider.translatesAutoresizingMaskIntoConstraints = false
             scrambleLengthSlider.maximumValue = 40
-            scrambleLengthSlider.minimumValue = 3
+            scrambleLengthSlider.minimumValue = 2
             var scrambleLength = UserDefaults.standard.float(forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
             if scrambleLength == 0.0 {
                 UserDefaults.standard.setValue(20.0, forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
@@ -63,13 +61,10 @@ class CBViewCreator {
             scrambleLengthSlider.setValue(scrambleLength, animated: false)
             scrambleLengthSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
             
-            scrambleLengthLabel.translatesAutoresizingMaskIntoConstraints = false
             scrambleLengthLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: .small)
             
-            let scrambleText = NSAttributedString(string: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), attributes: textAttributes)
+            let scrambleText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), size: .large)
             scrambleLabel.attributedText = scrambleText
-            scrambleLabel.numberOfLines = 0
-            scrambleLabel.lineBreakMode = .byWordWrapping
             var timer: Timer?
             
             func timerButtonViewPressed(){
@@ -85,7 +80,8 @@ class CBViewCreator {
                     self.solves.append(newSolve)
                     UserDefaultsHelper.saveAllObjects(allObjects: solves, named: .solves)
                     print(solves.count)
-                    scrambleLabel.attributedText = NSAttributedString(string: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), attributes: textAttributes)
+                    let scrambleText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), size: .large)
+                    scrambleLabel.attributedText = scrambleText
                     self.timerRunning = false
                     self.timeElapsed = 0.00
                     viewController.cube = Cube()
@@ -93,7 +89,7 @@ class CBViewCreator {
             }
             
             func createOptionsBar(for vc: TimerViewController) -> UIView {
-                let optionsBar = UIView()
+                let optionsBar = CBView()
                 let showButton = UIButton()
                 let buttonText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Show me the cube!", size: .large)
                 
@@ -125,7 +121,6 @@ class CBViewCreator {
                 
                 showButton.translatesAutoresizingMaskIntoConstraints = false
                 
-                optionsBar.translatesAutoresizingMaskIntoConstraints = false
                 optionsBar.isUserInteractionEnabled = true
                 optionsBar.backgroundColor = .clear
                 optionsBar.addSubview(showButton)
@@ -149,14 +144,10 @@ class CBViewCreator {
             timerButtonView.addTapGestureRecognizer {
                 timerButtonViewPressed()
             }
-            
-            self.runningTimerLabel.attributedText = NSAttributedString(string: "Time: 00:00", attributes: textAttributes)
+            self.runningTimerLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Time: 00:00", size: .large)
             
             containerView.translatesAutoresizingMaskIntoConstraints = false
             timerButtonView.translatesAutoresizingMaskIntoConstraints = false
-            scrambleLabel.translatesAutoresizingMaskIntoConstraints = false
-            runningTimerLabel.translatesAutoresizingMaskIntoConstraints = false
-            
             
             view.addSubview(containerView)
             containerView.addSubview(optionsBar)
@@ -210,6 +201,8 @@ class CBViewCreator {
             stackView.axis = .vertical
             stackView.distribution = .equalSpacing
             stackView.translatesAutoresizingMaskIntoConstraints = false
+            stackView.heightAnchor.constraint(equalToConstant: 90).isActive = true
+            stackView.widthAnchor.constraint(equalToConstant: 90).isActive = true
             
             for stack in 1...3 {
                 let hStack = UIStackView()
@@ -279,8 +272,7 @@ class CBViewCreator {
         }
         
         func configureTappableViewsForStack(stack: UIStackView, faceToTurn: CubeFace) {
-            let leftTapView = UIView()
-            leftTapView.translatesAutoresizingMaskIntoConstraints = false
+            let leftTapView = CBView()
             stack.addSubview(leftTapView)
             leftTapView.leadingAnchor.constraint(equalTo: stack.leadingAnchor).isActive = true
             leftTapView.heightAnchor.constraint(equalTo: stack.heightAnchor).isActive = true
@@ -308,8 +300,7 @@ class CBViewCreator {
                 timerVC?.cube = cubeCopy
                 viewController.updateCubeGraphic(with: cubeCopy)
             }
-            let rightTapView = UIView()
-            rightTapView.translatesAutoresizingMaskIntoConstraints = false
+            let rightTapView = CBView()
             stack.addSubview(rightTapView)
             rightTapView.trailingAnchor.constraint(equalTo: stack.trailingAnchor).isActive = true
             rightTapView.heightAnchor.constraint(equalTo: stack.heightAnchor).isActive = true
@@ -345,6 +336,8 @@ class CBViewCreator {
         
         let frontFaceVStack = configureStackViewForFace(face: cubeCopy.front, letter: "F")
         configureTappableViewsForStack(stack: frontFaceVStack, faceToTurn: .front)
+        frontFaceVStack.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
+        frontFaceVStack.layer.borderWidth = 3
         
         let downFaceVStack = configureStackViewForFace(face: cubeCopy.down, letter: "D")
         configureTappableViewsForStack(stack: downFaceVStack, faceToTurn: .down)
@@ -358,41 +351,6 @@ class CBViewCreator {
         let backFaceVStack = configureStackViewForFace(face: cubeCopy.back, letter: "B")
         configureTappableViewsForStack(stack: backFaceVStack, faceToTurn: .back)
         
-        var separator = UIView()
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        upFaceVStack.addSubview(separator)
-        separator.heightAnchor.constraint(equalToConstant: CBConstants.UIConstants.cellSeparatorHeight).isActive = true
-        separator.topAnchor.constraint(equalTo: upFaceVStack.bottomAnchor, constant: 2).isActive = true
-        separator.widthAnchor.constraint(equalTo: upFaceVStack.widthAnchor, constant: 4).isActive = true
-        separator.centerXAnchor.constraint(equalTo: upFaceVStack.centerXAnchor).isActive = true
-        separator.backgroundColor = .CBTheme.secondary
-        
-        separator = UIView()
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        frontFaceVStack.addSubview(separator)
-        separator.heightAnchor.constraint(equalToConstant: CBConstants.UIConstants.cellSeparatorHeight).isActive = true
-        separator.topAnchor.constraint(equalTo: frontFaceVStack.bottomAnchor, constant: 2).isActive = true
-        separator.widthAnchor.constraint(equalTo: frontFaceVStack.widthAnchor, constant: 4).isActive = true
-        separator.centerXAnchor.constraint(equalTo: frontFaceVStack.centerXAnchor).isActive = true
-        separator.backgroundColor = .CBTheme.secondary
-        
-        separator = UIView()
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        leftFaceVStack.addSubview(separator)
-        separator.widthAnchor.constraint(equalToConstant: CBConstants.UIConstants.cellSeparatorHeight).isActive = true
-        separator.trailingAnchor.constraint(equalTo: leftFaceVStack.trailingAnchor, constant: 4).isActive = true
-        separator.heightAnchor.constraint(equalTo: leftFaceVStack.heightAnchor, constant: 4).isActive = true
-        separator.centerYAnchor.constraint(equalTo: leftFaceVStack.centerYAnchor).isActive = true
-        separator.backgroundColor = .CBTheme.secondary
-        
-        separator = UIView()
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        rightFaceVStack.addSubview(separator)
-        separator.widthAnchor.constraint(equalToConstant: CBConstants.UIConstants.cellSeparatorHeight).isActive = true
-        separator.leadingAnchor.constraint(equalTo: rightFaceVStack.leadingAnchor, constant: -4).isActive = true
-        separator.heightAnchor.constraint(equalTo: rightFaceVStack.heightAnchor, constant: 4).isActive = true
-        separator.centerYAnchor.constraint(equalTo: rightFaceVStack.centerYAnchor).isActive = true
-        separator.backgroundColor = .CBTheme.secondary
         containerView.translatesAutoresizingMaskIntoConstraints = false
         guard let view = viewController.view else { return }
         
@@ -411,36 +369,25 @@ class CBViewCreator {
                 containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -CBConstants.UIConstants.defaultInsets),
                 
                 upFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                upFaceVStack.widthAnchor.constraint(equalToConstant: 90),
-                upFaceVStack.heightAnchor.constraint(equalToConstant: 90),
                 upFaceVStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
                 
                 frontFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                frontFaceVStack.widthAnchor.constraint(equalToConstant: 90),
-                frontFaceVStack.heightAnchor.constraint(equalToConstant: 90),
                 frontFaceVStack.topAnchor.constraint(equalTo: upFaceVStack.bottomAnchor, constant: 6),
                 
                 downFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                downFaceVStack.widthAnchor.constraint(equalToConstant: 90),
-                downFaceVStack.heightAnchor.constraint(equalToConstant: 90),
                 downFaceVStack.topAnchor.constraint(equalTo: frontFaceVStack.bottomAnchor, constant: 6),
                 
                 leftFaceVStack.trailingAnchor.constraint(equalTo: frontFaceVStack.leadingAnchor, constant: -6),
-                leftFaceVStack.widthAnchor.constraint(equalToConstant: 90),
-                leftFaceVStack.heightAnchor.constraint(equalToConstant: 90),
                 leftFaceVStack.centerYAnchor.constraint(equalTo: frontFaceVStack.centerYAnchor),
                 
                 rightFaceVStack.leadingAnchor.constraint(equalTo: frontFaceVStack.trailingAnchor, constant: 6),
-                rightFaceVStack.widthAnchor.constraint(equalToConstant: 90),
-                rightFaceVStack.heightAnchor.constraint(equalToConstant: 90),
                 rightFaceVStack.centerYAnchor.constraint(equalTo: frontFaceVStack.centerYAnchor),
                 
                 backFaceVStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UIConstants.doubleInset),
-                backFaceVStack.widthAnchor.constraint(equalToConstant: 90),
-                backFaceVStack.heightAnchor.constraint(equalToConstant: 90),
                 backFaceVStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -CBConstants.UIConstants.doubleInset)
             ])
     }
+    
     static func createLetterForCenterTile(for view: UIView, letter: String) {
         let letterView = UILabel()
         letterView.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: letter, size: .small, color: .black)
@@ -449,5 +396,4 @@ class CBViewCreator {
         letterView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         letterView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
-    
 }

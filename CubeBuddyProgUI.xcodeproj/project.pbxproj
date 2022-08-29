@@ -36,6 +36,7 @@
 		6AAF304828B9D54A00870A00 /* NavigationController+TabBar+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF304728B9D54A00870A00 /* NavigationController+TabBar+Ext.swift */; };
 		6AAF304B28BCAEE200870A00 /* CBLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF304A28BCAEE200870A00 /* CBLabel.swift */; };
 		6AAF304D28BCAFC600870A00 /* CBVStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF304C28BCAFC600870A00 /* CBVStackView.swift */; };
+		6AAF304F28BD040F00870A00 /* CBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF304E28BD040F00870A00 /* CBView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,7 @@
 		6AAF304728B9D54A00870A00 /* NavigationController+TabBar+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationController+TabBar+Ext.swift"; sourceTree = "<group>"; };
 		6AAF304A28BCAEE200870A00 /* CBLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBLabel.swift; sourceTree = "<group>"; };
 		6AAF304C28BCAFC600870A00 /* CBVStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBVStackView.swift; sourceTree = "<group>"; };
+		6AAF304E28BD040F00870A00 /* CBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -295,6 +297,7 @@
 			children = (
 				6AAF304A28BCAEE200870A00 /* CBLabel.swift */,
 				6AAF304C28BCAFC600870A00 /* CBVStackView.swift */,
+				6AAF304E28BD040F00870A00 /* CBView.swift */,
 			);
 			path = CBKit;
 			sourceTree = "<group>";
@@ -445,6 +448,7 @@
 				6AAF303628B8AE7C00870A00 /* SolveCellModel.swift in Sources */,
 				6AACD5042872F0AD006FB54B /* CBViewCreator.swift in Sources */,
 				6A7CCE4828701E3400598C88 /* TimerViewController.swift in Sources */,
+				6AAF304F28BD040F00870A00 /* CBView.swift in Sources */,
 				6A7CCE412870095800598C88 /* UIColor+Extension.swift in Sources */,
 				6A7CCE0A286FFDB000598C88 /* AppDelegate.swift in Sources */,
 				6AACD4FE287191FB006FB54B /* SolvesViewController.swift in Sources */,
