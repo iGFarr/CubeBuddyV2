@@ -8,28 +8,22 @@
 import UIKit
 
 class SolvesViewController: CBBaseTableViewController {
-    
     private var solves = [Solve]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.solves = UserDefaultsHelper.getAllObjects(named: .solves)
-        self.title = "Solves"
+        solves = UserDefaultsHelper.getAllObjects(named: .solves)
+        title = CBConstants.CBMenuPickerPages.solves.rawValue
         tableView.allowsMultipleSelection = true
         tableView.register(SolveCellModel.self, forCellReuseIdentifier: "solveCell")
-        tableView.tableFooterView = UIView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.solves = UserDefaultsHelper.getAllObjects(named: .solves)
+        solves = UserDefaultsHelper.getAllObjects(named: .solves)
         tableView.reloadData()
     }
 }
 
 extension SolvesViewController {
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        1
-    }
-    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
@@ -37,12 +31,12 @@ extension SolvesViewController {
         self.solves.count + 1
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = UITableViewCell()
         if indexPath.row == 0 {
+            let cell = UITableViewCell()
             cell.textLabel?.textAlignment = .center
             cell.textLabel?.text = "Clear All"
             cell.textLabel?.textColor = .systemRed
-            cell.textLabel?.font = UIFont.CBFonts.returnCustomFont()
+            cell.textLabel?.font = UIFont.CBFonts.primary
             cell.backgroundColor = .clear
             CBViewCreator.createCellSeparator(for: cell)
             cell.addTapGestureRecognizer {
@@ -62,14 +56,11 @@ extension SolvesViewController {
             }
             return cell
         } else {
-            let mostRecentSolve = solves[solves.count - indexPath.row]
-        cell = mostRecentSolve.createSolveCell(for: tableView, at: indexPath)
+            return solves[solves.count - indexPath.row].createSolveCell(for: tableView, at: indexPath)
         }
-        return cell
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-
         if let indexPathForSelectedRow = tableView.indexPathForSelectedRow,
             indexPathForSelectedRow == indexPath {
             tableView.deselectRow(at: indexPath, animated: false)

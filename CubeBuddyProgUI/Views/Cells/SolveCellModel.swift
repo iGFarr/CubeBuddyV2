@@ -13,7 +13,6 @@ class SolveCellModel: UITableViewCell {
     let scrambleLabel = CBLabel()
     let puzzleLabel = CBLabel()
     let stackView = CBVStackView()
-    let customSeparator = UIView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

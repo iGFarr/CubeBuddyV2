@@ -14,7 +14,7 @@ class CubeNoobYoutubePlayerVC: CBBaseViewController {
     private var url: URL?
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Cube Noob"
+        self.title = CBConstants.CBMenuPickerPages.cubeNoob.rawValue
         webView.addObserver(self, forKeyPath: "URL", options: .new, context: nil)
         
         if let url = URL(string: CBConstants.URLStrings.channelPage) {

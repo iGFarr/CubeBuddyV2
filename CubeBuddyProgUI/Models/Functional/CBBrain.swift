@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CBBrain {
+struct CBBrain {
     static func getScramble(length numMoves: Int = 20) -> String {
         let cubeMoves = ["U", "D", "R", "L", "F", "B"]
         let primeMoves = cubeMoves.map { $0 + "'" }

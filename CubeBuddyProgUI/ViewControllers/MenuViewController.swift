@@ -20,7 +20,7 @@ class MenuViewController: CBBaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Menu"
+        self.title = CBConstants.menuPageTitle
         createPickerWheel()
     }
     
@@ -52,16 +52,16 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return CBConstants.PickerRows.allCases.count + emptyRow
+        return CBConstants.CBMenuPickerPages.allCases.count + emptyRow
     }
     
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         if row == emptyRowIndex {
             return NSAttributedString(string: "")
         }
-        let title = CBConstants.PickerRows.allCases[row - 1].rawValue
+        let title = CBConstants.CBMenuPickerPages.allCases[row - 1].rawValue
         let color: UIColor = .CBTheme.secondary ?? .systemRed
-        let customFont: UIFont = .CBFonts.returnCustomFont(size: 20)
+        let customFont: UIFont = .CBFonts.primary
         let attributes: [NSAttributedString.Key: Any] = [.foregroundColor: color, .font: customFont]
         let attributedTitle = NSAttributedString(string: title, attributes: attributes)
         return attributedTitle
@@ -69,12 +69,12 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         guard row != emptyRowIndex else { return }
-        let title = CBConstants.PickerRows.allCases[row - 1].rawValue
+        let title = CBConstants.CBMenuPickerPages.allCases[row - 1].rawValue
         
-        if let vc = self.viewControllerTitles[title] {
+        if let vc = viewControllerTitles[title] {
             
             vc.modalPresentationStyle = .fullScreen
-            self.navigationController?.pushViewController(vc, animated: true)
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
 }

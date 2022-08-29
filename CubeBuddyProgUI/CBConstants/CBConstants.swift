@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 struct CBConstants {
-    enum PickerRows: String, CaseIterable {
+    enum CBMenuPickerPages: String, CaseIterable {
         case timer = "Stopwatch"
         case solves = "Solves"
         case cubeNoob = "Cube Noob"
@@ -28,10 +28,12 @@ struct CBConstants {
         static let defaultStackViewSpacing: CGFloat = 16
         static let doubleInset: CGFloat = 16
         static let stackViewTrailingInset: CGFloat = 24
-        static func makeTextAttributedWithCBStyle(text: String, size: CGFloat = 24, color: UIColor = .CBTheme.secondary ?? .systemGreen) -> NSAttributedString {
-            let font: UIFont = .CBFonts.returnCustomFont(size: size)
+        static func makeTextAttributedWithCBStyle(text: String, size: CBBasicFontSize = .medium, color: UIColor = .CBTheme.secondary ?? .systemGreen, textStyle: UIFont.TextStyle = .subheadline) -> NSAttributedString {
+            let font: UIFont = .CBFonts.returnCustomFont(size: size, textStyle: textStyle)
             let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: color, .font: font]
             return NSAttributedString(string: text, attributes: textAttributes)
         }
     }
+    
+    static let menuPageTitle = "Menu"
 }

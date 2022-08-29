@@ -17,6 +17,7 @@ class CBViewCreator {
         view.centerYAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
         view.backgroundColor = .CBTheme.secondary
     }
+    
     class TimerView: UIView {
         var solves =  [Solve]()
         var timerRunning = false
@@ -25,7 +26,7 @@ class CBViewCreator {
         let runningTimerLabel: UILabel = UILabel()
         let scrambleLengthSlider = UISlider()
         var timeElapsed = 0.00
-        let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.CBTheme.secondary ?? .systemGray, .font: UIFont.CBFonts.returnCustomFont(size: 32)]
+        let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.CBTheme.secondary ?? .systemGray, .font: UIFont.CBFonts.returnCustomFont(size: .large)]
         
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -37,8 +38,8 @@ class CBViewCreator {
         }
         
         @objc func sliderValueChanged(){
-            scrambleLengthLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: 16)
-            UserDefaults.standard.setValue(scrambleLengthSlider.value, forKey: UserDefaultsHelper.defaultKeys.scrambleLength.rawValue)
+            scrambleLengthLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: .small)
+            UserDefaults.standard.setValue(scrambleLengthSlider.value, forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
             let scrambleText = NSAttributedString(string: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), attributes: textAttributes)
             scrambleLabel.attributedText = scrambleText
         }
@@ -54,16 +55,16 @@ class CBViewCreator {
             scrambleLengthSlider.translatesAutoresizingMaskIntoConstraints = false
             scrambleLengthSlider.maximumValue = 40
             scrambleLengthSlider.minimumValue = 3
-            var scrambleLength = UserDefaults.standard.float(forKey: UserDefaultsHelper.defaultKeys.scrambleLength.rawValue)
+            var scrambleLength = UserDefaults.standard.float(forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
             if scrambleLength == 0.0 {
-                UserDefaults.standard.setValue(20.0, forKey: UserDefaultsHelper.defaultKeys.scrambleLength.rawValue)
+                UserDefaults.standard.setValue(20.0, forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
                 scrambleLength = 20.0
             }
             scrambleLengthSlider.setValue(scrambleLength, animated: false)
             scrambleLengthSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
             
             scrambleLengthLabel.translatesAutoresizingMaskIntoConstraints = false
-            scrambleLengthLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: 16)
+            scrambleLengthLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: .small)
             
             let scrambleText = NSAttributedString(string: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), attributes: textAttributes)
             scrambleLabel.attributedText = scrambleText
@@ -94,7 +95,7 @@ class CBViewCreator {
             func createOptionsBar(for vc: TimerViewController) -> UIView {
                 let optionsBar = UIView()
                 let showButton = UIButton()
-                let buttonText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Show me the cube!", size: 32)
+                let buttonText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Show me the cube!", size: .large)
                 
                 showButton.layer.cornerRadius = CBConstants.UIConstants.buttonCornerRadius
                 showButton.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
@@ -180,7 +181,7 @@ class CBViewCreator {
                     scrambleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UIConstants.doubleInset),
                     scrambleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UIConstants.doubleInset),
                     
-                    timerButtonView.topAnchor.constraint(equalTo: scrambleLabel.bottomAnchor, constant: CBConstants.UIConstants.doubleInset),
+                    timerButtonView.topAnchor.constraint(equalTo: optionsBar.bottomAnchor, constant: CBConstants.UIConstants.defaultInsetX4),
                     timerButtonView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
                     timerButtonView.widthAnchor.constraint(equalTo: containerView.widthAnchor),
                     
@@ -442,7 +443,7 @@ class CBViewCreator {
     }
     static func createLetterForCenterTile(for view: UIView, letter: String) {
         let letterView = UILabel()
-        letterView.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: letter, size: 16, color: .black)
+        letterView.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: letter, size: .small, color: .black)
         letterView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(letterView)
         letterView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

@@ -8,12 +8,12 @@
 import Foundation
 
 class UserDefaultsHelper {
-    enum defaultKeys: String {
+    enum DefaultKeys: String {
         case solves = "solves"
         case scrambleLength = "scramble length"
     }
     
-    static func getAllObjects<T: Codable>(named name: defaultKeys) -> [T] {
+    static func getAllObjects<T: Codable>(named name: DefaultKeys) -> [T] {
         if let objects = UserDefaults.standard.value(forKey: name.rawValue) as? Data {
              let decoder = JSONDecoder()
              if let objectsDecoded = try? decoder.decode(Array.self, from: objects) as [T] {
@@ -26,7 +26,7 @@ class UserDefaultsHelper {
           }
        }
 
-    static func saveAllObjects<T: Codable>(allObjects: [T], named name: defaultKeys) {
+    static func saveAllObjects<T: Codable>(allObjects: [T], named name: DefaultKeys) {
           let encoder = JSONEncoder()
           if let encoded = try? encoder.encode(allObjects){
               UserDefaults.standard.set(encoded, forKey: name.rawValue)
