@@ -27,7 +27,6 @@ struct CBConstants {
         static let cubeButtonWidth:CGFloat = 35
         static let defaultInsets: CGFloat = 8
         static let defaultInsetX4: CGFloat = 32
-        static let defaultPickerViewHeight: CGFloat = 250
         static let defaultStackViewSpacing: CGFloat = 16
         static let doubleInset: CGFloat = 16
         static let halfInset: CGFloat = 4

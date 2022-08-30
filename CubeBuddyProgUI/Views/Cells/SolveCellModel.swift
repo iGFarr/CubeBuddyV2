@@ -18,7 +18,7 @@ class SolveCellModel: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
         setup()
-        CBViewCreator.createCellSeparator(for: self)
+        CBTableViewCellCreator.createCellSeparator(for: self)
     }
     
     required init?(coder: NSCoder) {

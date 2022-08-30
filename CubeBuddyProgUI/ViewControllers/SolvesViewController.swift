@@ -19,7 +19,9 @@ class SolvesViewController: CBBaseTableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         solves = UserDefaultsHelper.getAllObjects(named: .solves)
-        tableView.reloadData()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 }
 
@@ -36,11 +38,13 @@ extension SolvesViewController {
             actions.append(UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive, handler: { action in
                 self.deleteSolves()
                 self.solves.removeAll()
-                self.tableView.reloadData()
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
             }))
             
             actions.append(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
-            return CBTableViewCellCreator.createDeleteAlertCellWith(actions: actions, for: tableView, in: self)
+            return CBTableViewCellCreator.createAlertCellWith(actions: actions, for: tableView, in: self)
             } else {
             return solves[solves.count - indexPath.row].createSolveCell(for: tableView, at: indexPath)
         }
@@ -58,6 +62,5 @@ extension SolvesViewController {
     func deleteSolves(){
         let solves = [Solve]()
         UserDefaultsHelper.saveAllObjects(allObjects: solves, named: .solves)
-        print(solves.count)
     }
 }

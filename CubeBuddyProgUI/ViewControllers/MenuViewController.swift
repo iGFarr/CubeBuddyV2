@@ -39,14 +39,13 @@ class MenuViewController: CBBaseViewController {
         NSLayoutConstraint.activate([
             picker.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             picker.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            picker.heightAnchor.constraint(equalToConstant: CBConstants.UIConstants.defaultPickerViewHeight),
             picker.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -CBConstants.UIConstants.defaultInsetX4)
         ])
     }
 }
 
 extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
-
+    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -60,10 +59,7 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
             return NSAttributedString(string: "")
         }
         let title = CBConstants.CBMenuPickerPages.allCases[row - 1].rawValue
-        let color: UIColor = .CBTheme.secondary ?? .systemRed
-        let customFont: UIFont = .CBFonts.primary
-        let attributes: [NSAttributedString.Key: Any] = [.foregroundColor: color, .font: customFont]
-        let attributedTitle = NSAttributedString(string: title, attributes: attributes)
+        let attributedTitle = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: title, size: .large, textStyle: .headline)
         return attributedTitle
     }
     
@@ -72,9 +68,24 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         let title = CBConstants.CBMenuPickerPages.allCases[row - 1].rawValue
         
         if let vc = viewControllerTitles[title] {
-            
             vc.modalPresentationStyle = .fullScreen
             navigationController?.pushViewController(vc, animated: true)
         }
     }
+    
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 40
+    }
+    //FIXME: This block is correctly attributing the row labels, but shifting to the left when scrolling
+//    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+//        let pickerLabel = CBLabel() //get picker label that come
+//        var title = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "", size: .large, textStyle: .headline)
+//        if row != emptyRowIndex {
+//            title = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: CBConstants.CBMenuPickerPages.allCases[row - 1].rawValue, size: .large)
+//        }
+//        pickerLabel.textAlignment = .center
+//        pickerLabel.attributedText = title //setting attributed text as title
+//        return pickerLabel //return value
+//    }
+//
 }

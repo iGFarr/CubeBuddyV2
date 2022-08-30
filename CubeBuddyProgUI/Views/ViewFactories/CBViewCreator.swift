@@ -8,15 +8,6 @@
 import UIKit
 
 class CBViewCreator {
-    static func createCellSeparator(for cell: UITableViewCell) {
-        let view = CBView()
-        cell.addSubview(view)
-        view.heightAnchor.constraint(equalToConstant: CBConstants.UIConstants.cellSeparatorHeight).isActive = true
-        view.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width - CBConstants.UIConstants.doubleInset).isActive = true
-        view.centerYAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
-        view.backgroundColor = .CBTheme.secondary
-    }
-    
     class TimerView: UIView {
         var solves =  [Solve]()
         var timerRunning = false
@@ -47,7 +38,7 @@ class CBViewCreator {
             func timerUpdatesUI(){
                 self.timeElapsed += 0.01
                 let formattedTimerString = CBBrain.formatTimeForTimerLabel(timeElapsed: self.timeElapsed)
-                self.runningTimerLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: formattedTimerString, size: .large)
+                self.runningTimerLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: formattedTimerString, size: .xl)
             }
             
             scrambleLengthSlider.translatesAutoresizingMaskIntoConstraints = false
@@ -104,7 +95,7 @@ class CBViewCreator {
                     let cubeGraphicVC = ScrambledCubeGraphicVC()
                     var cube = vc.cube
                     if let text = self.scrambleLabel.text, vc.cube == Cube() {
-                        cube = cube.makeMoves(cube.convertStringToMoveList(scramble: text.dropFirst("Scramble\n\n".count).split(separator: " ").map { move in
+                        cube = cube.makeMoves(cube.convertStringToMoveList(scramble: text.dropFirst("Scramble:\n".count).split(separator: " ").map { move in
                             String(move)
                         }))
                     } else {
@@ -142,7 +133,7 @@ class CBViewCreator {
             timerButtonView.addTapGestureRecognizer {
                 timerButtonViewPressed()
             }
-            self.runningTimerLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Time: 00:00", size: .large)
+            self.runningTimerLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Time: 00:00", size: .xl)
             
             view.addSubview(containerView)
             containerView.addSubview(optionsBar)
@@ -189,6 +180,10 @@ class CBViewCreator {
         let presentingVC = viewController.presentingViewController as? TimerViewController
         var cubeCopy = presentingVC?.cube ?? cube
         let containerView = CBView()
+        if cubeCopy == Cube() {
+            print("SOLVED")
+            containerView.backgroundColor = .systemRed
+        }
         
         enum CubeFace: String {
             case up = "U"
@@ -292,9 +287,6 @@ class CBViewCreator {
                 case .back:
                     cubeCopy = cubeCopy.makeBack(.counterclockwise)
                 }
-                if cubeCopy == Cube() {
-                    print("SOLVED")
-                }
                 viewController.cube = cubeCopy
                 let timerVC = viewController.rootVC
                 timerVC?.cube = cubeCopy
@@ -319,9 +311,6 @@ class CBViewCreator {
                     cubeCopy = cubeCopy.makeFront(.clockwise)
                 case .back:
                     cubeCopy = cubeCopy.makeBack(.clockwise)
-                }
-                if cubeCopy == Cube() {
-                    print("SOLVED")
                 }
                 viewController.cube = cubeCopy
                 let timerVC = viewController.rootVC
