@@ -36,10 +36,10 @@ class CBViewCreator {
         }
         
         @objc func sliderValueChanged() {
-            scrambleLengthLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: .small)
             UserDefaults.standard.setValue(scrambleLengthSlider.value, forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
             let scrambleText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), size: .large)
             scrambleLabel.attributedText = scrambleText
+            scrambleLengthLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: .small)
         }
         
         func createTimerView(for viewController: TimerViewController, usingOptionsBar: Bool = false) {
@@ -201,8 +201,8 @@ class CBViewCreator {
             stackView.axis = .vertical
             stackView.distribution = .equalSpacing
             stackView.translatesAutoresizingMaskIntoConstraints = false
-            stackView.heightAnchor.constraint(equalToConstant: 90).isActive = true
-            stackView.widthAnchor.constraint(equalToConstant: 90).isActive = true
+            stackView.heightAnchor.constraint(equalToConstant: CBConstants.UIConstants.cubeFaceDimension).isActive = true
+            stackView.widthAnchor.constraint(equalToConstant: CBConstants.UIConstants.cubeFaceDimension).isActive = true
             
             for stack in 1...3 {
                 let hStack = UIStackView()
@@ -213,7 +213,7 @@ class CBViewCreator {
                     let tileSquare = UIView()
                     tileSquare.backgroundColor = .black
                     tileSquare.translatesAutoresizingMaskIntoConstraints = false
-                    tileSquare.widthAnchor.constraint(equalToConstant: 25).isActive = true
+                    tileSquare.widthAnchor.constraint(equalToConstant: CBConstants.UIConstants.cubeTileDimension).isActive = true
                     tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
                     tileSquare.layer.borderWidth = 2
                     tileSquare.layer.cornerRadius = 4
@@ -255,7 +255,7 @@ class CBViewCreator {
                     }
                     hStack.addArrangedSubview(tileSquare)
                 }
-                hStack.heightAnchor.constraint(equalToConstant: 25).isActive = true
+                hStack.heightAnchor.constraint(equalToConstant: CBConstants.UIConstants.cubeTileDimension).isActive = true
                 stackView.addArrangedSubview(hStack)
             }
             
@@ -276,7 +276,7 @@ class CBViewCreator {
             stack.addSubview(leftTapView)
             leftTapView.leadingAnchor.constraint(equalTo: stack.leadingAnchor).isActive = true
             leftTapView.heightAnchor.constraint(equalTo: stack.heightAnchor).isActive = true
-            leftTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
+            leftTapView.widthAnchor.constraint(equalToConstant: CBConstants.UIConstants.cubeButtonWidth).isActive = true
             leftTapView.addTapGestureRecognizer {
                 switch faceToTurn {
                 case .up:
@@ -304,7 +304,7 @@ class CBViewCreator {
             stack.addSubview(rightTapView)
             rightTapView.trailingAnchor.constraint(equalTo: stack.trailingAnchor).isActive = true
             rightTapView.heightAnchor.constraint(equalTo: stack.heightAnchor).isActive = true
-            rightTapView.widthAnchor.constraint(equalToConstant: 35).isActive = true
+            rightTapView.widthAnchor.constraint(equalToConstant: CBConstants.UIConstants.cubeButtonWidth).isActive = true
             rightTapView.addTapGestureRecognizer {
                 switch faceToTurn {
                 case .up:
