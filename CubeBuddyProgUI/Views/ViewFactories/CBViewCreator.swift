@@ -204,23 +204,23 @@ class CBViewCreator {
             case right = "R"
         }
         
-        func configureStackViewForFace(face: Surface, letter: CubeFace, hasBorder: Bool = true) -> UIStackView {
+        func configureStackViewForFace(face: Surface, letter: CubeFace, hasBorder: Bool = true, cubeSize: Int = 4) -> UIStackView {
             let stackView = UIStackView()
             
             stackView.axis = .vertical
             stackView.distribution = .equalSpacing
             stackView.translatesAutoresizingMaskIntoConstraints = false
-            stackView.heightAnchor.constraint(equalToConstant: CBConstants.UIConstants.cubeFaceDimension).isActive = true
-            stackView.widthAnchor.constraint(equalToConstant: CBConstants.UIConstants.cubeFaceDimension).isActive = true
+            stackView.heightAnchor.constraint(equalToConstant: CGFloat(cubeSize * 25 + 15)).isActive = true
+            stackView.widthAnchor.constraint(equalToConstant: CGFloat(cubeSize * 25 + 15)).isActive = true
             containerView.addSubview(stackView)
             
-            for stack in 1...3 {
+            for stack in 1...cubeSize {
                 let hStack = UIStackView()
                 hStack.translatesAutoresizingMaskIntoConstraints = false
                 hStack.axis = .horizontal
                 hStack.distribution = .equalSpacing
                 
-                for square in 1...3 {
+                for square in 1...cubeSize {
                     let tileSquare = UIView()
                     tileSquare.backgroundColor = .black
                     tileSquare.translatesAutoresizingMaskIntoConstraints = false
@@ -342,7 +342,7 @@ class CBViewCreator {
         let upFaceVStack = configureStackViewForFace(face: cubeCopy.up, letter: .up)
         configureTappableViewsForStack(stack: upFaceVStack, faceToTurn: .up)
         
-        let frontFaceVStack = configureStackViewForFace(face: cubeCopy.front, letter: .front, hasBorder: true)
+        let frontFaceVStack = configureStackViewForFace(face: cubeCopy.front, letter: .front)
         configureTappableViewsForStack(stack: frontFaceVStack, faceToTurn: .front)
         
         let downFaceVStack = configureStackViewForFace(face: cubeCopy.down, letter: .down)
@@ -370,13 +370,10 @@ class CBViewCreator {
                 containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -CBConstants.UIConstants.defaultInsets),
                 
                 upFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                upFaceVStack.bottomAnchor.constraint(equalTo: containerView.centerYAnchor),
+                upFaceVStack.bottomAnchor.constraint(equalTo: frontFaceVStack.topAnchor, constant: -CBConstants.UIConstants.defaultInsets),
                 
                 frontFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                frontFaceVStack.topAnchor.constraint(equalTo: upFaceVStack.bottomAnchor, constant: CBConstants.UIConstants.defaultInsets),
-                
-                downFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                downFaceVStack.topAnchor.constraint(equalTo: frontFaceVStack.bottomAnchor, constant: CBConstants.UIConstants.defaultInsets),
+                frontFaceVStack.bottomAnchor.constraint(equalTo: downFaceVStack.topAnchor, constant: -CBConstants.UIConstants.defaultInsets),
                 
                 leftFaceVStack.trailingAnchor.constraint(equalTo: frontFaceVStack.leadingAnchor, constant: -CBConstants.UIConstants.defaultInsets),
                 leftFaceVStack.centerYAnchor.constraint(equalTo: frontFaceVStack.centerYAnchor),
@@ -385,7 +382,10 @@ class CBViewCreator {
                 rightFaceVStack.centerYAnchor.constraint(equalTo: frontFaceVStack.centerYAnchor),
                 
                 backFaceVStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UIConstants.doubleInset),
-                backFaceVStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -CBConstants.UIConstants.doubleInset)
+                backFaceVStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -CBConstants.UIConstants.doubleInset),
+                
+                downFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                downFaceVStack.bottomAnchor.constraint(equalTo: backFaceVStack.topAnchor, constant: -CBConstants.UIConstants.defaultInsetX4)
             ])
     }
     
@@ -399,8 +399,7 @@ class CBViewCreator {
         letterView.translatesAutoresizingMaskIntoConstraints = false
         stackView.addSubview(letterView)
         letterView.centerYAnchor.constraint(equalTo: stackView.centerYAnchor).isActive = true
-        
-        
+                
         switch side {
         case .right:
             letterView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -CBConstants.UIConstants.halfInset).isActive = true
