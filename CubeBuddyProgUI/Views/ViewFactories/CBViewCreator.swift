@@ -88,9 +88,9 @@ class CBViewCreator {
                 }
             }
             
-            func createOptionsBar(for vc: TimerViewController) -> UIView {
+            func createOptionsBar(for vc: TimerViewController) -> CBView {
                 let optionsBar = CBView()
-                let showButton = UIButton()
+                let showButton = CBButton()
                 let buttonText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Show me the cube!", size: .large)
                 
                 showButton.layer.cornerRadius = CBConstants.UIConstants.buttonCornerRadius
@@ -118,9 +118,7 @@ class CBViewCreator {
                     vc.modalPresentationStyle = .fullScreen
                     vc.navigationController?.pushViewController(cubeGraphicVC, animated: true)
                 }
-                
-                showButton.translatesAutoresizingMaskIntoConstraints = false
-                
+                                
                 optionsBar.isUserInteractionEnabled = true
                 optionsBar.backgroundColor = .clear
                 optionsBar.addSubview(showButton)
@@ -134,9 +132,9 @@ class CBViewCreator {
             
             guard let view = viewController.view else { return }
             
-            let containerView = UIView()
-            var optionsBar = UIView()
-            let timerButtonView = UIView()
+            let containerView = CBView()
+            var optionsBar = CBView()
+            let timerButtonView = CBView()
             
             if usingOptionsBar {
                 optionsBar = createOptionsBar(for: viewController)
@@ -145,9 +143,6 @@ class CBViewCreator {
                 timerButtonViewPressed()
             }
             self.runningTimerLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Time: 00:00", size: .large)
-            
-            containerView.translatesAutoresizingMaskIntoConstraints = false
-            timerButtonView.translatesAutoresizingMaskIntoConstraints = false
             
             view.addSubview(containerView)
             containerView.addSubview(optionsBar)
@@ -221,9 +216,8 @@ class CBViewCreator {
                 hStack.distribution = .equalSpacing
                 
                 for square in 1...Int(cubeSize) {
-                    let tileSquare = UIView()
+                    let tileSquare = CBView()
                     tileSquare.backgroundColor = .black
-                    tileSquare.translatesAutoresizingMaskIntoConstraints = false
                     tileSquare.widthAnchor.constraint(equalToConstant: CBConstants.UIConstants.cubeTileDimension).isActive = true
                     tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
                     tileSquare.layer.borderWidth = 2
