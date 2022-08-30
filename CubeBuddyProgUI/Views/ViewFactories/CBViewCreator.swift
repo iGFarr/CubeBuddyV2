@@ -395,7 +395,7 @@ class CBViewCreator {
     }
     static func createLetterForCenterTile(in stackView: UIStackView, letter: String, on side: PossibleSide) {
         let letterView = UILabel()
-        letterView.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: letter, size: .medium, color: .black)
+        letterView.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: letter, size: .small, color: .black)
         letterView.translatesAutoresizingMaskIntoConstraints = false
         stackView.addSubview(letterView)
         letterView.centerYAnchor.constraint(equalTo: stackView.centerYAnchor).isActive = true
