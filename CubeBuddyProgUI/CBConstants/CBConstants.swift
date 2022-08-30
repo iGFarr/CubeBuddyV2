@@ -30,10 +30,11 @@ struct CBConstants {
         static let defaultPickerViewHeight: CGFloat = 250
         static let defaultStackViewSpacing: CGFloat = 16
         static let doubleInset: CGFloat = 16
+        static let halfInset: CGFloat = 4
         static let stackViewTrailingInset: CGFloat = 24
-        static func makeTextAttributedWithCBStyle(text: String, size: CBBasicFontSize = .medium, color: UIColor = .CBTheme.secondary ?? .systemGreen, textStyle: UIFont.TextStyle = .subheadline) -> NSAttributedString {
+        static func makeTextAttributedWithCBStyle(text: String, size: CBBasicFontSize = .medium, color: UIColor = .CBTheme.secondary ?? .systemGreen, textStyle: UIFont.TextStyle = .subheadline, strokeWidth: Int = 0) -> NSAttributedString {
             let font: UIFont = .CBFonts.returnCustomFont(size: size, textStyle: textStyle)
-            let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: color, .font: font]
+            let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: color, .font: font, .strokeWidth: strokeWidth]
             return NSAttributedString(string: text, attributes: textAttributes)
         }
     }

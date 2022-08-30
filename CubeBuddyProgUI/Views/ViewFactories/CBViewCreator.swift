@@ -195,7 +195,16 @@ class CBViewCreator {
         var cubeCopy = presentingVC?.cube ?? cube
         let containerView = UIView()
         
-        func configureStackViewForFace(face: Surface, letter: String) -> UIStackView {
+        enum CubeFace: String {
+            case up = "U"
+            case down = "D"
+            case back = "B"
+            case front = "F"
+            case left = "L"
+            case right = "R"
+        }
+        
+        func configureStackViewForFace(face: Surface, letter: CubeFace, hasBorder: Bool = true) -> UIStackView {
             let stackView = UIStackView()
             
             stackView.axis = .vertical
@@ -203,12 +212,14 @@ class CBViewCreator {
             stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.heightAnchor.constraint(equalToConstant: CBConstants.UIConstants.cubeFaceDimension).isActive = true
             stackView.widthAnchor.constraint(equalToConstant: CBConstants.UIConstants.cubeFaceDimension).isActive = true
+            containerView.addSubview(stackView)
             
             for stack in 1...3 {
                 let hStack = UIStackView()
                 hStack.translatesAutoresizingMaskIntoConstraints = false
                 hStack.axis = .horizontal
                 hStack.distribution = .equalSpacing
+                
                 for square in 1...3 {
                     let tileSquare = UIView()
                     tileSquare.backgroundColor = .black
@@ -217,6 +228,10 @@ class CBViewCreator {
                     tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
                     tileSquare.layer.borderWidth = 2
                     tileSquare.layer.cornerRadius = 4
+                    
+                    createLetterForCenterTile(in: stackView, letter: letter.rawValue, on: .right)
+                    createLetterForCenterTile(in: stackView, letter: letter.rawValue + "'", on: .left)
+                    
                     switch stack {
                     case 1:
                         if square == 1 {
@@ -231,14 +246,12 @@ class CBViewCreator {
                     case 2:
                         if square == 1 {
                             tileSquare.backgroundColor = getColorForTile(tile: face.d)
-                            createLetterForCenterTile(for: tileSquare, letter: letter + "'")
                         }
                         if square == 2 {
                             tileSquare.backgroundColor = getColorForTile(tile: face.e)
                         }
                         if square == 3 {
                             tileSquare.backgroundColor = getColorForTile(tile: face.f)
-                            createLetterForCenterTile(for: tileSquare, letter: letter)
                         }
                     case 3:
                         if square == 1 {
@@ -258,18 +271,13 @@ class CBViewCreator {
                 hStack.heightAnchor.constraint(equalToConstant: CBConstants.UIConstants.cubeTileDimension).isActive = true
                 stackView.addArrangedSubview(hStack)
             }
-            
+            if hasBorder {
+                stackView.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
+                stackView.layer.borderWidth = 3
+            }
             return stackView
         }
         
-        enum CubeFace: String {
-            case up = "U"
-            case down = "D"
-            case back = "B"
-            case front = "F"
-            case left = "L"
-            case right = "R"
-        }
         
         func configureTappableViewsForStack(stack: UIStackView, faceToTurn: CubeFace) {
             let leftTapView = CBView()
@@ -331,36 +339,29 @@ class CBViewCreator {
         }
         
         // FACE STACKS
-        let upFaceVStack = configureStackViewForFace(face: cubeCopy.up, letter: "U")
+        let upFaceVStack = configureStackViewForFace(face: cubeCopy.up, letter: .up)
         configureTappableViewsForStack(stack: upFaceVStack, faceToTurn: .up)
         
-        let frontFaceVStack = configureStackViewForFace(face: cubeCopy.front, letter: "F")
+        let frontFaceVStack = configureStackViewForFace(face: cubeCopy.front, letter: .front, hasBorder: true)
         configureTappableViewsForStack(stack: frontFaceVStack, faceToTurn: .front)
-        frontFaceVStack.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
-        frontFaceVStack.layer.borderWidth = 3
         
-        let downFaceVStack = configureStackViewForFace(face: cubeCopy.down, letter: "D")
+        let downFaceVStack = configureStackViewForFace(face: cubeCopy.down, letter: .down)
         configureTappableViewsForStack(stack: downFaceVStack, faceToTurn: .down)
         
-        let leftFaceVStack = configureStackViewForFace(face: cubeCopy.left, letter: "L")
+        let leftFaceVStack = configureStackViewForFace(face: cubeCopy.left, letter: .left)
         configureTappableViewsForStack(stack: leftFaceVStack, faceToTurn: .left)
         
-        let rightFaceVStack = configureStackViewForFace(face: cubeCopy.right, letter: "R")
+        let rightFaceVStack = configureStackViewForFace(face: cubeCopy.right, letter: .right)
         configureTappableViewsForStack(stack: rightFaceVStack, faceToTurn: .right)
         
-        let backFaceVStack = configureStackViewForFace(face: cubeCopy.back, letter: "B")
+        let backFaceVStack = configureStackViewForFace(face: cubeCopy.back, letter: .back)
         configureTappableViewsForStack(stack: backFaceVStack, faceToTurn: .back)
         
         containerView.translatesAutoresizingMaskIntoConstraints = false
         guard let view = viewController.view else { return }
         
         view.addSubview(containerView)
-        containerView.addSubview(upFaceVStack)
-        containerView.addSubview(frontFaceVStack)
-        containerView.addSubview(downFaceVStack)
-        containerView.addSubview(leftFaceVStack)
-        containerView.addSubview(rightFaceVStack)
-        containerView.addSubview(backFaceVStack)
+        
         NSLayoutConstraint.activate(
             [
                 containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -388,12 +389,23 @@ class CBViewCreator {
             ])
     }
     
-    static func createLetterForCenterTile(for view: UIView, letter: String) {
+    enum PossibleSide {
+        case left
+        case right
+    }
+    static func createLetterForCenterTile(in stackView: UIStackView, letter: String, on side: PossibleSide) {
         let letterView = UILabel()
-        letterView.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: letter, size: .small, color: .black)
+        letterView.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: letter, size: .medium, color: .black)
         letterView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(letterView)
-        letterView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        letterView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        stackView.addSubview(letterView)
+        letterView.centerYAnchor.constraint(equalTo: stackView.centerYAnchor).isActive = true
+        
+        
+        switch side {
+        case .right:
+            letterView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -CBConstants.UIConstants.halfInset).isActive = true
+        case .left:
+            letterView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: CBConstants.UIConstants.halfInset).isActive = true
+        }
     }
 }
