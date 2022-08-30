@@ -199,19 +199,17 @@ class CBViewCreator {
             case right = "R"
         }
         
-        func configureStackViewForFace(face: Surface, letter: CubeFace, hasBorder: Bool = true, cubeSize: CGFloat = 3) -> UIStackView {
-            let stackView = UIStackView()
+        func configureStackViewForFace(face: Surface, letter: CubeFace, hasBorder: Bool = true, cubeSize: CGFloat = 3) -> CBStackView {
+            let stackView = CBStackView()
             
             stackView.axis = .vertical
             stackView.distribution = .equalSpacing
-            stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.heightAnchor.constraint(equalToConstant: cubeSize * CBConstants.UIConstants.cubeTileDimension + CBConstants.UIConstants.defaultStackViewSpacing).isActive = true
             stackView.widthAnchor.constraint(equalToConstant: cubeSize * CBConstants.UIConstants.cubeTileDimension + CBConstants.UIConstants.defaultStackViewSpacing).isActive = true
             containerView.addSubview(stackView)
             
             for stack in 1...Int(cubeSize) {
-                let hStack = UIStackView()
-                hStack.translatesAutoresizingMaskIntoConstraints = false
+                let hStack = CBStackView()
                 hStack.axis = .horizontal
                 hStack.distribution = .equalSpacing
                 

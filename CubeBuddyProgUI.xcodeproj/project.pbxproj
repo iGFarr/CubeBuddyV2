@@ -38,6 +38,8 @@
 		6AAF304D28BCAFC600870A00 /* CBVStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF304C28BCAFC600870A00 /* CBVStackView.swift */; };
 		6AAF304F28BD040F00870A00 /* CBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF304E28BD040F00870A00 /* CBView.swift */; };
 		6AAF305128BE260800870A00 /* CBButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF305028BE260800870A00 /* CBButton.swift */; };
+		6AAF305328BE274500870A00 /* CBStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF305228BE274500870A00 /* CBStackView.swift */; };
+		6AAF305528BE299E00870A00 /* CBTableViewCellCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF305428BE299E00870A00 /* CBTableViewCellCreator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +95,8 @@
 		6AAF304C28BCAFC600870A00 /* CBVStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBVStackView.swift; sourceTree = "<group>"; };
 		6AAF304E28BD040F00870A00 /* CBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBView.swift; sourceTree = "<group>"; };
 		6AAF305028BE260800870A00 /* CBButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBButton.swift; sourceTree = "<group>"; };
+		6AAF305228BE274500870A00 /* CBStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBStackView.swift; sourceTree = "<group>"; };
+		6AAF305428BE299E00870A00 /* CBTableViewCellCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBTableViewCellCreator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,6 +242,7 @@
 			isa = PBXGroup;
 			children = (
 				6AACD5032872F0AD006FB54B /* CBViewCreator.swift */,
+				6AAF305428BE299E00870A00 /* CBTableViewCellCreator.swift */,
 			);
 			path = ViewFactories;
 			sourceTree = "<group>";
@@ -301,6 +306,7 @@
 				6AAF304C28BCAFC600870A00 /* CBVStackView.swift */,
 				6AAF304E28BD040F00870A00 /* CBView.swift */,
 				6AAF305028BE260800870A00 /* CBButton.swift */,
+				6AAF305228BE274500870A00 /* CBStackView.swift */,
 			);
 			path = CBKit;
 			sourceTree = "<group>";
@@ -460,6 +466,8 @@
 				6A7CCE0C286FFDB000598C88 /* SceneDelegate.swift in Sources */,
 				6AAF303B28B8CAB800870A00 /* UserDefaultsHelper.swift in Sources */,
 				6AAF303928B8AF2600870A00 /* CBBaseTableViewController.swift in Sources */,
+				6AAF305528BE299E00870A00 /* CBTableViewCellCreator.swift in Sources */,
+				6AAF305328BE274500870A00 /* CBStackView.swift in Sources */,
 				6AAF304B28BCAEE200870A00 /* CBLabel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

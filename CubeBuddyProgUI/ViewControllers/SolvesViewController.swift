@@ -32,30 +32,16 @@ extension SolvesViewController {
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
-            let cell = UITableViewCell()
-            cell.textLabel?.textAlignment = .center
-            cell.textLabel?.text = "Clear All"
-            cell.textLabel?.textColor = .systemRed
-            cell.textLabel?.font = UIFont.CBFonts.primary
-            cell.backgroundColor = .clear
-            CBViewCreator.createCellSeparator(for: cell)
-            cell.addTapGestureRecognizer {
-                let alert = UIAlertController(title: "WARNING", message: "You are about to delete all your solves permanently.", preferredStyle: .alert)
-                
-                // add an action (button)
-                alert.addAction(UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive, handler: { action in
-                    self.deleteSolves()
-                    self.solves.removeAll()
-                    self.tableView.reloadData()
-                }))
-                
-                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
-                
-                // show the alert
-                self.present(alert, animated: true, completion: nil)
-            }
-            return cell
-        } else {
+            var actions = [UIAlertAction]()
+            actions.append(UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive, handler: { action in
+                self.deleteSolves()
+                self.solves.removeAll()
+                self.tableView.reloadData()
+            }))
+            
+            actions.append(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
+            return CBTableViewCellCreator.createDeleteAlertCellWith(actions: actions, for: tableView, in: self)
+            } else {
             return solves[solves.count - indexPath.row].createSolveCell(for: tableView, at: indexPath)
         }
     }

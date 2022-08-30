@@ -7,13 +7,12 @@
 
 import UIKit
 
-class CBVStackView: UIStackView {
+class CBVStackView: CBStackView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         alignment = .leading
         distribution = .fill
         axis = .vertical
-        translatesAutoresizingMaskIntoConstraints = false
         spacing = CBConstants.UIConstants.defaultStackViewSpacing
     }
     
