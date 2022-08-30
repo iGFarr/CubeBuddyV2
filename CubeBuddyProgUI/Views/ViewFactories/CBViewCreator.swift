@@ -370,18 +370,18 @@ class CBViewCreator {
                 containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -CBConstants.UIConstants.defaultInsets),
                 
                 upFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                upFaceVStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
+                upFaceVStack.bottomAnchor.constraint(equalTo: containerView.centerYAnchor),
                 
                 frontFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                frontFaceVStack.topAnchor.constraint(equalTo: upFaceVStack.bottomAnchor, constant: 6),
+                frontFaceVStack.topAnchor.constraint(equalTo: upFaceVStack.bottomAnchor, constant: CBConstants.UIConstants.defaultInsets),
                 
                 downFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                downFaceVStack.topAnchor.constraint(equalTo: frontFaceVStack.bottomAnchor, constant: 6),
+                downFaceVStack.topAnchor.constraint(equalTo: frontFaceVStack.bottomAnchor, constant: CBConstants.UIConstants.defaultInsets),
                 
-                leftFaceVStack.trailingAnchor.constraint(equalTo: frontFaceVStack.leadingAnchor, constant: -6),
+                leftFaceVStack.trailingAnchor.constraint(equalTo: frontFaceVStack.leadingAnchor, constant: -CBConstants.UIConstants.defaultInsets),
                 leftFaceVStack.centerYAnchor.constraint(equalTo: frontFaceVStack.centerYAnchor),
                 
-                rightFaceVStack.leadingAnchor.constraint(equalTo: frontFaceVStack.trailingAnchor, constant: 6),
+                rightFaceVStack.leadingAnchor.constraint(equalTo: frontFaceVStack.trailingAnchor, constant: CBConstants.UIConstants.defaultInsets),
                 rightFaceVStack.centerYAnchor.constraint(equalTo: frontFaceVStack.centerYAnchor),
                 
                 backFaceVStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UIConstants.doubleInset),
