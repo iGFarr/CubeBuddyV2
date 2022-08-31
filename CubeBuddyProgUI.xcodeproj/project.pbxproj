@@ -40,6 +40,8 @@
 		6AAF305128BE260800870A00 /* CBButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF305028BE260800870A00 /* CBButton.swift */; };
 		6AAF305328BE274500870A00 /* CBStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF305228BE274500870A00 /* CBStackView.swift */; };
 		6AAF305528BE299E00870A00 /* CBTableViewCellCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF305428BE299E00870A00 /* CBTableViewCellCreator.swift */; };
+		6AAF305728BF3FC200870A00 /* CBSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF305628BF3FC200870A00 /* CBSlider.swift */; };
+		6AAF305928BF3FE200870A00 /* CBSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF305828BF3FE200870A00 /* CBSegmentedControl.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +99,8 @@
 		6AAF305028BE260800870A00 /* CBButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBButton.swift; sourceTree = "<group>"; };
 		6AAF305228BE274500870A00 /* CBStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBStackView.swift; sourceTree = "<group>"; };
 		6AAF305428BE299E00870A00 /* CBTableViewCellCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBTableViewCellCreator.swift; sourceTree = "<group>"; };
+		6AAF305628BF3FC200870A00 /* CBSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBSlider.swift; sourceTree = "<group>"; };
+		6AAF305828BF3FE200870A00 /* CBSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBSegmentedControl.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -307,6 +311,8 @@
 				6AAF304E28BD040F00870A00 /* CBView.swift */,
 				6AAF305028BE260800870A00 /* CBButton.swift */,
 				6AAF305228BE274500870A00 /* CBStackView.swift */,
+				6AAF305628BF3FC200870A00 /* CBSlider.swift */,
+				6AAF305828BF3FE200870A00 /* CBSegmentedControl.swift */,
 			);
 			path = CBKit;
 			sourceTree = "<group>";
@@ -451,7 +457,9 @@
 				6A7CCE14286FFDB000598C88 /* CubeBuddyProgUI.xcdatamodeld in Sources */,
 				6AAF304128B915F900870A00 /* CoreRubiksCube.swift in Sources */,
 				6AAF303328B8AD3D00870A00 /* SolveModel.swift in Sources */,
+				6AAF305728BF3FC200870A00 /* CBSlider.swift in Sources */,
 				6AACD4FC28717EF3006FB54B /* UIFont+Extension.swift in Sources */,
+				6AAF305928BF3FE200870A00 /* CBSegmentedControl.swift in Sources */,
 				6AACD5062872F778006FB54B /* UIView+Extensions.swift in Sources */,
 				6A7CCE462870129700598C88 /* CBConstants.swift in Sources */,
 				6AAF303628B8AE7C00870A00 /* SolveCellModel.swift in Sources */,
