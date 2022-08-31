@@ -47,15 +47,18 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
     //TEMP
     func configureWipLabel(){
         let wipLabel = CBLabel()
-        wipLabel.text = "WIP"
+        wipLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "WIP", size: .xxl, color: .systemRed)
         wipLabel.textColor = .systemRed
         wipLabel.isHidden = false
         if self.selectedPuzzleSize == 3 {
-            wipLabel.isHidden = true
+            if self.cube == Cube() {
+                wipLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "SOLVED", size: .xxl)
+            } else {
+                wipLabel.isHidden = true
+            }
         }
         view.addSubview(wipLabel)
         wipLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         wipLabel.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40).isActive = true
-        print("Configured")
     }
 }

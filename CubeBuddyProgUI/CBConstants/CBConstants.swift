@@ -23,7 +23,7 @@ struct CBConstants {
         static let buttonCornerRadius: CGFloat = 10
         static let cellSeparatorHeight: CGFloat = 2
         static let cubeFaceDimension: CGFloat = 90
-        static let cubeTileDimension: CGFloat = 25
+        static let cubeTileDimension: CGFloat = 30
         static let cubeButtonWidth:CGFloat = 35
         static let defaultInsets: CGFloat = 8
         static let defaultInsetX4: CGFloat = 32

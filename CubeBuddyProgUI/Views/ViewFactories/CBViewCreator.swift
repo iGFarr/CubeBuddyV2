@@ -15,7 +15,7 @@ class CBViewCreator {
         let scrambleLabel = CBLabel()
         let runningTimerLabel = CBLabel()
         let scrambleLengthSlider = CBSlider()
-        let puzzleChoiceSegmentedControl = CBSegmentedControl(items: ["3x3", "4x4", "5x5", "6x6", "7x7"])
+        let puzzleChoiceSegmentedControl = CBSegmentedControl(items: ["3x3", "4x4", "5x5", "6x6", "7x7", "8x8", "9x9"])
         var timeElapsed = 0.00
         
         override init(frame: CGRect) {
@@ -115,7 +115,7 @@ class CBViewCreator {
                     vc.modalPresentationStyle = .fullScreen
                     vc.navigationController?.pushViewController(cubeGraphicVC, animated: true)
                 }
-                                
+                
                 optionsBar.isUserInteractionEnabled = true
                 optionsBar.backgroundColor = .clear
                 optionsBar.addSubview(showButton)
@@ -194,7 +194,6 @@ class CBViewCreator {
         let containerView = CBView()
         if cubeCopy == Cube() {
             print("SOLVED")
-            containerView.backgroundColor = .systemRed
         }
         
         enum CubeFace: String {
@@ -208,8 +207,7 @@ class CBViewCreator {
         
         func configureStackViewForFace(face: Surface, letter: CubeFace, hasBorder: Bool = true, cubeSize: CGFloat = viewController.selectedPuzzleSize) -> CBStackView {
             let stackView = CBStackView()
-            let stackViewSpacing = CBConstants.UIConstants.defaultStackViewSpacing * (3 / cubeSize)
-            let stackViewDimension = cubeSize == 3 ? 3 * CBConstants.UIConstants.cubeTileDimension + stackViewSpacing : 4 * CBConstants.UIConstants.cubeTileDimension + stackViewSpacing
+            let stackViewDimension = 3 * CBConstants.UIConstants.cubeTileDimension + CBConstants.UIConstants.defaultStackViewSpacing
             stackView.axis = .vertical
             stackView.distribution = .equalSpacing
             stackView.heightAnchor.constraint(equalToConstant: stackViewDimension).isActive = true
@@ -228,10 +226,8 @@ class CBViewCreator {
                     tileSquare.widthAnchor.constraint(equalToConstant: (CBConstants.UIConstants.cubeTileDimension) * (3 / cubeSize)).isActive = true
                     tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
                     tileSquare.layer.borderWidth = 2
-                    tileSquare.layer.cornerRadius = 4
+                    tileSquare.layer.cornerRadius = 4 * (3 / cubeSize)
                     
-                    createLetterForCenterTile(in: stackView, letter: letter.rawValue, on: .right)
-                    createLetterForCenterTile(in: stackView, letter: letter.rawValue + "'", on: .left)
                     
                     switch stack {
                     case 1:
@@ -275,6 +271,10 @@ class CBViewCreator {
                 stackView.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
                 stackView.layer.borderWidth = 3
             }
+            if cubeSize == 3 {
+                createLetterForCenterTile(in: stackView, letter: letter.rawValue, on: .right)
+                createLetterForCenterTile(in: stackView, letter: letter.rawValue + "'", on: .left)
+            }
             return stackView
         }
         
@@ -304,7 +304,7 @@ class CBViewCreator {
                 let timerVC = viewController.rootVC
                 timerVC?.cube = cubeCopy
                 viewController.updateCubeGraphic(with: cubeCopy)
-    
+                
             }
             let rightTapView = CBView()
             stack.addSubview(rightTapView)
@@ -346,7 +346,6 @@ class CBViewCreator {
         configureTappableViewsForStack(stack: rightFaceVStack, faceToTurn: .right)
         let backFaceVStack = configureStackViewForFace(face: cubeCopy.back, letter: .back)
         configureTappableViewsForStack(stack: backFaceVStack, faceToTurn: .back)
-        
         guard let view = viewController.view else { return }
         
         view.addSubview(containerView)
@@ -382,12 +381,12 @@ class CBViewCreator {
         case left
         case right
     }
-    static func createLetterForCenterTile(in stackView: UIStackView, letter: String, on side: PossibleSide) {
+    static func createLetterForCenterTile(in stackView: UIStackView, letter: String, on side: PossibleSide, color: UIColor = .black) {
         let letterView = CBLabel()
-        letterView.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: letter, size: .small, color: .black)
+        letterView.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: letter, size: .small, color: color)
         stackView.addSubview(letterView)
         letterView.centerYAnchor.constraint(equalTo: stackView.centerYAnchor).isActive = true
-                
+        
         switch side {
         case .right:
             letterView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -CBConstants.UIConstants.halfInset).isActive = true
