@@ -62,9 +62,9 @@ struct CBTableViewCellCreator {
     
     static func createSolveCell(for table: UITableView, at indexPath: IndexPath, with solve: Solve) -> UITableViewCell {
         let cell = table.dequeueReusableCell(withIdentifier: "solveCell", for: indexPath) as! SolveCellModel
-        cell.solveTimeLabel.text = solve.time
-        cell.scrambleLabel.text = solve.scramble
-        cell.puzzleLabel.text = solve.puzzle
+        cell.solveTimeLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: solve.time)
+        cell.scrambleLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: solve.scramble)
+        cell.puzzleLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: solve.puzzle)
         return cell
     }
 }

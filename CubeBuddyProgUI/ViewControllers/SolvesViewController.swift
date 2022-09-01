@@ -30,7 +30,7 @@ extension SolvesViewController {
         return UITableView.automaticDimension
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.solves.count + 1
+        self.solves.count > 0 ? solves.count + 1 : 0
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = UITableViewCell()
@@ -49,6 +49,7 @@ extension SolvesViewController {
             cell = CBTableViewCellCreator.createAlertCellWith(actions: actions, for: tableView, in: self)
             return cell
         }
+        
         guard solves.count > indexPath.row - 1 else { return cell }
         let solve = solves[solves.count - indexPath.row]
         cell = CBTableViewCellCreator.createSolveCell(for: tableView, at: indexPath, with: solve)

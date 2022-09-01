@@ -14,6 +14,7 @@ enum CBBasicFontSize: CGFloat {
     case large = 32
     case xl = 40
     case xxl = 48
+    case iPad = 56
 }
 extension UIFont {
     struct CBFonts {

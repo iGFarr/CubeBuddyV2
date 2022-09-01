@@ -29,20 +29,13 @@ class SolveCellModel: UITableViewCell {
         solveTimeLabel.numberOfLines = 1
         puzzleLabel.numberOfLines = 1
         
-        contentView.addSubview(stackView)
+        CBConstraintHelper.constrain(stackView, to: contentView, usingInsets: true)
         contentView.addSubview(puzzleLabel)
         stackView.addArrangedSubview(solveTimeLabel)
         stackView.addArrangedSubview(scrambleLabel)
-        
         NSLayoutConstraint.activate([
             puzzleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -CBConstants.UI.doubleInset),
             puzzleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: CBConstants.UI.defaultInsets),
-
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: CBConstants.UI.defaultInsets),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -CBConstants.UI.stackViewTrailingInset),
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: CBConstants.UI.defaultInsets),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -CBConstants.UI.defaultInsets),
-            
             scrambleLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])
     }

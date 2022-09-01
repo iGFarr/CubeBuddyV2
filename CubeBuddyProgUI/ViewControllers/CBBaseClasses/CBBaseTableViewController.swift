@@ -12,5 +12,6 @@ class CBBaseTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .CBTheme.primary
+        tableView.separatorStyle = .none
     }
 }

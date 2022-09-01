@@ -11,6 +11,7 @@ class CBButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = .clear
     }
     
     required init?(coder: NSCoder) {

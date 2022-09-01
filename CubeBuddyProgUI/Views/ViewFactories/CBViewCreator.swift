@@ -141,7 +141,7 @@ struct CBViewCreator {
             }
             self.runningTimerLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Time: 00:00", size: .xl)
             
-            view.addSubview(containerView)
+            CBConstraintHelper.constrain(containerView, toSafeAreaOf: view, usingInsets: false)
             containerView.addSubview(optionsBar)
             containerView.addSubview(timerButtonView)
             containerView.addSubview(scrambleLabel)
@@ -149,14 +149,8 @@ struct CBViewCreator {
             containerView.addSubview(scrambleLengthLabel)
             containerView.addSubview(puzzleChoiceSegmentedControl)
             timerButtonView.addSubview(runningTimerLabel)
-            
             NSLayoutConstraint.activate(
                 [
-                    containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-                    containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-                    containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-                    containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-                    
                     optionsBar.topAnchor.constraint(equalTo: containerView.topAnchor),
                     optionsBar.widthAnchor.constraint(equalTo: containerView.widthAnchor),
                     optionsBar.heightAnchor.constraint(lessThanOrEqualToConstant: usingOptionsBar ? 100 : 0),
@@ -350,13 +344,9 @@ struct CBViewCreator {
         
         view.addSubview(containerView)
         
+        CBConstraintHelper.constrain(containerView, toSafeAreaOf: view, usingInsets: true)
         NSLayoutConstraint.activate(
             [
-                containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-                containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-                containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: CBConstants.UI.defaultInsets),
-                containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -CBConstants.UI.defaultInsets),
-                
                 upFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
                 upFaceVStack.bottomAnchor.constraint(equalTo: frontFaceVStack.topAnchor, constant: -CBConstants.UI.defaultInsets),
                 
@@ -381,7 +371,11 @@ struct CBViewCreator {
         case left
         case right
     }
+    
     static func createLetterForCenterTile(in stackView: UIStackView, letter: String, on side: PossibleSide, color: UIColor = .black) {
+        if CBConstants.UI.notIpad == false {
+            return
+        }
         let letterView = CBLabel()
         letterView.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: letter, size: .small, color: color)
         stackView.addSubview(letterView)

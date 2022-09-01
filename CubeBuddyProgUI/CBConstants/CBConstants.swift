@@ -24,15 +24,18 @@ struct CBConstants {
         static let cellSeparatorHeight: CGFloat = 2
         static let cubeFaceDimension: CGFloat = 90
         static let cubeTileDimension: CGFloat = 30
-        static let cubeButtonWidth:CGFloat = 35
+        static let cubeButtonWidth:CGFloat = 45
         static let defaultInsets: CGFloat = 8
         static let defaultInsetX4: CGFloat = 32
         static let defaultStackViewSpacing: CGFloat = 16
         static let doubleInset: CGFloat = 16
         static let halfInset: CGFloat = 4
-        static let stackViewTrailingInset: CGFloat = 24
+        static let notIpad: Bool = UIScreen.main.bounds.width <= 600
         static func makeTextAttributedWithCBStyle(text: String, size: CBBasicFontSize = .medium, color: UIColor = .CBTheme.secondary ?? .systemGreen, textStyle: UIFont.TextStyle = .subheadline, strokeWidth: Int = 0) -> NSAttributedString {
-            let font: UIFont = .CBFonts.returnCustomFont(size: size, textStyle: textStyle)
+            var font: UIFont = .CBFonts.returnCustomFont(size: size, textStyle: textStyle)
+            if Self.notIpad == false {
+                font = .CBFonts.returnCustomFont(size: .iPad, textStyle: textStyle)
+            }
             let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: color, .font: font, .strokeWidth: strokeWidth]
             return NSAttributedString(string: text, attributes: textAttributes)
         }
