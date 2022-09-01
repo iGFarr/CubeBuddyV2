@@ -53,6 +53,12 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
         if self.selectedPuzzleSize == 3 {
             if self.cube == Cube() {
                 wipLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "SOLVED", size: .xxl)
+                self.timer?.invalidate()
+                self.rootVC?.viewModel?.timer?.invalidate()
+                self.rootVC?.viewModel?.timerRunning = false
+                self.rootVC?.viewModel?.timeElapsed = 0.00
+                let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(self.rootVC?.viewModel?.scrambleLengthSlider.value ?? 20)), size: .large)
+                self.rootVC?.viewModel?.scrambleLabel.attributedText = scrambleText
             } else {
                 wipLabel.isHidden = true
             }

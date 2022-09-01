@@ -30,12 +30,28 @@ struct CBConstants {
         static let defaultStackViewSpacing: CGFloat = 16
         static let doubleInset: CGFloat = 16
         static let halfInset: CGFloat = 4
-        static let notIpad: Bool = UIScreen.main.bounds.width <= 600
+        static let isIpad: Bool = UIScreen.main.bounds.width >= 600
         static func makeTextAttributedWithCBStyle(text: String, size: CBBasicFontSize = .medium, color: UIColor = .CBTheme.secondary ?? .systemGreen, textStyle: UIFont.TextStyle = .subheadline, strokeWidth: Int = 0) -> NSAttributedString {
-            var font: UIFont = .CBFonts.returnCustomFont(size: size, textStyle: textStyle)
-            if Self.notIpad == false {
-                font = .CBFonts.returnCustomFont(size: .iPad, textStyle: textStyle)
+            var adjustedSize = size
+            if Self.isIpad {
+                switch size {
+                case .mini:
+                    adjustedSize = .medium
+                case .small:
+                    adjustedSize = .large
+                case .medium:
+                    adjustedSize = .xl
+                case .large:
+                    adjustedSize = .xxl
+                case .xl:
+                    adjustedSize = .iPad
+                case .xxl:
+                    adjustedSize = .iPad
+                case .iPad:
+                    break
+                }
             }
+            let font: UIFont = .CBFonts.returnCustomFont(size: adjustedSize, textStyle: textStyle)
             let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: color, .font: font, .strokeWidth: strokeWidth]
             return NSAttributedString(string: text, attributes: textAttributes)
         }

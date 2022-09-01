@@ -17,6 +17,7 @@ struct CBViewCreator {
         let scrambleLengthSlider = CBSlider()
         let puzzleChoiceSegmentedControl = CBSegmentedControl(items: ["3x3", "4x4", "5x5", "6x6", "7x7", "8x8", "9x9"])
         var timeElapsed = 0.00
+        var timer: Timer?
         
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -45,6 +46,16 @@ struct CBViewCreator {
             
             puzzleChoiceSegmentedControl.selectedSegmentIndex = 0
             puzzleChoiceSegmentedControl.selectedSegmentTintColor = .CBTheme.secondary
+            let unselectedColor: UIColor = .CBTheme.secondary ?? .systemGreen
+            let selectedColor: UIColor = .CBTheme.primary ?? .systemBlue
+            puzzleChoiceSegmentedControl.setTitleTextAttributes([
+                .font: UIFont.CBFonts.returnCustomFont(size: CBConstants.UI.isIpad ? .medium : .small),
+                .foregroundColor: unselectedColor
+            ], for: .normal)
+            puzzleChoiceSegmentedControl.setTitleTextAttributes([
+                .font: UIFont.CBFonts.returnCustomFont(size: CBConstants.UI.isIpad ? .medium : .small),
+                .foregroundColor: selectedColor
+            ], for: .selected)
             scrambleLengthSlider.thumbTintColor = .CBTheme.secondary
             scrambleLengthSlider.maximumValue = 40
             scrambleLengthSlider.minimumValue = 2
@@ -61,11 +72,10 @@ struct CBViewCreator {
             let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), size: .large)
             scrambleLabel.attributedText = scrambleText
             
-            var timer: Timer?
             
             func timerButtonViewPressed(){
                 timer?.invalidate()
-                if self.timerRunning == false {
+                if self.timerRunning == false && self.timeElapsed == 0.00 {
                     timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
                         timerUpdatesUI()
                     }
@@ -164,7 +174,7 @@ struct CBViewCreator {
                     timerButtonView.widthAnchor.constraint(equalTo: containerView.widthAnchor),
                     
                     runningTimerLabel.centerXAnchor.constraint(equalTo: timerButtonView.centerXAnchor),
-                    runningTimerLabel.topAnchor.constraint(equalTo: scrambleLabel.bottomAnchor, constant: 8),
+                    runningTimerLabel.topAnchor.constraint(equalTo: scrambleLabel.bottomAnchor, constant: CBConstants.UI.defaultInsets),
                     
                     scrambleLengthLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
                     scrambleLengthLabel.bottomAnchor.constraint(equalTo: scrambleLengthSlider.topAnchor, constant: -CBConstants.UI.defaultInsets),
@@ -176,7 +186,7 @@ struct CBViewCreator {
                     
                     puzzleChoiceSegmentedControl.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
                     puzzleChoiceSegmentedControl.widthAnchor.constraint(equalTo: containerView.widthAnchor, constant: -CBConstants.UI.doubleInset),
-                    puzzleChoiceSegmentedControl.heightAnchor.constraint(equalToConstant: 30),
+                    puzzleChoiceSegmentedControl.heightAnchor.constraint(equalToConstant: CBConstants.UI.isIpad ? 60 : 30),
                     puzzleChoiceSegmentedControl.bottomAnchor.constraint(equalTo: scrambleLengthLabel.topAnchor, constant: -CBConstants.UI.defaultInsets)
                 ])
         }
@@ -189,89 +199,6 @@ struct CBViewCreator {
         if cubeCopy == Cube() {
             print("SOLVED")
         }
-        
-        enum CubeFace: String {
-            case up = "U"
-            case down = "D"
-            case back = "B"
-            case front = "F"
-            case left = "L"
-            case right = "R"
-        }
-        
-        func configureStackViewForFace(face: Surface, letter: CubeFace, hasBorder: Bool = true, cubeSize: CGFloat = viewController.selectedPuzzleSize) -> CBStackView {
-            let stackView = CBStackView()
-            let stackViewDimension = 3 * CBConstants.UI.cubeTileDimension + CBConstants.UI.defaultStackViewSpacing
-            stackView.axis = .vertical
-            stackView.distribution = .equalSpacing
-            stackView.heightAnchor.constraint(equalToConstant: stackViewDimension).isActive = true
-            stackView.widthAnchor.constraint(equalToConstant: stackViewDimension).isActive = true
-            containerView.addSubview(stackView)
-            
-            for stack in 1...Int(cubeSize) {
-                let hStack = CBStackView()
-                stackView.addArrangedSubview(hStack)
-                hStack.axis = .horizontal
-                hStack.distribution = .equalSpacing
-                
-                for square in 1...Int(cubeSize) {
-                    let tileSquare = CBView()
-                    tileSquare.backgroundColor = .black
-                    tileSquare.widthAnchor.constraint(equalToConstant: (CBConstants.UI.cubeTileDimension) * (3 / cubeSize)).isActive = true
-                    tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
-                    tileSquare.layer.borderWidth = 2
-                    tileSquare.layer.cornerRadius = 4 * (3 / cubeSize)
-                    
-                    
-                    switch stack {
-                    case 1:
-                        if square == 1 {
-                            tileSquare.backgroundColor = getColorForTile(tile: face.a)
-                        }
-                        if square == 2 {
-                            tileSquare.backgroundColor = getColorForTile(tile: face.b)
-                        }
-                        if square == 3 {
-                            tileSquare.backgroundColor = getColorForTile(tile: face.c)
-                        }
-                    case 2:
-                        if square == 1 {
-                            tileSquare.backgroundColor = getColorForTile(tile: face.d)
-                        }
-                        if square == 2 {
-                            tileSquare.backgroundColor = getColorForTile(tile: face.e)
-                        }
-                        if square == 3 {
-                            tileSquare.backgroundColor = getColorForTile(tile: face.f)
-                        }
-                    case 3:
-                        if square == 1 {
-                            tileSquare.backgroundColor = getColorForTile(tile: face.g)
-                        }
-                        if square == 2 {
-                            tileSquare.backgroundColor = getColorForTile(tile: face.h)
-                        }
-                        if square == 3 {
-                            tileSquare.backgroundColor = getColorForTile(tile: face.i)
-                        }
-                    default:
-                        break
-                    }
-                    hStack.addArrangedSubview(tileSquare)
-                }
-                hStack.heightAnchor.constraint(equalToConstant: (CBConstants.UI.cubeTileDimension) * (3 / cubeSize)).isActive = true
-            }
-            if hasBorder {
-                stackView.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
-                stackView.layer.borderWidth = 3
-            }
-            if cubeSize == 3 {
-                createLetterForCenterTile(in: stackView, letter: letter.rawValue, on: .right)
-                createLetterForCenterTile(in: stackView, letter: letter.rawValue + "'", on: .left)
-            }
-            return stackView
-        }
-        
         
         func configureTappableViewsForStack(stack: UIStackView, faceToTurn: CubeFace) {
             let leftTapView = CBView()
@@ -298,7 +225,6 @@ struct CBViewCreator {
                 let timerVC = viewController.rootVC
                 timerVC?.cube = cubeCopy
                 viewController.updateCubeGraphic(with: cubeCopy)
-                
             }
             let rightTapView = CBView()
             stack.addSubview(rightTapView)
@@ -328,17 +254,17 @@ struct CBViewCreator {
         }
         
         // FACE STACKS
-        let upFaceVStack = configureStackViewForFace(face: cubeCopy.up, letter: .up)
+        let upFaceVStack = configureStackViewForFace(face: cubeCopy.up, letter: .up, cubeSize: viewController.selectedPuzzleSize, in: containerView)
         configureTappableViewsForStack(stack: upFaceVStack, faceToTurn: .up)
-        let frontFaceVStack = configureStackViewForFace(face: cubeCopy.front, letter: .front)
+        let frontFaceVStack = configureStackViewForFace(face: cubeCopy.front, letter: .front, cubeSize: viewController.selectedPuzzleSize, in: containerView)
         configureTappableViewsForStack(stack: frontFaceVStack, faceToTurn: .front)
-        let downFaceVStack = configureStackViewForFace(face: cubeCopy.down, letter: .down)
+        let downFaceVStack = configureStackViewForFace(face: cubeCopy.down, letter: .down, cubeSize: viewController.selectedPuzzleSize, in: containerView)
         configureTappableViewsForStack(stack: downFaceVStack, faceToTurn: .down)
-        let leftFaceVStack = configureStackViewForFace(face: cubeCopy.left, letter: .left)
+        let leftFaceVStack = configureStackViewForFace(face: cubeCopy.left, letter: .left, cubeSize: viewController.selectedPuzzleSize, in: containerView)
         configureTappableViewsForStack(stack: leftFaceVStack, faceToTurn: .left)
-        let rightFaceVStack = configureStackViewForFace(face: cubeCopy.right, letter: .right)
+        let rightFaceVStack = configureStackViewForFace(face: cubeCopy.right, letter: .right, cubeSize: viewController.selectedPuzzleSize, in: containerView)
         configureTappableViewsForStack(stack: rightFaceVStack, faceToTurn: .right)
-        let backFaceVStack = configureStackViewForFace(face: cubeCopy.back, letter: .back)
+        let backFaceVStack = configureStackViewForFace(face: cubeCopy.back, letter: .back, cubeSize: viewController.selectedPuzzleSize, in: containerView)
         configureTappableViewsForStack(stack: backFaceVStack, faceToTurn: .back)
         guard let view = viewController.view else { return }
         
@@ -373,9 +299,6 @@ struct CBViewCreator {
     }
     
     static func createLetterForCenterTile(in stackView: UIStackView, letter: String, on side: PossibleSide, color: UIColor = .black) {
-        if CBConstants.UI.notIpad == false {
-            return
-        }
         let letterView = CBLabel()
         letterView.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: letter, size: .small, color: color)
         stackView.addSubview(letterView)
@@ -383,9 +306,98 @@ struct CBViewCreator {
         
         switch side {
         case .right:
-            letterView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -CBConstants.UI.halfInset).isActive = true
+            letterView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -CBConstants.UI.defaultInsets).isActive = true
         case .left:
-            letterView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: CBConstants.UI.halfInset).isActive = true
+            letterView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: CBConstants.UI.defaultInsets).isActive = true
         }
+    }
+    
+    enum CubeFace: String {
+        case up = "U"
+        case down = "D"
+        case back = "B"
+        case front = "F"
+        case left = "L"
+        case right = "R"
+    }
+    
+    static func configureStackViewForFace(face: Surface, letter: CubeFace, hasBorder: Bool = true, cubeSize: CGFloat = 3, in container: CBView) -> CBStackView {
+        let stackView = CBStackView()
+        var stackViewDimension = 3 * CBConstants.UI.cubeTileDimension + CBConstants.UI.defaultStackViewSpacing
+        if CBConstants.UI.isIpad {
+            stackViewDimension *= 2
+        }
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        stackView.heightAnchor.constraint(equalToConstant: stackViewDimension).isActive = true
+        stackView.widthAnchor.constraint(equalToConstant: stackViewDimension).isActive = true
+        container.addSubview(stackView)
+        
+        var tileDimension = CBConstants.UI.cubeTileDimension
+        if CBConstants.UI.isIpad {
+            tileDimension *= 2
+        }
+        for stack in 1...Int(cubeSize) {
+            let hStack = CBStackView()
+            stackView.addArrangedSubview(hStack)
+            hStack.axis = .horizontal
+            hStack.distribution = .equalSpacing
+            
+            for square in 1...Int(cubeSize) {
+                let tileSquare = CBView()
+                tileSquare.backgroundColor = .black
+                tileSquare.widthAnchor.constraint(equalToConstant: (tileDimension) * (3 / cubeSize)).isActive = true
+                tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
+                tileSquare.layer.borderWidth = 2
+                tileSquare.layer.cornerRadius = 4 * (3 / cubeSize)
+                
+                
+                switch stack {
+                case 1:
+                    if square == 1 {
+                        tileSquare.backgroundColor = getColorForTile(tile: face.a)
+                    }
+                    if square == 2 {
+                        tileSquare.backgroundColor = getColorForTile(tile: face.b)
+                    }
+                    if square == 3 {
+                        tileSquare.backgroundColor = getColorForTile(tile: face.c)
+                    }
+                case 2:
+                    if square == 1 {
+                        tileSquare.backgroundColor = getColorForTile(tile: face.d)
+                    }
+                    if square == 2 {
+                        tileSquare.backgroundColor = getColorForTile(tile: face.e)
+                    }
+                    if square == 3 {
+                        tileSquare.backgroundColor = getColorForTile(tile: face.f)
+                    }
+                case 3:
+                    if square == 1 {
+                        tileSquare.backgroundColor = getColorForTile(tile: face.g)
+                    }
+                    if square == 2 {
+                        tileSquare.backgroundColor = getColorForTile(tile: face.h)
+                    }
+                    if square == 3 {
+                        tileSquare.backgroundColor = getColorForTile(tile: face.i)
+                    }
+                default:
+                    break
+                }
+                hStack.addArrangedSubview(tileSquare)
+            }
+            hStack.heightAnchor.constraint(equalToConstant: (tileDimension) * (3 / cubeSize)).isActive = true
+        }
+        if hasBorder {
+            stackView.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
+            stackView.layer.borderWidth = 3
+        }
+        if cubeSize == 3 {
+            createLetterForCenterTile(in: stackView, letter: letter.rawValue, on: .right)
+            createLetterForCenterTile(in: stackView, letter: letter.rawValue + "'", on: .left)
+        }
+        return stackView
     }
 }
