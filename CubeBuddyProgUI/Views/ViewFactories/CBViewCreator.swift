@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CBViewCreator {
+struct CBViewCreator {
     class TimerView: UIView {
         var solves =  [Solve]()
         var timerRunning = false
@@ -30,9 +30,9 @@ class CBViewCreator {
         @objc
         func sliderValueChanged() {
             UserDefaults.standard.setValue(scrambleLengthSlider.value, forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
-            let scrambleText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), size: .large)
+            let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), size: .large)
             scrambleLabel.attributedText = scrambleText
-            scrambleLengthLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: .small)
+            scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: .small)
         }
         
         func createTimerView(for viewController: TimerViewController, usingOptionsBar: Bool = false) {
@@ -40,7 +40,7 @@ class CBViewCreator {
             func timerUpdatesUI(){
                 self.timeElapsed += 0.01
                 let formattedTimerString = CBBrain.formatTimeForTimerLabel(timeElapsed: self.timeElapsed)
-                self.runningTimerLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: formattedTimerString, size: .xl)
+                self.runningTimerLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: formattedTimerString, size: .xl)
             }
             
             puzzleChoiceSegmentedControl.selectedSegmentIndex = 0
@@ -56,9 +56,9 @@ class CBViewCreator {
             scrambleLengthSlider.setValue(scrambleLength, animated: false)
             scrambleLengthSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
             
-            scrambleLengthLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: .small)
+            scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: .small)
             
-            let scrambleText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), size: .large)
+            let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), size: .large)
             scrambleLabel.attributedText = scrambleText
             
             var timer: Timer?
@@ -76,7 +76,7 @@ class CBViewCreator {
                     self.solves.append(newSolve)
                     UserDefaultsHelper.saveAllObjects(allObjects: solves, named: .solves)
                     print(solves.count)
-                    let scrambleText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), size: .large)
+                    let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), size: .large)
                     scrambleLabel.attributedText = scrambleText
                     self.timerRunning = false
                     self.timeElapsed = 0.00
@@ -87,9 +87,9 @@ class CBViewCreator {
             func createOptionsBar(for vc: TimerViewController) -> CBView {
                 let optionsBar = CBView()
                 let showButton = CBButton()
-                let buttonText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Show me the cube!", size: .large)
+                let buttonText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Show me the cube!", size: .large)
                 
-                showButton.layer.cornerRadius = CBConstants.UIConstants.buttonCornerRadius
+                showButton.layer.cornerRadius = CBConstants.UI.buttonCornerRadius
                 showButton.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
                 showButton.layer.borderWidth = 2
                 showButton.setAttributedTitle(buttonText, for: .normal)
@@ -121,8 +121,8 @@ class CBViewCreator {
                 optionsBar.addSubview(showButton)
                 NSLayoutConstraint.activate([
                     showButton.centerXAnchor.constraint(equalTo: optionsBar.centerXAnchor),
-                    showButton.centerYAnchor.constraint(equalTo: optionsBar.centerYAnchor, constant: CBConstants.UIConstants.defaultInsets),
-                    showButton.widthAnchor.constraint(lessThanOrEqualToConstant: UIScreen.main.bounds.width - CBConstants.UIConstants.defaultInsets)
+                    showButton.centerYAnchor.constraint(equalTo: optionsBar.centerYAnchor, constant: CBConstants.UI.defaultInsets),
+                    showButton.widthAnchor.constraint(lessThanOrEqualToConstant: UIScreen.main.bounds.width - CBConstants.UI.defaultInsets)
                 ])
                 return optionsBar
             }
@@ -139,7 +139,7 @@ class CBViewCreator {
             timerButtonView.addTapGestureRecognizer {
                 timerButtonViewPressed()
             }
-            self.runningTimerLabel.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: "Time: 00:00", size: .xl)
+            self.runningTimerLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Time: 00:00", size: .xl)
             
             view.addSubview(containerView)
             containerView.addSubview(optionsBar)
@@ -161,11 +161,11 @@ class CBViewCreator {
                     optionsBar.widthAnchor.constraint(equalTo: containerView.widthAnchor),
                     optionsBar.heightAnchor.constraint(lessThanOrEqualToConstant: usingOptionsBar ? 100 : 0),
                     
-                    scrambleLabel.topAnchor.constraint(equalTo: optionsBar.bottomAnchor, constant: CBConstants.UIConstants.doubleInset),
-                    scrambleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UIConstants.doubleInset),
-                    scrambleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UIConstants.doubleInset),
+                    scrambleLabel.topAnchor.constraint(equalTo: optionsBar.bottomAnchor, constant: CBConstants.UI.doubleInset),
+                    scrambleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
+                    scrambleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UI.doubleInset),
                     
-                    timerButtonView.topAnchor.constraint(equalTo: optionsBar.bottomAnchor, constant: CBConstants.UIConstants.defaultInsetX4),
+                    timerButtonView.topAnchor.constraint(equalTo: optionsBar.bottomAnchor, constant: CBConstants.UI.defaultInsetX4),
                     timerButtonView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
                     timerButtonView.widthAnchor.constraint(equalTo: containerView.widthAnchor),
                     
@@ -173,17 +173,17 @@ class CBViewCreator {
                     runningTimerLabel.topAnchor.constraint(equalTo: scrambleLabel.bottomAnchor, constant: 8),
                     
                     scrambleLengthLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                    scrambleLengthLabel.bottomAnchor.constraint(equalTo: scrambleLengthSlider.topAnchor, constant: -CBConstants.UIConstants.defaultInsets),
+                    scrambleLengthLabel.bottomAnchor.constraint(equalTo: scrambleLengthSlider.topAnchor, constant: -CBConstants.UI.defaultInsets),
                     
-                    scrambleLengthSlider.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UIConstants.doubleInset),
-                    scrambleLengthSlider.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UIConstants.doubleInset),
-                    scrambleLengthSlider.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -CBConstants.UIConstants.doubleInset),
+                    scrambleLengthSlider.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
+                    scrambleLengthSlider.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UI.doubleInset),
+                    scrambleLengthSlider.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -CBConstants.UI.doubleInset),
                     scrambleLengthSlider.heightAnchor.constraint(equalToConstant: 30),
                     
                     puzzleChoiceSegmentedControl.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                    puzzleChoiceSegmentedControl.widthAnchor.constraint(equalTo: containerView.widthAnchor, constant: -CBConstants.UIConstants.doubleInset),
+                    puzzleChoiceSegmentedControl.widthAnchor.constraint(equalTo: containerView.widthAnchor, constant: -CBConstants.UI.doubleInset),
                     puzzleChoiceSegmentedControl.heightAnchor.constraint(equalToConstant: 30),
-                    puzzleChoiceSegmentedControl.bottomAnchor.constraint(equalTo: scrambleLengthLabel.topAnchor, constant: -CBConstants.UIConstants.defaultInsets)
+                    puzzleChoiceSegmentedControl.bottomAnchor.constraint(equalTo: scrambleLengthLabel.topAnchor, constant: -CBConstants.UI.defaultInsets)
                 ])
         }
     }
@@ -207,7 +207,7 @@ class CBViewCreator {
         
         func configureStackViewForFace(face: Surface, letter: CubeFace, hasBorder: Bool = true, cubeSize: CGFloat = viewController.selectedPuzzleSize) -> CBStackView {
             let stackView = CBStackView()
-            let stackViewDimension = 3 * CBConstants.UIConstants.cubeTileDimension + CBConstants.UIConstants.defaultStackViewSpacing
+            let stackViewDimension = 3 * CBConstants.UI.cubeTileDimension + CBConstants.UI.defaultStackViewSpacing
             stackView.axis = .vertical
             stackView.distribution = .equalSpacing
             stackView.heightAnchor.constraint(equalToConstant: stackViewDimension).isActive = true
@@ -223,7 +223,7 @@ class CBViewCreator {
                 for square in 1...Int(cubeSize) {
                     let tileSquare = CBView()
                     tileSquare.backgroundColor = .black
-                    tileSquare.widthAnchor.constraint(equalToConstant: (CBConstants.UIConstants.cubeTileDimension) * (3 / cubeSize)).isActive = true
+                    tileSquare.widthAnchor.constraint(equalToConstant: (CBConstants.UI.cubeTileDimension) * (3 / cubeSize)).isActive = true
                     tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
                     tileSquare.layer.borderWidth = 2
                     tileSquare.layer.cornerRadius = 4 * (3 / cubeSize)
@@ -265,7 +265,7 @@ class CBViewCreator {
                     }
                     hStack.addArrangedSubview(tileSquare)
                 }
-                hStack.heightAnchor.constraint(equalToConstant: (CBConstants.UIConstants.cubeTileDimension) * (3 / cubeSize)).isActive = true
+                hStack.heightAnchor.constraint(equalToConstant: (CBConstants.UI.cubeTileDimension) * (3 / cubeSize)).isActive = true
             }
             if hasBorder {
                 stackView.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
@@ -284,7 +284,7 @@ class CBViewCreator {
             stack.addSubview(leftTapView)
             leftTapView.leadingAnchor.constraint(equalTo: stack.leadingAnchor).isActive = true
             leftTapView.heightAnchor.constraint(equalTo: stack.heightAnchor).isActive = true
-            leftTapView.widthAnchor.constraint(equalToConstant: CBConstants.UIConstants.cubeButtonWidth).isActive = true
+            leftTapView.widthAnchor.constraint(equalToConstant: CBConstants.UI.cubeButtonWidth).isActive = true
             leftTapView.addTapGestureRecognizer {
                 switch faceToTurn {
                 case .up:
@@ -310,7 +310,7 @@ class CBViewCreator {
             stack.addSubview(rightTapView)
             rightTapView.trailingAnchor.constraint(equalTo: stack.trailingAnchor).isActive = true
             rightTapView.heightAnchor.constraint(equalTo: stack.heightAnchor).isActive = true
-            rightTapView.widthAnchor.constraint(equalToConstant: CBConstants.UIConstants.cubeButtonWidth).isActive = true
+            rightTapView.widthAnchor.constraint(equalToConstant: CBConstants.UI.cubeButtonWidth).isActive = true
             rightTapView.addTapGestureRecognizer {
                 switch faceToTurn {
                 case .up:
@@ -354,26 +354,26 @@ class CBViewCreator {
             [
                 containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
                 containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-                containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: CBConstants.UIConstants.defaultInsets),
-                containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -CBConstants.UIConstants.defaultInsets),
+                containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: CBConstants.UI.defaultInsets),
+                containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -CBConstants.UI.defaultInsets),
                 
                 upFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                upFaceVStack.bottomAnchor.constraint(equalTo: frontFaceVStack.topAnchor, constant: -CBConstants.UIConstants.defaultInsets),
+                upFaceVStack.bottomAnchor.constraint(equalTo: frontFaceVStack.topAnchor, constant: -CBConstants.UI.defaultInsets),
                 
                 frontFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                frontFaceVStack.bottomAnchor.constraint(equalTo: downFaceVStack.topAnchor, constant: -CBConstants.UIConstants.defaultInsets),
+                frontFaceVStack.bottomAnchor.constraint(equalTo: downFaceVStack.topAnchor, constant: -CBConstants.UI.defaultInsets),
                 
-                leftFaceVStack.trailingAnchor.constraint(equalTo: frontFaceVStack.leadingAnchor, constant: -CBConstants.UIConstants.defaultInsets),
+                leftFaceVStack.trailingAnchor.constraint(equalTo: frontFaceVStack.leadingAnchor, constant: -CBConstants.UI.defaultInsets),
                 leftFaceVStack.centerYAnchor.constraint(equalTo: frontFaceVStack.centerYAnchor),
                 
-                rightFaceVStack.leadingAnchor.constraint(equalTo: frontFaceVStack.trailingAnchor, constant: CBConstants.UIConstants.defaultInsets),
+                rightFaceVStack.leadingAnchor.constraint(equalTo: frontFaceVStack.trailingAnchor, constant: CBConstants.UI.defaultInsets),
                 rightFaceVStack.centerYAnchor.constraint(equalTo: frontFaceVStack.centerYAnchor),
                 
-                backFaceVStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UIConstants.doubleInset),
-                backFaceVStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -CBConstants.UIConstants.doubleInset),
+                backFaceVStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
+                backFaceVStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -CBConstants.UI.doubleInset),
                 
                 downFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                downFaceVStack.bottomAnchor.constraint(equalTo: backFaceVStack.topAnchor, constant: -CBConstants.UIConstants.defaultInsetX4)
+                downFaceVStack.bottomAnchor.constraint(equalTo: backFaceVStack.topAnchor, constant: -CBConstants.UI.defaultInsetX4)
             ])
     }
     
@@ -383,15 +383,15 @@ class CBViewCreator {
     }
     static func createLetterForCenterTile(in stackView: UIStackView, letter: String, on side: PossibleSide, color: UIColor = .black) {
         let letterView = CBLabel()
-        letterView.attributedText = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: letter, size: .small, color: color)
+        letterView.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: letter, size: .small, color: color)
         stackView.addSubview(letterView)
         letterView.centerYAnchor.constraint(equalTo: stackView.centerYAnchor).isActive = true
         
         switch side {
         case .right:
-            letterView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -CBConstants.UIConstants.halfInset).isActive = true
+            letterView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -CBConstants.UI.halfInset).isActive = true
         case .left:
-            letterView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: CBConstants.UIConstants.halfInset).isActive = true
+            letterView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: CBConstants.UI.halfInset).isActive = true
         }
     }
 }

@@ -33,6 +33,8 @@ extension SolvesViewController {
         self.solves.count + 1
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell = UITableViewCell()
+        
         if indexPath.row == 0 {
             var actions = [UIAlertAction]()
             actions.append(UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive, handler: { action in
@@ -42,17 +44,20 @@ extension SolvesViewController {
                     self.tableView.reloadData()
                 }
             }))
-            
             actions.append(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
-            return CBTableViewCellCreator.createAlertCellWith(actions: actions, for: tableView, in: self)
-            } else {
-            return solves[solves.count - indexPath.row].createSolveCell(for: tableView, at: indexPath)
+            
+            cell = CBTableViewCellCreator.createAlertCellWith(actions: actions, for: tableView, in: self)
+            return cell
         }
+        guard solves.count > indexPath.row - 1 else { return cell }
+        let solve = solves[solves.count - indexPath.row]
+        cell = CBTableViewCellCreator.createSolveCell(for: tableView, at: indexPath, with: solve)
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if let indexPathForSelectedRow = tableView.indexPathForSelectedRow,
-            indexPathForSelectedRow == indexPath {
+           indexPathForSelectedRow == indexPath {
             tableView.deselectRow(at: indexPath, animated: false)
             return nil
         }

@@ -35,13 +35,13 @@ class SolveCellModel: UITableViewCell {
         stackView.addArrangedSubview(scrambleLabel)
         
         NSLayoutConstraint.activate([
-            puzzleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -CBConstants.UIConstants.doubleInset),
-            puzzleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: CBConstants.UIConstants.defaultInsets),
+            puzzleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -CBConstants.UI.doubleInset),
+            puzzleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: CBConstants.UI.defaultInsets),
 
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: CBConstants.UIConstants.defaultInsets),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -CBConstants.UIConstants.stackViewTrailingInset),
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: CBConstants.UIConstants.defaultInsets),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -CBConstants.UIConstants.defaultInsets),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: CBConstants.UI.defaultInsets),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -CBConstants.UI.stackViewTrailingInset),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: CBConstants.UI.defaultInsets),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -CBConstants.UI.defaultInsets),
             
             scrambleLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])

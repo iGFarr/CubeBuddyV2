@@ -19,7 +19,7 @@ struct CBConstants {
         static let channelPage = "https://www.youtube.com/channel/UCAHXaslH4yfGCCV_tleWioQ"
     }
     
-    struct UIConstants {
+    struct UI {
         static let buttonCornerRadius: CGFloat = 10
         static let cellSeparatorHeight: CGFloat = 2
         static let cubeFaceDimension: CGFloat = 90

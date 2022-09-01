@@ -13,7 +13,7 @@ class CBVStackView: CBStackView {
         alignment = .leading
         distribution = .fill
         axis = .vertical
-        spacing = CBConstants.UIConstants.defaultStackViewSpacing
+        spacing = CBConstants.UI.defaultStackViewSpacing
     }
     
     required init(coder: NSCoder) {

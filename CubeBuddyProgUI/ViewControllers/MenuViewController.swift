@@ -39,7 +39,7 @@ class MenuViewController: CBBaseViewController {
         NSLayoutConstraint.activate([
             picker.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             picker.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            picker.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -CBConstants.UIConstants.defaultInsetX4)
+            picker.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -CBConstants.UI.defaultInsetX4)
         ])
     }
 }
@@ -59,7 +59,7 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
             return NSAttributedString(string: "")
         }
         let title = CBConstants.CBMenuPickerPages.allCases[row - 1].rawValue
-        let attributedTitle = CBConstants.UIConstants.makeTextAttributedWithCBStyle(text: title, size: .large, textStyle: .headline)
+        let attributedTitle = CBConstants.UI.makeTextAttributedWithCBStyle(text: title, size: .large, textStyle: .headline)
         return attributedTitle
     }
     
