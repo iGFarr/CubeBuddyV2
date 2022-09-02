@@ -36,7 +36,7 @@ final class CBLabel: UILabel {
             leading(view.leadingAnchor, constant: inset)
         case .topRight:
             top(view.topAnchor, constant: inset)
-            trailing(view.leadingAnchor, constant: -inset)
+            trailing(view.trailingAnchor, constant: -inset)
         case .bottomLeft:
             bottom(view.bottomAnchor, constant: -inset)
             leading(view.leadingAnchor, constant: inset)
