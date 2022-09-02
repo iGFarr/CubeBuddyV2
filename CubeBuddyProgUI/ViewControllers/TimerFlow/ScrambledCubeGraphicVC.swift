@@ -64,7 +64,7 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
             }
         }
         view.addSubview(wipLabel)
-        wipLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        wipLabel.xAlignedWith(view)
         wipLabel.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40).isActive = true
     }
 }

@@ -52,7 +52,6 @@ class CubeNoobYoutubePlayerVC: CBBaseViewController {
         }
         
         let topBarHeight = navBarHeight + statusHeight
-        webView.translatesAutoresizingMaskIntoConstraints = false        
         CBConstraintHelper.constrainWithCustomInsets(subView: webView, to: view, topInset: topBarHeight)
     }
 }

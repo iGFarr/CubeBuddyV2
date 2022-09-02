@@ -109,13 +109,17 @@ struct CBViewCreator {
             self.runningTimerLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Time: 00:00", size: .xl)
             
             CBConstraintHelper.constrain(containerView, toSafeAreaOf: view, usingInsets: false)
-            containerView.addSubview(optionsBar)
-            containerView.addSubview(timerButtonView)
-            containerView.addSubview(scrambleLabel)
-            containerView.addSubview(scrambleLengthSlider)
-            containerView.addSubview(scrambleLengthLabel)
-            containerView.addSubview(puzzleChoiceSegmentedControl)
+            containerView.addSubviews([
+                optionsBar,
+                timerButtonView,
+                scrambleLabel,
+                scrambleLengthSlider,
+                scrambleLengthLabel,
+                puzzleChoiceSegmentedControl
+            ])
+
             timerButtonView.addSubview(runningTimerLabel)
+            
             NSLayoutConstraint.activate(
                 [
                     optionsBar.topAnchor.constraint(equalTo: containerView.topAnchor),
@@ -184,6 +188,7 @@ struct CBViewCreator {
         optionsBar.isUserInteractionEnabled = true
         optionsBar.backgroundColor = .clear
         optionsBar.addSubview(showButton)
+        
         NSLayoutConstraint.activate([
             showButton.centerXAnchor.constraint(equalTo: optionsBar.centerXAnchor),
             showButton.centerYAnchor.constraint(equalTo: optionsBar.centerYAnchor, constant: CBConstants.UI.defaultInsets),
@@ -196,16 +201,16 @@ struct CBViewCreator {
         let presentingVC = viewController.presentingViewController as? TimerViewController
         var cubeCopy = presentingVC?.cube ?? cube
         let containerView = CBView()
-        if cubeCopy == Cube() {
-            print("SOLVED")
-        }
         
         func configureTappableViewsForStack(stack: UIStackView, faceToTurn: CubeFace) {
             let leftTapView = CBView()
-            stack.addSubview(leftTapView)
-            leftTapView.leadingAnchor.constraint(equalTo: stack.leadingAnchor).isActive = true
-            leftTapView.heightAnchor.constraint(equalTo: stack.heightAnchor).isActive = true
-            leftTapView.widthAnchor.constraint(equalToConstant: CBConstants.UI.cubeButtonWidth).isActive = true
+            let rightTapView = CBView()
+            stack.addSubviews([
+                leftTapView, rightTapView
+            ])
+            leftTapView.leading(stack.leadingAnchor)
+            leftTapView.heightEqualsHeightOf(stack)
+            leftTapView.widthConstant(CBConstants.UI.cubeButtonWidth)
             leftTapView.addTapGestureRecognizer {
                 switch faceToTurn {
                 case .up:
@@ -226,11 +231,10 @@ struct CBViewCreator {
                 timerVC?.cube = cubeCopy
                 viewController.updateCubeGraphic(with: cubeCopy)
             }
-            let rightTapView = CBView()
-            stack.addSubview(rightTapView)
-            rightTapView.trailingAnchor.constraint(equalTo: stack.trailingAnchor).isActive = true
-            rightTapView.heightAnchor.constraint(equalTo: stack.heightAnchor).isActive = true
-            rightTapView.widthAnchor.constraint(equalToConstant: CBConstants.UI.cubeButtonWidth).isActive = true
+            
+            rightTapView.trailing(stack.trailingAnchor)
+            rightTapView.heightEqualsHeightOf(stack)
+            rightTapView.widthConstant(CBConstants.UI.cubeButtonWidth)
             rightTapView.addTapGestureRecognizer {
                 switch faceToTurn {
                 case .up:
@@ -266,31 +270,28 @@ struct CBViewCreator {
         configureTappableViewsForStack(stack: rightFaceVStack, faceToTurn: .right)
         let backFaceVStack = configureStackViewForFace(face: cubeCopy.back, letter: .back, cubeSize: viewController.selectedPuzzleSize, in: containerView)
         configureTappableViewsForStack(stack: backFaceVStack, faceToTurn: .back)
+        
         guard let view = viewController.view else { return }
-        
         view.addSubview(containerView)
-        
         CBConstraintHelper.constrain(containerView, toSafeAreaOf: view, usingInsets: true)
-        NSLayoutConstraint.activate(
-            [
-                upFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                upFaceVStack.bottomAnchor.constraint(equalTo: frontFaceVStack.topAnchor, constant: -CBConstants.UI.defaultInsets),
-                
-                frontFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                frontFaceVStack.bottomAnchor.constraint(equalTo: downFaceVStack.topAnchor, constant: -CBConstants.UI.defaultInsets),
-                
-                leftFaceVStack.trailingAnchor.constraint(equalTo: frontFaceVStack.leadingAnchor, constant: -CBConstants.UI.defaultInsets),
-                leftFaceVStack.centerYAnchor.constraint(equalTo: frontFaceVStack.centerYAnchor),
-                
-                rightFaceVStack.leadingAnchor.constraint(equalTo: frontFaceVStack.trailingAnchor, constant: CBConstants.UI.defaultInsets),
-                rightFaceVStack.centerYAnchor.constraint(equalTo: frontFaceVStack.centerYAnchor),
-                
-                backFaceVStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
-                backFaceVStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -CBConstants.UI.doubleInset),
-                
-                downFaceVStack.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                downFaceVStack.bottomAnchor.constraint(equalTo: backFaceVStack.topAnchor, constant: -CBConstants.UI.defaultInsetX4)
-            ])
+        
+        upFaceVStack.xAlignedWith(containerView)
+        upFaceVStack.bottom(frontFaceVStack.topAnchor, constant: -CBConstants.UI.defaultInsets)
+        
+        frontFaceVStack.xAlignedWith(containerView)
+        frontFaceVStack.bottom(downFaceVStack.topAnchor, constant: -CBConstants.UI.defaultInsets)
+        
+        leftFaceVStack.trailing(frontFaceVStack.leadingAnchor, constant: -CBConstants.UI.defaultInsets)
+        leftFaceVStack.yAlignedWith(frontFaceVStack)
+        
+        rightFaceVStack.leading(frontFaceVStack.trailingAnchor, constant: CBConstants.UI.defaultInsets)
+        rightFaceVStack.yAlignedWith(frontFaceVStack)
+        
+        backFaceVStack.leading(containerView.leadingAnchor, constant: CBConstants.UI.doubleInset)
+        backFaceVStack.bottom(containerView.bottomAnchor, constant: -CBConstants.UI.doubleInset)
+        
+        downFaceVStack.xAlignedWith(containerView)
+        downFaceVStack.bottom(backFaceVStack.topAnchor, constant: -CBConstants.UI.defaultInsetX4)
     }
     
     enum PossibleSide {
@@ -302,13 +303,13 @@ struct CBViewCreator {
         let letterView = CBLabel()
         letterView.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: letter, size: .small, color: color)
         stackView.addSubview(letterView)
-        letterView.centerYAnchor.constraint(equalTo: stackView.centerYAnchor).isActive = true
+        letterView.yAlignedWith(stackView)
         
         switch side {
         case .right:
-            letterView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -CBConstants.UI.defaultInsets).isActive = true
+            letterView.trailing(stackView.trailingAnchor, constant: -CBConstants.UI.defaultInsets)
         case .left:
-            letterView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: CBConstants.UI.defaultInsets).isActive = true
+            letterView.leading(stackView.leadingAnchor, constant: CBConstants.UI.defaultInsets)
         }
     }
     
@@ -321,16 +322,18 @@ struct CBViewCreator {
         case right = "R"
     }
     
-    static func configureStackViewForFace(face: Surface, letter: CubeFace, hasBorder: Bool = true, cubeSize: CGFloat = 3, in container: CBView) -> CBStackView {
+    static func configureStackViewForFace(face: Surface, letter: CubeFace, hasBorder: Bool = true, cubeSize: CGFloat = CBConstants.defaultPuzzleSize, in container: CBView) -> CBStackView {
         let stackView = CBStackView()
-        var stackViewDimension = CGFloat(CBConstants.defaultPuzzleSize) * CBConstants.UI.cubeTileDimension + CBConstants.UI.defaultStackViewSpacing
+        
+        // All constraints and dimensions are based around 3x3, and then scaled down to fit for larger cubes. So the overall face dimension is equal to 3 * tile size + some spacing
+        var stackViewDimension = CBConstants.defaultPuzzleSize * CBConstants.UI.cubeTileDimension + CBConstants.UI.defaultStackViewSpacing
         if CBConstants.UI.isIpad {
             stackViewDimension *= CBConstants.UI.iPadScaleMultiplier
         }
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
-        stackView.heightAnchor.constraint(equalToConstant: stackViewDimension).isActive = true
-        stackView.widthAnchor.constraint(equalToConstant: stackViewDimension).isActive = true
+        stackView.heightConstant(stackViewDimension)
+        stackView.widthConstant(stackViewDimension)
         container.addSubview(stackView)
         
         var tileDimension = CBConstants.UI.cubeTileDimension
@@ -346,11 +349,10 @@ struct CBViewCreator {
             for square in 1...Int(cubeSize) {
                 let tileSquare = CBView()
                 tileSquare.backgroundColor = .black
-                tileSquare.widthAnchor.constraint(equalToConstant: (tileDimension) * (CGFloat(CBConstants.defaultPuzzleSize) / cubeSize)).isActive = true
+                tileSquare.widthConstant(tileDimension * (CBConstants.defaultPuzzleSize / cubeSize))
                 tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
                 tileSquare.layer.borderWidth = 2
-                tileSquare.layer.cornerRadius = 6 * (CGFloat(CBConstants.defaultPuzzleSize) / (1.5 * cubeSize))
-                
+                tileSquare.layer.cornerRadius = 6 * (CBConstants.defaultPuzzleSize / (1.5 * cubeSize))
                 
                 switch stack {
                 case 1:
@@ -388,13 +390,13 @@ struct CBViewCreator {
                 }
                 hStack.addArrangedSubview(tileSquare)
             }
-            hStack.heightAnchor.constraint(equalToConstant: (tileDimension) * (CGFloat(CBConstants.defaultPuzzleSize) / cubeSize)).isActive = true
+            hStack.heightConstant(tileDimension * (CBConstants.defaultPuzzleSize / cubeSize))
         }
         if hasBorder {
             stackView.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
             stackView.layer.borderWidth = 3
         }
-        if cubeSize == CGFloat(CBConstants.defaultPuzzleSize) {
+        if cubeSize == CBConstants.defaultPuzzleSize {
             createLetterForCenterTile(in: stackView, letter: letter.rawValue, on: .right)
             createLetterForCenterTile(in: stackView, letter: letter.rawValue + "'", on: .left)
         }

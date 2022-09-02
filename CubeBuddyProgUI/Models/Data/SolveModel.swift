@@ -7,6 +7,7 @@
 
 import UIKit
 
+// Internally populated model for solve cells in SolvesViewController
 struct Solve: Codable {
     var scramble: String
     var time: String

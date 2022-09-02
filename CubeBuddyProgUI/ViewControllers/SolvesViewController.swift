@@ -35,7 +35,7 @@ extension SolvesViewController {
         self.solves.count > 0 ? solves.count + clearAllCell : 0
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = UITableViewCell()
+        var cell = CBBaseTableViewCell()
         
         if indexPath.row == clearAllCellIndex {
             var actions = [UIAlertAction]()

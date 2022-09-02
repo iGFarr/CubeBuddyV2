@@ -24,7 +24,7 @@ struct CBConstants {
         static let cellSeparatorHeight: CGFloat = 2
         static let cubeFaceDimension: CGFloat = 90
         static let cubeTileDimension: CGFloat = 30
-        static let cubeButtonWidth:CGFloat = 45
+        static let cubeButtonWidth: CGFloat = isIpad ? 90 : 45
         static let defaultInsets: CGFloat = 8
         static let defaultInsetX4: CGFloat = 32
         static let defaultStackViewSpacing: CGFloat = 16
@@ -60,7 +60,7 @@ struct CBConstants {
         }
     }
     
-    static let defaultPuzzleSize = 3
+    static let defaultPuzzleSize: CGFloat = 3
     static let defaultPuzzleDescription = "3x3"
     static let defaultScrambleLength = 20
     static let defaultScrambleSliderValue: Float = 20.0

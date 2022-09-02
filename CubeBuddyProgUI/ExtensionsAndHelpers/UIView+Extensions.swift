@@ -7,6 +7,7 @@
 
 import UIKit
 
+// Streamlines tap gestures on views
 extension UIView {
         // In order to create computed properties for extensions, we need a key to
         // store and access the stored property
@@ -48,4 +49,77 @@ extension UIView {
                 print("no action")
             }
         }
+}
+
+// Convenience functions
+extension UIView {
+    public func addSubviews(_ views: [UIView]){
+        for view in views {
+            addSubview(view)
+        }
+    }
+    
+    public func top(_ yConstraint: NSLayoutYAxisAnchor) {
+        topAnchor.constraint(equalTo: yConstraint).isActive = true
+    }
+    
+    public func bottom(_ yConstraint: NSLayoutYAxisAnchor) {
+        bottomAnchor.constraint(equalTo: yConstraint).isActive = true
+    }
+    
+    public func leading(_ xConstraint: NSLayoutXAxisAnchor) {
+        leadingAnchor.constraint(equalTo: xConstraint).isActive = true
+    }
+    
+    public func trailing(_ xConstraint: NSLayoutXAxisAnchor) {
+        trailingAnchor.constraint(equalTo: xConstraint).isActive = true
+    }
+    
+    public func top(_ yConstraint: NSLayoutYAxisAnchor, constant: CGFloat) {
+        topAnchor.constraint(equalTo: yConstraint, constant: constant).isActive = true
+    }
+    
+    public func bottom(_ yConstraint: NSLayoutYAxisAnchor, constant: CGFloat) {
+        bottomAnchor.constraint(equalTo: yConstraint, constant: constant).isActive = true
+    }
+    
+    public func leading(_ xConstraint: NSLayoutXAxisAnchor, constant: CGFloat) {
+        leadingAnchor.constraint(equalTo: xConstraint, constant: constant).isActive = true
+    }
+    
+    public func trailing(_ xConstraint: NSLayoutXAxisAnchor, constant: CGFloat) {
+        trailingAnchor.constraint(equalTo: xConstraint, constant: constant).isActive = true
+    }
+    
+    public func heightEqualsHeightOf(_ view: UIView) {
+        heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+    }
+    
+    public func heightEqualsHeightOf(_ view: UIView, constant: CGFloat) {
+        heightAnchor.constraint(equalTo: view.heightAnchor, constant: constant).isActive = true
+    }
+    
+    public func heightConstant(_ constant: CGFloat) {
+        heightAnchor.constraint(equalToConstant: constant).isActive = true
+    }
+    
+    public func widthEqualsWidthOf(_ view: UIView) {
+        widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+    }
+    
+    public func widthEqualsWidthOf(_ view: UIView, constant: CGFloat) {
+        widthAnchor.constraint(equalTo: view.widthAnchor, constant: constant).isActive = true
+    }
+    
+    public func widthConstant(_ constant: CGFloat) {
+        widthAnchor.constraint(equalToConstant: constant).isActive = true
+    }
+    
+    public func xAlignedWith(_ view: UIView) {
+        centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+    }
+    
+    public func yAlignedWith(_ view: UIView) {
+        centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    }
 }

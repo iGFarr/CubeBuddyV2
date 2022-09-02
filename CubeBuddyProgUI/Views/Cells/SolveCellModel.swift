@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SolveCellModel: UITableViewCell {
+class SolveCellModel: CBBaseTableViewCell {
 
     let solveTimeLabel = CBLabel()
     let scrambleLabel = CBLabel()
@@ -29,14 +29,11 @@ class SolveCellModel: UITableViewCell {
         solveTimeLabel.numberOfLines = 1
         puzzleLabel.numberOfLines = 1
         
+        puzzleLabel.constrainLabelToCorner(.topRight, in: contentView)
         CBConstraintHelper.constrain(stackView, to: contentView, usingInsets: true)
-        contentView.addSubview(puzzleLabel)
-        stackView.addArrangedSubview(solveTimeLabel)
-        stackView.addArrangedSubview(scrambleLabel)
-        NSLayoutConstraint.activate([
-            puzzleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -CBConstants.UI.doubleInset),
-            puzzleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: CBConstants.UI.defaultInsets),
-            scrambleLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
+        stackView.addArrangedSubviews([
+            solveTimeLabel,
+            scrambleLabel
         ])
     }
 }

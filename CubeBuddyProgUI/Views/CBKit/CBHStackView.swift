@@ -10,7 +10,7 @@ import UIKit
 final class CBHStackView: CBStackView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        distribution = .fillEqually
+        distribution = .equalSpacing
         axis = .horizontal
         spacing = CBConstants.UI.defaultStackViewSpacing
     }

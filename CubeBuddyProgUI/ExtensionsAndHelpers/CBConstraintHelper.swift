@@ -41,6 +41,7 @@ struct CBConstraintHelper {
     }
     
     static func constrainWithCustomInsets(subView: UIView, to view: UIView, leftInset: CGFloat = 0, rightInset: CGFloat = 0, topInset: CGFloat = 0, bottomInset: CGFloat = 0) {
+        subView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(subView)
         NSLayoutConstraint.activate([
             subView.topAnchor.constraint(equalTo: view.topAnchor, constant: topInset),
