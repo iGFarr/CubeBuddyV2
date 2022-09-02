@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CBSegmentedControl: UISegmentedControl {
+final class CBSegmentedControl: UISegmentedControl {
     override init(items: [Any]?) {
         super.init(items: items)
         translatesAutoresizingMaskIntoConstraints = false

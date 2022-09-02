@@ -41,9 +41,6 @@ class CubeNoobYoutubePlayerVC: CBBaseViewController {
     }
     
     private func constrainWebView(){
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(webView)
-        
         guard let navBarHeight = self.navigationController?.navigationBar.frame.size.height else { return }
         
         var statusHeight: CGFloat!
@@ -55,12 +52,7 @@ class CubeNoobYoutubePlayerVC: CBBaseViewController {
         }
         
         let topBarHeight = navBarHeight + statusHeight
-        NSLayoutConstraint.activate(
-            [
-                webView.topAnchor.constraint(equalTo: view.topAnchor, constant: topBarHeight),
-                webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                webView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-            ])
+        webView.translatesAutoresizingMaskIntoConstraints = false        
+        CBConstraintHelper.constrainWithCustomInsets(subView: webView, to: view, topInset: topBarHeight)
     }
 }

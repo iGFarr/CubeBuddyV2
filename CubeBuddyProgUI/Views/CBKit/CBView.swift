@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CBView: UIView {
+final class CBView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false

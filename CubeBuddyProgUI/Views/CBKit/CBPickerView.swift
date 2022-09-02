@@ -1,18 +1,18 @@
 //
-//  CBHStackView.swift
+//  CBPickerView.swift
 //  CubeBuddyProgUI
 //
-//  Created by Isaac Farr on 9/1/22.
+//  Created by Isaac Farr on 9/2/22.
 //
 
 import UIKit
 
-final class CBHStackView: CBStackView {
+final class CBPickerView: UIPickerView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        distribution = .fillEqually
-        axis = .horizontal
-        spacing = CBConstants.UI.defaultStackViewSpacing
+        translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = .clear
+        isOpaque = false
     }
     
     required init(coder: NSCoder) {

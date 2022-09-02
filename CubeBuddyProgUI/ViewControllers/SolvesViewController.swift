@@ -9,6 +9,8 @@ import UIKit
 
 class SolvesViewController: CBBaseTableViewController {
     private var solves = [Solve]()
+    private let clearAllCellIndex = 0
+    private let clearAllCell = 1
     override func viewDidLoad() {
         super.viewDidLoad()
         solves = UserDefaultsHelper.getAllObjects(named: .solves)
@@ -30,12 +32,12 @@ extension SolvesViewController {
         return UITableView.automaticDimension
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.solves.count > 0 ? solves.count + 1 : 0
+        self.solves.count > 0 ? solves.count + clearAllCell : 0
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = UITableViewCell()
         
-        if indexPath.row == 0 {
+        if indexPath.row == clearAllCellIndex {
             var actions = [UIAlertAction]()
             actions.append(UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive, handler: { action in
                 self.deleteSolves()
@@ -50,7 +52,7 @@ extension SolvesViewController {
             return cell
         }
         
-        guard solves.count > indexPath.row - 1 else { return cell }
+        guard solves.count > indexPath.row - clearAllCell else { return cell }
         let solve = solves[solves.count - indexPath.row]
         cell = CBTableViewCellCreator.createSolveCell(for: tableView, at: indexPath, with: solve)
         return cell
@@ -65,7 +67,7 @@ extension SolvesViewController {
         return indexPath
     }
     
-    func deleteSolves(){
+    private func deleteSolves(){
         let solves = [Solve]()
         UserDefaultsHelper.saveAllObjects(allObjects: solves, named: .solves)
     }

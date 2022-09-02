@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CBLabel: UILabel {
+final class CBLabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false

@@ -31,6 +31,9 @@ struct CBConstants {
         static let doubleInset: CGFloat = 16
         static let halfInset: CGFloat = 4
         static let isIpad: Bool = UIScreen.main.bounds.width >= 600
+        static let iPadScaleMultiplier: CGFloat = 2
+        static let pickerRowHeight: CGFloat = isIpad ? 80 : 50
+        static let pickerComponentWidth: CGFloat = isIpad ? 300 : 200
         static func makeTextAttributedWithCBStyle(text: String, size: CBBasicFontSize = .medium, color: UIColor = .CBTheme.secondary ?? .systemGreen, textStyle: UIFont.TextStyle = .subheadline, strokeWidth: Int = 0) -> NSAttributedString {
             var adjustedSize = size
             if Self.isIpad {
@@ -57,5 +60,9 @@ struct CBConstants {
         }
     }
     
+    static let defaultPuzzleSize = 3
+    static let defaultPuzzleDescription = "3x3"
+    static let defaultScrambleLength = 20
+    static let defaultScrambleSliderValue: Float = 20.0
     static let menuPageTitle = "Menu"
 }

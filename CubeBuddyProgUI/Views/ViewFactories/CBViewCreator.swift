@@ -8,14 +8,14 @@
 import UIKit
 
 struct CBViewCreator {
-    class TimerView: UIView {
+    final class TimerView: UIView {
         var solves =  [Solve]()
         var timerRunning = false
         let scrambleLengthLabel = CBLabel()
         let scrambleLabel = CBLabel()
         let runningTimerLabel = CBLabel()
         let scrambleLengthSlider = CBSlider()
-        let puzzleChoiceSegmentedControl = CBSegmentedControl(items: ["3x3", "4x4", "5x5", "6x6", "7x7", "8x8", "9x9"])
+        let puzzleChoiceSegmentedControl = CBSegmentedControl(items: ["3x3", "4x4", "5x5", "6x6", "7x7"])
         var timeElapsed = 0.00
         var timer: Timer?
         
@@ -61,8 +61,8 @@ struct CBViewCreator {
             scrambleLengthSlider.minimumValue = 2
             var scrambleLength = UserDefaults.standard.float(forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
             if scrambleLength == 0.0 {
-                UserDefaults.standard.setValue(20.0, forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
-                scrambleLength = 20.0
+                UserDefaults.standard.setValue(CBConstants.defaultScrambleSliderValue, forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
+                scrambleLength = CBConstants.defaultScrambleSliderValue
             }
             scrambleLengthSlider.setValue(scrambleLength, animated: false)
             scrambleLengthSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
@@ -92,49 +92,6 @@ struct CBViewCreator {
                     self.timeElapsed = 0.00
                     viewController.cube = Cube()
                 }
-            }
-            
-            func createOptionsBar(for vc: TimerViewController) -> CBView {
-                let optionsBar = CBView()
-                let showButton = CBButton()
-                let buttonText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Show me the cube!", size: .large)
-                
-                showButton.layer.cornerRadius = CBConstants.UI.buttonCornerRadius
-                showButton.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
-                showButton.layer.borderWidth = 2
-                showButton.setAttributedTitle(buttonText, for: .normal)
-                if #available(iOS 15.0, *) {
-                    showButton.configuration = .borderedTinted()
-                }
-                showButton.addTapGestureRecognizer {
-                    let cubeGraphicVC = ScrambledCubeGraphicVC()
-                    var cube = vc.cube
-                    if let text = self.scrambleLabel.text, vc.cube == Cube() {
-                        cube = cube.makeMoves(cube.convertStringToMoveList(scramble: text.dropFirst("Scramble:\n".count).split(separator: " ").map { move in
-                            String(move)
-                        }))
-                    } else {
-                        cube = vc.cube
-                    }
-                    vc.cube = cube
-                    
-                    cubeGraphicVC.scramble = self.scrambleLabel.text ?? ""
-                    cubeGraphicVC.cube = cube
-                    cubeGraphicVC.rootVC = viewController
-                    cubeGraphicVC.selectedPuzzleSize = CGFloat((vc.viewModel?.puzzleChoiceSegmentedControl.selectedSegmentIndex ?? 0) + 3)
-                    vc.modalPresentationStyle = .fullScreen
-                    vc.navigationController?.pushViewController(cubeGraphicVC, animated: true)
-                }
-                
-                optionsBar.isUserInteractionEnabled = true
-                optionsBar.backgroundColor = .clear
-                optionsBar.addSubview(showButton)
-                NSLayoutConstraint.activate([
-                    showButton.centerXAnchor.constraint(equalTo: optionsBar.centerXAnchor),
-                    showButton.centerYAnchor.constraint(equalTo: optionsBar.centerYAnchor, constant: CBConstants.UI.defaultInsets),
-                    showButton.widthAnchor.constraint(lessThanOrEqualToConstant: UIScreen.main.bounds.width - CBConstants.UI.defaultInsets)
-                ])
-                return optionsBar
             }
             
             guard let view = viewController.view else { return }
@@ -190,6 +147,49 @@ struct CBViewCreator {
                     puzzleChoiceSegmentedControl.bottomAnchor.constraint(equalTo: scrambleLengthLabel.topAnchor, constant: -CBConstants.UI.defaultInsets)
                 ])
         }
+    }
+    
+    static func createOptionsBar(for vc: TimerViewController) -> CBView {
+        let optionsBar = CBView()
+        let showButton = CBButton()
+        let buttonText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Show me the cube!", size: .large)
+        
+        showButton.layer.cornerRadius = CBConstants.UI.buttonCornerRadius
+        showButton.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
+        showButton.layer.borderWidth = 2
+        showButton.setAttributedTitle(buttonText, for: .normal)
+        if #available(iOS 15.0, *) {
+            showButton.configuration = .borderedTinted()
+        }
+        showButton.addTapGestureRecognizer {
+            let cubeGraphicVC = ScrambledCubeGraphicVC()
+            var cube = vc.cube
+            if let text = vc.viewModel?.scrambleLabel.text, vc.cube == Cube() {
+                cube = cube.makeMoves(cube.convertStringToMoveList(scramble: text.dropFirst("Scramble:\n".count).split(separator: " ").map { move in
+                    String(move)
+                }))
+            } else {
+                cube = vc.cube
+            }
+            vc.cube = cube
+            
+            cubeGraphicVC.scramble = vc.viewModel?.scrambleLabel.text ?? ""
+            cubeGraphicVC.cube = cube
+            cubeGraphicVC.rootVC = vc
+            cubeGraphicVC.selectedPuzzleSize = CGFloat((vc.viewModel?.puzzleChoiceSegmentedControl.selectedSegmentIndex ?? 0) + 3)
+            vc.modalPresentationStyle = .fullScreen
+            vc.navigationController?.pushViewController(cubeGraphicVC, animated: true)
+        }
+        
+        optionsBar.isUserInteractionEnabled = true
+        optionsBar.backgroundColor = .clear
+        optionsBar.addSubview(showButton)
+        NSLayoutConstraint.activate([
+            showButton.centerXAnchor.constraint(equalTo: optionsBar.centerXAnchor),
+            showButton.centerYAnchor.constraint(equalTo: optionsBar.centerYAnchor, constant: CBConstants.UI.defaultInsets),
+            showButton.widthAnchor.constraint(lessThanOrEqualToConstant: UIScreen.main.bounds.width - CBConstants.UI.defaultInsets)
+        ])
+        return optionsBar
     }
     
     static func createCubeGraphicView(for viewController: ScrambledCubeGraphicVC, with cube: Cube) {
@@ -323,9 +323,9 @@ struct CBViewCreator {
     
     static func configureStackViewForFace(face: Surface, letter: CubeFace, hasBorder: Bool = true, cubeSize: CGFloat = 3, in container: CBView) -> CBStackView {
         let stackView = CBStackView()
-        var stackViewDimension = 3 * CBConstants.UI.cubeTileDimension + CBConstants.UI.defaultStackViewSpacing
+        var stackViewDimension = CGFloat(CBConstants.defaultPuzzleSize) * CBConstants.UI.cubeTileDimension + CBConstants.UI.defaultStackViewSpacing
         if CBConstants.UI.isIpad {
-            stackViewDimension *= 2
+            stackViewDimension *= CBConstants.UI.iPadScaleMultiplier
         }
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
@@ -335,7 +335,7 @@ struct CBViewCreator {
         
         var tileDimension = CBConstants.UI.cubeTileDimension
         if CBConstants.UI.isIpad {
-            tileDimension *= 2
+            tileDimension *= CBConstants.UI.iPadScaleMultiplier
         }
         for stack in 1...Int(cubeSize) {
             let hStack = CBStackView()
@@ -346,10 +346,10 @@ struct CBViewCreator {
             for square in 1...Int(cubeSize) {
                 let tileSquare = CBView()
                 tileSquare.backgroundColor = .black
-                tileSquare.widthAnchor.constraint(equalToConstant: (tileDimension) * (3 / cubeSize)).isActive = true
+                tileSquare.widthAnchor.constraint(equalToConstant: (tileDimension) * (CGFloat(CBConstants.defaultPuzzleSize) / cubeSize)).isActive = true
                 tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
                 tileSquare.layer.borderWidth = 2
-                tileSquare.layer.cornerRadius = 4 * (3 / cubeSize)
+                tileSquare.layer.cornerRadius = 6 * (CGFloat(CBConstants.defaultPuzzleSize) / (1.5 * cubeSize))
                 
                 
                 switch stack {
@@ -388,13 +388,13 @@ struct CBViewCreator {
                 }
                 hStack.addArrangedSubview(tileSquare)
             }
-            hStack.heightAnchor.constraint(equalToConstant: (tileDimension) * (3 / cubeSize)).isActive = true
+            hStack.heightAnchor.constraint(equalToConstant: (tileDimension) * (CGFloat(CBConstants.defaultPuzzleSize) / cubeSize)).isActive = true
         }
         if hasBorder {
             stackView.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
             stackView.layer.borderWidth = 3
         }
-        if cubeSize == 3 {
+        if cubeSize == CGFloat(CBConstants.defaultPuzzleSize) {
             createLetterForCenterTile(in: stackView, letter: letter.rawValue, on: .right)
             createLetterForCenterTile(in: stackView, letter: letter.rawValue + "'", on: .left)
         }

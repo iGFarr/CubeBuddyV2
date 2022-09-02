@@ -7,7 +7,7 @@
 
 import Foundation
 
-class UserDefaultsHelper {
+struct UserDefaultsHelper {
     enum DefaultKeys: String {
         case solves = "solves"
         case scrambleLength = "scramble length"

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CBConstraintHelper {
+struct CBConstraintHelper {
     static func constrain(_ subView: UIView, to view: UIView, usingInsets: Bool = false, leadingTrailingInset: CGFloat = CBConstants.UI.defaultInsets, topBottomInset: CGFloat = CBConstants.UI.defaultInsets) {
         view.addSubview(subView)
         var horizontalInsets: CGFloat = 0
@@ -37,6 +37,16 @@ class CBConstraintHelper {
             subView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -verticalInsets),
             subView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: horizontalInsets),
             subView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -horizontalInsets)
+        ])
+    }
+    
+    static func constrainWithCustomInsets(subView: UIView, to view: UIView, leftInset: CGFloat = 0, rightInset: CGFloat = 0, topInset: CGFloat = 0, bottomInset: CGFloat = 0) {
+        view.addSubview(subView)
+        NSLayoutConstraint.activate([
+            subView.topAnchor.constraint(equalTo: view.topAnchor, constant: topInset),
+            subView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -bottomInset),
+            subView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: leftInset),
+            subView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -rightInset)
         ])
     }
 }

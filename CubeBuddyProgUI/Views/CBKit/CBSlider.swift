@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CBSlider: UISlider {
+final class CBSlider: UISlider {
     override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false

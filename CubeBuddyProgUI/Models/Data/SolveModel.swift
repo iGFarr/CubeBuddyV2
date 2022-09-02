@@ -12,7 +12,7 @@ struct Solve: Codable {
     var time: String
     var puzzle: String
     
-    init(scramble: String, time: String, puzzle: String = "3x3") {
+    init(scramble: String, time: String, puzzle: String = CBConstants.defaultPuzzleDescription) {
         self.scramble = scramble
         self.time = time
         self.puzzle = puzzle

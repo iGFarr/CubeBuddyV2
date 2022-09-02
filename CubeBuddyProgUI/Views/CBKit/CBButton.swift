@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CBButton: UIButton {
+final class CBButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false

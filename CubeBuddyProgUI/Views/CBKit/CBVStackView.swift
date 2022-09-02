@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CBVStackView: CBStackView {
+final class CBVStackView: CBStackView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         alignment = .leading
