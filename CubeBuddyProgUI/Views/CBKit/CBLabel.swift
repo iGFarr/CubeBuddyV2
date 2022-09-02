@@ -32,16 +32,16 @@ final class CBLabel: UILabel {
         view.addSubview(self)
         switch corner {
         case .topLeft:
-            top(view.topAnchor, constant: inset)
+            top(view.topAnchor, constant: inset/2)
             leading(view.leadingAnchor, constant: inset)
         case .topRight:
-            top(view.topAnchor, constant: inset)
+            top(view.topAnchor, constant: inset/2)
             trailing(view.trailingAnchor, constant: -inset)
         case .bottomLeft:
-            bottom(view.bottomAnchor, constant: -inset)
+            bottom(view.bottomAnchor, constant: -inset/2)
             leading(view.leadingAnchor, constant: inset)
         case .bottomRight:
-            bottom(view.bottomAnchor, constant: -inset)
+            bottom(view.bottomAnchor, constant: -inset/2)
             trailing(view.trailingAnchor, constant: -inset)
         }
     }
