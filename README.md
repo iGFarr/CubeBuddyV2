@@ -5,3 +5,5 @@ This is a rework of my original cube timer made primarily with Storyboard IB. In
 buttons on the side of each face. 
 
 <img src="AppDemoResized.gif" width="300">
+<img src="WIP4x4.png" width="300">
+<img src="WIP9x9.png" width="300">
