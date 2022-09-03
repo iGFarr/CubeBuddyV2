@@ -7,9 +7,4 @@ buttons on the side of each face.
 * See iPad screenshots for example of light mode. Both iPhones pictured below are in dark mode.
 * Cube sizes other than 3x3 are a work in progress. See the bottom-most pictures for current progress towards the UI creation.
 
-<img src="AppDemoResized.gif" width="100">
-![App Demo](AppDemo.png)
-![App Demo2](AppDemo2.png)
-![App Demo3](AppDemo3.png)
-![App Demo4](WIP4x4.png)
-![App Demo5](WIP9x9.png)
+<img src="AppDemoResized.gif" width="250">
