@@ -7,3 +7,15 @@ buttons on the side of each face.
 <img src="AppDemoResized.gif" width="300">
 <img src="WIP4x4.png" width="300">
 <img src="WIP9x9.png" width="300">
+
+<div class="row">
+  <div class="column">
+    <img src="AppDemoResized.gif" alt="DEMO" style="width:30%">
+  </div>
+  <div class="column">
+    <img src="WIP4x4.png" alt="4x4WIP" style="width:30%">
+  </div>
+  <div class="column">
+    <img src="WIP9x9.png" alt="9x9WIP" style="width:30%">
+  </div>
+</div>
