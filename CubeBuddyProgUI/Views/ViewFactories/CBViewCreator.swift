@@ -8,6 +8,29 @@
 import UIKit
 
 struct CBViewCreator {
+    static func configureThemeChangeButton(for vc: CBBaseViewController, size: CGFloat = 30) {
+        let themeSwitchButton = CBButton()
+        themeSwitchButton.heightConstant(size)
+        themeSwitchButton.widthConstant(size)
+        themeSwitchButton.setBackgroundImage(UIImage(systemName: "lightbulb"), for: .normal)
+        themeSwitchButton.tintColor = .CBTheme.secondary ?? .systemGreen
+        themeSwitchButton.addTapGestureRecognizer {
+            self.themeChanged(vc: vc)
+        }
+        themeSwitchButton.constrainToCorner(.topLeft, in: vc.view, safeArea: true)
+    }
+
+    static func themeChanged(vc: CBBaseViewController) {
+        switch vc.view.window?.traitCollection.userInterfaceStyle {
+        case .light:
+            vc.view.window?.overrideUserInterfaceStyle = .dark
+        case .dark:
+            vc.view.window?.overrideUserInterfaceStyle = .light
+        default:
+            vc.view.window?.overrideUserInterfaceStyle = .dark
+        }
+    }
+    
     final class TimerView: UIView {
         var solves =  [Solve]()
         var timerRunning = false

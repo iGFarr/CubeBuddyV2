@@ -20,29 +20,4 @@ final class CBLabel: UILabel {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    enum CornerPosition {
-        case topRight
-        case topLeft
-        case bottomRight
-        case bottomLeft
-    }
-    
-    func constrainLabelToCorner(_ corner: CornerPosition, in view: UIView, insetBy inset: CGFloat = CBConstants.UI.doubleInset) {
-        view.addSubview(self)
-        switch corner {
-        case .topLeft:
-            top(view.topAnchor, constant: inset/2)
-            leading(view.leadingAnchor, constant: inset)
-        case .topRight:
-            top(view.topAnchor, constant: inset/2)
-            trailing(view.trailingAnchor, constant: -inset)
-        case .bottomLeft:
-            bottom(view.bottomAnchor, constant: -inset/2)
-            leading(view.leadingAnchor, constant: inset)
-        case .bottomRight:
-            bottom(view.bottomAnchor, constant: -inset/2)
-            trailing(view.trailingAnchor, constant: -inset)
-        }
-    }
 }

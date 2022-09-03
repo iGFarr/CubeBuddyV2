@@ -22,6 +22,7 @@ class MenuViewController: CBBaseViewController {
         super.viewDidLoad()
         self.title = CBConstants.menuPageTitle
         createPickerWheel()
+        CBViewCreator.configureThemeChangeButton(for: self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -33,6 +34,8 @@ class MenuViewController: CBBaseViewController {
         picker.dataSource = self
         CBConstraintHelper.constrain(picker, to: view)
     }
+    
+    
 }
 
 extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
