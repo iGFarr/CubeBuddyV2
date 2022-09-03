@@ -8,3 +8,8 @@ buttons on the side of each face.
 <img src="WIP4x4.png" style="width: 30%">
 <img src="WIP9x9.png" style="width: 30%">
 
+<p float="left">
+  <img src="AppDemoResized.gif" width="100" />
+  <img src="WIP4x4.png" width="100" /> 
+  <img src="WIP9x9.png" width="100" />
+</p>
