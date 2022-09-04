@@ -1,9 +1,8 @@
 # CubeBuddyV2
 <h2>Revamped with prog constraints</h1>
 <b> This is a rework of my original cube timer, which was made primarily with Storyboard IB. In this version which uses no storyboards at all, I use a custom Cube data object(an extension of Kaz Yoshikawa's work) with each face mapped to a color in order to create a flat graphical representation of the cube which can be manipulated via 
-buttons on the side of each face.
-
-</b>
+buttons on the side of each face.</b>
+</hr>
 <p float="left">
   <img src="AppDemo-1.png" width="400" />
   <img src="AppDemo-2.png" width="400" /> 
