@@ -6,6 +6,7 @@ buttons on the side of each face.</b>
 <hr size="5">
 <div class="row">
         <div class="column" style="background-color:#FFB695;">
+                <p>Dark Theme</p>
             <img src="AppDemo-1.png" width="50%" />
         </div>
         <div class="column" style="background-color:#96D1CD;">
