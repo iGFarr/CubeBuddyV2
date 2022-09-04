@@ -5,8 +5,12 @@
 buttons on the side of each face.</b>
 <hr size="5">
 <div class="row">
+  <div class="column">
   <img src="AppDemo-1.png" width="400" />
-  <img src="AppDemo-2.png" width="400" /> 
+  </div>
+  <div class="column">
+  <img src="AppDemo-2.png" width="400" />
+  </div>
 </div>
 <hr size="5">
 <img src="AppDemo-3.png" width="800" />
