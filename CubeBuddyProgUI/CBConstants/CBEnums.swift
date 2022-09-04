@@ -38,12 +38,6 @@ enum CustomColors: String {
     case secondary = "CBSecondary"
 }
 
-enum PossibleSide {
-    case left
-    case right
-}
-
-
 enum SeparatorPosition {
     case top
     case bottom

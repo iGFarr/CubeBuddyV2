@@ -16,6 +16,14 @@ class CBBaseViewController: UIViewController {
             CBViewCreator.configureSoundSwitchButton(for: self)
         }
     }
+    var explosionsOnSwitchButton = CBButton()
+    var explosionsOn: Bool = UserDefaults.standard.bool(forKey: UserDefaultsHelper.DefaultKeys.explosionsOn.rawValue) {
+        didSet {
+            UserDefaults.standard.set(explosionsOn, forKey: UserDefaultsHelper.DefaultKeys.explosionsOn.rawValue)
+            explosionsOnSwitchButton.removeFromSuperview()
+            CBViewCreator.configureExplosionsSwitchButton(for: self)
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         if UserDefaults.standard.integer(forKey: UserDefaultsHelper.DefaultKeys.firstLoad.rawValue) == 0 {

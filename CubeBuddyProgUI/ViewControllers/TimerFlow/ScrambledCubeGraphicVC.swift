@@ -36,6 +36,7 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
         CBViewCreator.createCubeGraphicView(for: self, with: cube)
         configureWipLabel()
         CBViewCreator.configureSoundSwitchButton(for: self)
+        CBViewCreator.configureExplosionsSwitchButton(for: self)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -46,12 +47,6 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
         timeElapsed += 0.01
         let formattedTimerString = CBBrain.formatTimeForTimerLabel(timeElapsed: timeElapsed)
         title = formattedTimerString
-    }
-        
-    func playSolveSound(){
-        if self.soundsOn {
-            AVHelper.playVictorySound()
-        }
     }
     
     func configureTimer(){
@@ -74,7 +69,6 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
         wipLabel.isHidden = false
         if self.selectedPuzzleSize == 3 {
             if self.cube == Cube() {
-                playSolveSound()
                 wipLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "SOLVED", size: .xxl)
                 self.timer?.invalidate()
                 self.rootVC?.viewModel?.timer?.invalidate()

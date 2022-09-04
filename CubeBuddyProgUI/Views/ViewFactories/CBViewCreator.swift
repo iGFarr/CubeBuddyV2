@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct CBViewCreator {
+class CBViewCreator {
     static func configureSoundSwitchButton(for vc: CBBaseViewController, size: CGFloat = 40){
         let soundSwitchButton = CBButton()
         soundSwitchButton.heightConstant(size)
@@ -26,6 +26,24 @@ struct CBViewCreator {
         vc.soundsSwitchButton = soundSwitchButton
     }
     
+    static func configureExplosionsSwitchButton(for vc: CBBaseViewController, size: CGFloat = 40){
+        let explosionsSwitchButton = CBButton()
+        explosionsSwitchButton.heightConstant(size)
+        explosionsSwitchButton.widthConstant(size)
+        if vc.explosionsOn {
+            explosionsSwitchButton.setBackgroundImage(UIImage(systemName: "atom"), for: .normal)
+        } else {
+            explosionsSwitchButton.setBackgroundImage(UIImage(systemName: "burn"), for: .normal)
+        }
+        explosionsSwitchButton.tintColor = .CBTheme.secondary ?? .systemGreen
+        explosionsSwitchButton.addTapGestureRecognizer {
+            vc.explosionsOn.toggle()
+            print("toggled")
+        }
+        explosionsSwitchButton.constrainToCorner(.topRight, in: vc.view, safeArea: true)
+        vc.explosionsOnSwitchButton = explosionsSwitchButton
+    }
+    
     static func configureThemeChangeButton(for vc: CBBaseViewController, size: CGFloat = 40) {
         let themeSwitchButton = CBButton()
         themeSwitchButton.heightConstant(size)
@@ -37,7 +55,7 @@ struct CBViewCreator {
         }
         themeSwitchButton.constrainToCorner(.topLeft, in: vc.view, safeArea: true)
     }
-
+    
     static func themeChanged(vc: CBBaseViewController) {
         var theme: UIUserInterfaceStyle = .dark
         switch vc.view.window?.traitCollection.userInterfaceStyle {
@@ -51,7 +69,7 @@ struct CBViewCreator {
         UIView.animate(withDuration: 0.75, delay: 0.125, options: .curveEaseIn) {
             vc.view.window?.overrideUserInterfaceStyle = theme
         }
-
+        
     }
     
     final class TimerView: UIView {
@@ -163,7 +181,7 @@ struct CBViewCreator {
                 scrambleLengthLabel,
                 puzzleChoiceSegmentedControl
             ])
-
+            
             timerButtonView.addSubview(runningTimerLabel)
             
             NSLayoutConstraint.activate(
@@ -248,6 +266,8 @@ struct CBViewCreator {
         let presentingVC = viewController.presentingViewController as? TimerViewController
         var cubeCopy = presentingVC?.cube ?? cube
         let containerView = CBView()
+        let avHelper = CBAVHelper()
+        var transformAmount: CGFloat = 0
         
         func configureTappableViewsForStack(stack: UIStackView, faceToTurn: CubeFace) {
             let leftTapView = CBView()
@@ -280,7 +300,22 @@ struct CBViewCreator {
                 UIView.animate(withDuration: 0.25, delay: 0.0, options: .curveEaseInOut) {
                     stack.transform = CGAffineTransform(rotationAngle: -quarterTurn)
                 } completion: { Bool in
-                    viewController.updateCubeGraphic(with: cubeCopy)
+                    if cubeCopy == Cube() {
+                        if viewController.soundsOn {
+                            avHelper.playVictorySound()
+                        }
+                        
+                        if viewController.explosionsOn {
+                            animationExplosion(view: containerView)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                                viewController.updateCubeGraphic(with: cubeCopy)
+                            }
+                        } else {
+                            viewController.updateCubeGraphic(with: cubeCopy)
+                        }
+                    } else {
+                        viewController.updateCubeGraphic(with: cubeCopy)
+                    }
                 }
             }
             
@@ -309,11 +344,45 @@ struct CBViewCreator {
                 UIView.animate(withDuration: 0.25, delay: 0.0, options: .curveEaseInOut) {
                     stack.transform = CGAffineTransform(rotationAngle: quarterTurn)
                 } completion: { Bool in
-                    viewController.updateCubeGraphic(with: cubeCopy)
+                    if cubeCopy == Cube() {
+                        if viewController.soundsOn {
+                            avHelper.playVictorySound()
+                        }
+                        
+                        if viewController.explosionsOn {
+                            animationExplosion(view: containerView)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                                viewController.updateCubeGraphic(with: cubeCopy)
+                            }
+                        } else {
+                            viewController.updateCubeGraphic(with: cubeCopy)
+                        }
+                    } else {
+                        viewController.updateCubeGraphic(with: cubeCopy)
+                    }
                 }
             }
         }
-        
+        func animationExplosion(view: UIView){
+            for subview in view.subviews {
+                var xTransform: CGFloat = [1, -1, 2, -2].randomElement() ?? 1
+                let yTransform: CGFloat = [1, -1, 2, -2].randomElement() ?? 1
+                if subview.center.x < (view.center.x - CBConstants.UI.defaultInsets) {
+                    xTransform = -1
+                } else if subview.center.x > view.center.x {
+                    xTransform = 1
+                }
+                print(subview.center.x, view.center.x)
+                let timer = Timer(timeInterval: 0.001, repeats: true) { _ in
+                    transformAmount += 0.025
+                    //                    subview.transform = CGAffineTransform(translationX: transformAmount * xTransform, y: transformAmount * yTransform)
+                    subview.transform = CGAffineTransform(rotationAngle: transformAmount).translatedBy(x: transformAmount * xTransform, y: transformAmount * yTransform)
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now()) { // Change `2.0` to the desired number of seconds.
+                    RunLoop.current.add(timer, forMode: .default)
+                }
+            }
+        }
         // FACE STACKS
         let upFaceVStack = configureStackViewForFace(face: cubeCopy.up, letter: .up, cubeSize: viewController.selectedPuzzleSize, in: containerView)
         configureTappableViewsForStack(stack: upFaceVStack, faceToTurn: .up)
@@ -351,18 +420,12 @@ struct CBViewCreator {
         downFaceVStack.bottom(containerView.bottomAnchor, constant: CBConstants.UI.isPortraitMode ? -CBConstants.UI.defaultInsetX4 : -CBConstants.UI.doubleInset)
     }
     
-    static func createLetterForCenterTile(in stackView: UIStackView, letter: String, on side: PossibleSide, color: UIColor = .black) {
+    static func createLetterForCenterTile(in stackView: UIStackView, letter: String, color: UIColor = .black) {
         let letterView = CBLabel()
         letterView.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: letter, size: .small, color: color)
         stackView.addSubview(letterView)
         letterView.yAlignedWith(stackView)
-        
-        switch side {
-        case .right:
-            letterView.trailing(stackView.trailingAnchor, constant: -CBConstants.UI.defaultInsets)
-        case .left:
-            letterView.leading(stackView.leadingAnchor, constant: CBConstants.UI.defaultInsets)
-        }
+        letterView.xAlignedWith(stackView)
     }
     
     static func configureStackViewForFace(face: Surface, letter: CubeFace, hasBorder: Bool = true, cubeSize: CGFloat = CBConstants.defaultPuzzleSize, in container: CBView) -> CBStackView {
@@ -440,8 +503,7 @@ struct CBViewCreator {
             stackView.layer.borderWidth = 3
         }
         if cubeSize == CBConstants.defaultPuzzleSize {
-            createLetterForCenterTile(in: stackView, letter: letter.rawValue, on: .right)
-            createLetterForCenterTile(in: stackView, letter: letter.rawValue + "'", on: .left)
+            createLetterForCenterTile(in: stackView, letter: letter.rawValue)
         }
         return stackView
     }

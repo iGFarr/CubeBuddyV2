@@ -13,6 +13,7 @@ struct UserDefaultsHelper {
         case scrambleLength = "scramble length"
         case soundsOn = "sounds on"
         case firstLoad = "first load"
+        case explosionsOn = "explosions on"
     }
     
     static func getAllObjects<T: Codable>(named name: DefaultKeys) -> [T] {
