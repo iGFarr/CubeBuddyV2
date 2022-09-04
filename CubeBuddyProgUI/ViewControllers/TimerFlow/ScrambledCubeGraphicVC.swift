@@ -15,6 +15,7 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
     var timeElapsed = 0.00
     var selectedPuzzleSize: CGFloat = 3
     let AVHelper = CBAVHelper()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         timeElapsed = rootVC?.viewModel?.timeElapsed ?? 0.00
@@ -29,7 +30,6 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
         }
         updateCubeGraphic(with: cube)
         configureWipLabel()
-        CBViewCreator.configureThemeChangeButton(for: self)
         let value = UIInterfaceOrientation.portrait.rawValue
         UIDevice.current.setValue(value, forKey: "orientation")
     }
@@ -44,7 +44,6 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
         }
         CBViewCreator.createCubeGraphicView(for: self, with: cube)
         configureWipLabel()
-        CBViewCreator.configureThemeChangeButton(for: self)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

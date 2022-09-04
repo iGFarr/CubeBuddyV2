@@ -34,6 +34,14 @@ class MenuViewController: CBBaseViewController {
         picker.dataSource = self
         CBConstraintHelper.constrain(picker, to: view)
     }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        viewControllerTitles = [
+            CBConstants.CBMenuPickerPages.timer.rawValue: TimerViewController(),
+            CBConstants.CBMenuPickerPages.solves.rawValue: SolvesViewController(),
+            CBConstants.CBMenuPickerPages.cubeNoob.rawValue: CubeNoobYoutubePlayerVC()
+        ]
+    }
 }
 
 extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
