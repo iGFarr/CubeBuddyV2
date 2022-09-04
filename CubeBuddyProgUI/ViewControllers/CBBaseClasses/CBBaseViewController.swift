@@ -8,6 +8,7 @@
 import UIKit
 
 class CBBaseViewController: UIViewController {
+    let AVHelper = CBAVHelper()
     var soundsSwitchButton = CBButton()
     var soundsOn: Bool = UserDefaults.standard.bool(forKey: UserDefaultsHelper.DefaultKeys.soundsOn.rawValue) {
         didSet {
@@ -29,6 +30,7 @@ class CBBaseViewController: UIViewController {
         if UserDefaults.standard.integer(forKey: UserDefaultsHelper.DefaultKeys.firstLoad.rawValue) == 0 {
             UserDefaults.standard.set(1, forKey: UserDefaultsHelper.DefaultKeys.firstLoad.rawValue)
             UserDefaults.standard.set(true, forKey: UserDefaultsHelper.DefaultKeys.soundsOn.rawValue)
+            UserDefaults.standard.set(true, forKey: UserDefaultsHelper.DefaultKeys.explosionsOn.rawValue)
             soundsOn = true
         }
         view.backgroundColor = .CBTheme.primary

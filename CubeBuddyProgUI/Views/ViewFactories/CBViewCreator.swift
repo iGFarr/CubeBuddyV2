@@ -19,6 +19,9 @@ class CBViewCreator {
         }
         soundSwitchButton.tintColor = .CBTheme.secondary ?? .systemGreen
         soundSwitchButton.addTapGestureRecognizer {
+            if vc.soundsOn {
+                vc.AVHelper.player.stop()
+            }
             vc.soundsOn.toggle()
             print("toggled")
         }
@@ -301,11 +304,13 @@ class CBViewCreator {
                     stack.transform = CGAffineTransform(rotationAngle: -quarterTurn)
                 } completion: { Bool in
                     if cubeCopy == Cube() {
+                        viewController.configureWipLabel()
                         if viewController.soundsOn {
-                            avHelper.playVictorySound()
+                            viewController.AVHelper.playVictorySound()
                         }
                         
                         if viewController.explosionsOn {
+                            containerView.isUserInteractionEnabled = false
                             animationExplosion(view: containerView)
                             DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                                 viewController.updateCubeGraphic(with: cubeCopy)
@@ -345,11 +350,13 @@ class CBViewCreator {
                     stack.transform = CGAffineTransform(rotationAngle: quarterTurn)
                 } completion: { Bool in
                     if cubeCopy == Cube() {
+                        viewController.configureWipLabel()
                         if viewController.soundsOn {
-                            avHelper.playVictorySound()
+                            viewController.AVHelper.playVictorySound()
                         }
                         
                         if viewController.explosionsOn {
+                            containerView.isUserInteractionEnabled = false
                             animationExplosion(view: containerView)
                             DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                                 viewController.updateCubeGraphic(with: cubeCopy)

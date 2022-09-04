@@ -14,7 +14,6 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
     var timer: Timer?
     var timeElapsed = 0.00
     var selectedPuzzleSize: CGFloat = 3
-    let AVHelper = CBAVHelper()
     
     override func viewDidLoad() {
         super.viewDidLoad()
