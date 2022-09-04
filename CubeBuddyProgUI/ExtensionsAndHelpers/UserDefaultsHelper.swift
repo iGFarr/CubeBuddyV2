@@ -11,6 +11,8 @@ struct UserDefaultsHelper {
     enum DefaultKeys: String {
         case solves = "solves"
         case scrambleLength = "scramble length"
+        case soundsOn = "sounds on"
+        case firstLoad = "first load"
     }
     
     static func getAllObjects<T: Codable>(named name: DefaultKeys) -> [T] {

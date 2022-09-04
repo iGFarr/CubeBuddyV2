@@ -22,19 +22,20 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
         UIDevice.current.setValue(value, forKey: "orientation")
         configureTimer()
         updateCubeGraphic(with: cube)
-        configureWipLabel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         let value = UIInterfaceOrientation.portrait.rawValue
         UIDevice.current.setValue(value, forKey: "orientation")
     }
+    
     func updateCubeGraphic(with cube: Cube){
         for view in view.subviews {
             view.removeFromSuperview()
         }
         CBViewCreator.createCubeGraphicView(for: self, with: cube)
         configureWipLabel()
+        CBViewCreator.configureSoundSwitchButton(for: self)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -48,7 +49,9 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
     }
         
     func playSolveSound(){
-        AVHelper.playVictorySound()
+        if self.soundsOn {
+            AVHelper.playVictorySound()
+        }
     }
     
     func configureTimer(){

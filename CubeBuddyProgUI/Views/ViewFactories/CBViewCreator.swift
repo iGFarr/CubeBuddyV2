@@ -8,6 +8,24 @@
 import UIKit
 
 struct CBViewCreator {
+    static func configureSoundSwitchButton(for vc: CBBaseViewController, size: CGFloat = 40){
+        let soundSwitchButton = CBButton()
+        soundSwitchButton.heightConstant(size)
+        soundSwitchButton.widthConstant(size)
+        if vc.soundsOn {
+            soundSwitchButton.setBackgroundImage(UIImage(systemName: "speaker.fill"), for: .normal)
+        } else {
+            soundSwitchButton.setBackgroundImage(UIImage(systemName: "speaker"), for: .normal)
+        }
+        soundSwitchButton.tintColor = .CBTheme.secondary ?? .systemGreen
+        soundSwitchButton.addTapGestureRecognizer {
+            vc.soundsOn.toggle()
+            print("toggled")
+        }
+        soundSwitchButton.constrainToCorner(.topLeft, in: vc.view, safeArea: true)
+        vc.soundsSwitchButton = soundSwitchButton
+    }
+    
     static func configureThemeChangeButton(for vc: CBBaseViewController, size: CGFloat = 40) {
         let themeSwitchButton = CBButton()
         themeSwitchButton.heightConstant(size)
