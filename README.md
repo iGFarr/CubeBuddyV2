@@ -6,10 +6,10 @@ buttons on the side of each face.</b>
 <hr size="5">
 <div class="row">
   <div class="column">
-  <img src="AppDemo-1.png" width="400" />
+  <img src="AppDemo-1.png" width="50%" />
   </div>
   <div class="column">
-  <img src="AppDemo-2.png" width="400" />
+  <img src="AppDemo-2.png" width="50%" />
   </div>
 </div>
 <hr size="5">
