@@ -9,7 +9,7 @@ import UIKit
 
 class CBBaseViewController: UIViewController {
     let AVHelper = CBAVHelper()
-    var soundsSwitchButton = CBButton()
+    lazy var soundsSwitchButton = CBButton()
     var soundsOn: Bool = UserDefaults.standard.bool(forKey: UserDefaultsHelper.DefaultKeys.soundsOn.rawValue) {
         didSet {
             UserDefaults.standard.set(soundsOn, forKey: UserDefaultsHelper.DefaultKeys.soundsOn.rawValue)
@@ -17,7 +17,7 @@ class CBBaseViewController: UIViewController {
             CBViewCreator.configureSoundSwitchButton(for: self)
         }
     }
-    var explosionsOnSwitchButton = CBButton()
+    lazy var explosionsOnSwitchButton = CBButton()
     var explosionsOn: Bool = UserDefaults.standard.bool(forKey: UserDefaultsHelper.DefaultKeys.explosionsOn.rawValue) {
         didSet {
             UserDefaults.standard.set(explosionsOn, forKey: UserDefaultsHelper.DefaultKeys.explosionsOn.rawValue)
@@ -29,9 +29,10 @@ class CBBaseViewController: UIViewController {
         super.viewDidLoad()
         if UserDefaults.standard.integer(forKey: UserDefaultsHelper.DefaultKeys.firstLoad.rawValue) == 0 {
             UserDefaults.standard.set(1, forKey: UserDefaultsHelper.DefaultKeys.firstLoad.rawValue)
-            UserDefaults.standard.set(true, forKey: UserDefaultsHelper.DefaultKeys.soundsOn.rawValue)
-            UserDefaults.standard.set(true, forKey: UserDefaultsHelper.DefaultKeys.explosionsOn.rawValue)
+            UserDefaults.standard.setValue(CBConstants.defaultScrambleSliderValue, forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
+
             soundsOn = true
+            explosionsOn = true
         }
         view.backgroundColor = .CBTheme.primary
     }

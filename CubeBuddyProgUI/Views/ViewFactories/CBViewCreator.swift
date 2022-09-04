@@ -77,6 +77,7 @@ class CBViewCreator {
     
     final class TimerView: UIView {
         var solves =  [Solve]()
+        var delegate: SliderDelegate?
         var timerRunning = false
         let scrambleLengthLabel = CBLabel()
         let scrambleLabel = CBLabel()
@@ -98,9 +99,24 @@ class CBViewCreator {
         @objc
         func sliderValueChanged() {
             UserDefaults.standard.setValue(scrambleLengthSlider.value, forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
-            let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), size: .large)
-            scrambleLabel.attributedText = scrambleText
-            scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: .small)
+            scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(floor(scrambleLengthSlider.value))), size: .small)
+            if timerRunning == false {
+                let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(floor(scrambleLengthSlider.value))), size: .large)
+                scrambleLabel.attributedText = scrambleText
+                if Int(floor(scrambleLengthSlider.value)) < 1 {
+                    scrambleLabel.isHidden = true
+                } else {
+                    scrambleLabel.isHidden = false
+                }
+            }
+            var cube = Cube()
+            if let text = scrambleLabel.text {
+                cube = cube.makeMoves(cube.convertStringToMoveList(scramble: text.dropFirst("Scramble:\n".count).split(separator: " ").map { move in
+                    String(move)
+                }))
+                timerRunning = false
+                self.delegate?.updateCube(cube: cube)
+            }
         }
         
         func createTimerView(for viewController: TimerViewController, usingOptionsBar: Bool = false) {
@@ -125,20 +141,17 @@ class CBViewCreator {
             ], for: .selected)
             scrambleLengthSlider.thumbTintColor = .CBTheme.secondary
             scrambleLengthSlider.maximumValue = 40
-            scrambleLengthSlider.minimumValue = 2
-            var scrambleLength = UserDefaults.standard.float(forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
-            if scrambleLength == 0.0 {
-                UserDefaults.standard.setValue(CBConstants.defaultScrambleSliderValue, forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
-                scrambleLength = CBConstants.defaultScrambleSliderValue
-            }
+            scrambleLengthSlider.minimumValue = 0
+            let scrambleLength = UserDefaults.standard.float(forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
             scrambleLengthSlider.setValue(scrambleLength, animated: false)
             scrambleLengthSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
+            if scrambleLengthSlider.value == 0 {
+                scrambleLabel.isHidden = true
+            }
+            scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(floor(scrambleLengthSlider.value))), size: .small)
             
-            scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length: " + String(Int(scrambleLengthSlider.value)), size: .small)
-            
-            let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), size: .large)
+            let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(floor(scrambleLengthSlider.value))), size: .large)
             scrambleLabel.attributedText = scrambleText
-            
             
             func timerButtonViewPressed(){
                 timer?.invalidate()
@@ -148,16 +161,26 @@ class CBViewCreator {
                     }
                     timer?.fire()
                     self.timerRunning = true
+                    if floor(scrambleLengthSlider.value) != 0 {
+                        scrambleLabel.isHidden = false
+                    } else if floor(scrambleLengthSlider.value) == 0 {
+                        scrambleLabel.isHidden = true
+                    }
                 } else {
                     let newSolve = Solve(scramble: scrambleLabel.text ?? "No scramble", time: runningTimerLabel.text ?? "No timer", puzzle: "\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + 3)x\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + 3)")
                     self.solves.append(newSolve)
                     UserDefaultsHelper.saveAllObjects(allObjects: solves, named: .solves)
                     print(solves.count)
-                    let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(scrambleLengthSlider.value)), size: .large)
+                    let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(floor(scrambleLengthSlider.value))), size: .large)
                     scrambleLabel.attributedText = scrambleText
                     self.timerRunning = false
                     self.timeElapsed = 0.00
                     viewController.cube = Cube()
+                    if floor(scrambleLengthSlider.value) != 0 && scrambleLabel.isHidden {
+                        scrambleLabel.isHidden = false
+                    } else if floor(scrambleLengthSlider.value) == 0 {
+                        scrambleLabel.isHidden = true
+                    }
                 }
             }
             
@@ -269,7 +292,6 @@ class CBViewCreator {
         let presentingVC = viewController.presentingViewController as? TimerViewController
         var cubeCopy = presentingVC?.cube ?? cube
         let containerView = CBView()
-        let avHelper = CBAVHelper()
         var transformAmount: CGFloat = 0
         
         func configureTappableViewsForStack(stack: UIStackView, faceToTurn: CubeFace) {
@@ -430,7 +452,7 @@ class CBViewCreator {
     static func createLetterForCenterTile(in stackView: UIStackView, letter: String, color: UIColor = .black) {
         let letterView = CBLabel()
         letterView.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: letter, size: .small, color: color)
-        stackView.addSubview(letterView)
+        stackView.superview?.addSubview(letterView)
         letterView.yAlignedWith(stackView)
         letterView.xAlignedWith(stackView)
     }
