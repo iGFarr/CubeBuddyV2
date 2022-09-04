@@ -25,13 +25,19 @@ struct CBConstants {
         static let cubeFaceDimension: CGFloat = 90
         static let cubeTileDimension: CGFloat = 30
         static let cubeButtonWidth: CGFloat = isIpad ? 90 : 45
+        static let defaultCornerRadius: CGFloat = isIpad ? 10 : 6
         static let defaultInsets: CGFloat = 8
         static let defaultInsetX4: CGFloat = 32
         static let defaultStackViewSpacing: CGFloat = 16
         static let doubleInset: CGFloat = 16
         static let halfInset: CGFloat = 4
-        static let isIpad: Bool = UIScreen.main.bounds.width >= 600
-        static let iPadScaleMultiplier: CGFloat = 2
+        static var isIpad: Bool {
+            UIDevice.current.userInterfaceIdiom == .pad
+        }
+        static var isPortraitMode: Bool {
+            (UIDevice.current.orientation == .portrait) || (UIDevice.current.orientation == .portraitUpsideDown)
+        }
+        static let iPadScaleMultiplier: CGFloat = 1.75
         static let pickerRowHeight: CGFloat = isIpad ? 80 : 50
         static let pickerComponentWidth: CGFloat = isIpad ? 300 : 200
         static func makeTextAttributedWithCBStyle(text: String, size: CBBasicFontSize = .medium, color: UIColor = .CBTheme.secondary ?? .systemGreen, textStyle: UIFont.TextStyle = .subheadline, strokeWidth: Int = 0) -> NSAttributedString {

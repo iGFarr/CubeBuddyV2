@@ -330,7 +330,7 @@ struct CBViewCreator {
         backFaceVStack.bottom(containerView.bottomAnchor, constant: -CBConstants.UI.doubleInset)
         
         downFaceVStack.xAlignedWith(containerView)
-        downFaceVStack.bottom(backFaceVStack.topAnchor, constant: -CBConstants.UI.defaultInsetX4)
+        downFaceVStack.bottom(containerView.bottomAnchor, constant: CBConstants.UI.isPortraitMode ? -CBConstants.UI.defaultInsetX4 : -CBConstants.UI.doubleInset)
     }
     
     static func createLetterForCenterTile(in stackView: UIStackView, letter: String, on side: PossibleSide, color: UIColor = .black) {
@@ -377,7 +377,7 @@ struct CBViewCreator {
                 tileSquare.widthConstant(tileDimension * (CBConstants.defaultPuzzleSize / cubeSize))
                 tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
                 tileSquare.layer.borderWidth = 2
-                tileSquare.layer.cornerRadius = 6 * (CBConstants.defaultPuzzleSize / (1.5 * cubeSize))
+                tileSquare.layer.cornerRadius = CBConstants.UI.defaultCornerRadius * (CBConstants.defaultPuzzleSize / (1.5 * cubeSize))
                 
                 switch stack {
                 case 1:

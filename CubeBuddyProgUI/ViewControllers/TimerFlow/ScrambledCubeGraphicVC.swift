@@ -18,20 +18,11 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        timeElapsed = rootVC?.viewModel?.timeElapsed ?? 0.00
-        let formattedTimerString = CBBrain.formatTimeForTimerLabel(timeElapsed: timeElapsed)
-        if rootVC?.viewModel?.timerRunning ?? true {
-            timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
-                self.timerUpdatesUI()
-            }
-            title = formattedTimerString
-        } else {
-            title = rootVC?.viewModel?.runningTimerLabel.text
-        }
-        updateCubeGraphic(with: cube)
-        configureWipLabel()
         let value = UIInterfaceOrientation.portrait.rawValue
         UIDevice.current.setValue(value, forKey: "orientation")
+        configureTimer()
+        updateCubeGraphic(with: cube)
+        configureWipLabel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -58,6 +49,19 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
         
     func playSolveSound(){
         AVHelper.playVictorySound()
+    }
+    
+    func configureTimer(){
+        timeElapsed = rootVC?.viewModel?.timeElapsed ?? 0.00
+        let formattedTimerString = CBBrain.formatTimeForTimerLabel(timeElapsed: timeElapsed)
+        if rootVC?.viewModel?.timerRunning ?? true {
+            timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
+                self.timerUpdatesUI()
+            }
+            title = formattedTimerString
+        } else {
+            title = rootVC?.viewModel?.runningTimerLabel.text
+        }
     }
     //TEMP
     func configureWipLabel(){
