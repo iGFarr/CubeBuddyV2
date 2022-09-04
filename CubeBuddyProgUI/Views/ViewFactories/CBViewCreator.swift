@@ -8,11 +8,11 @@
 import UIKit
 
 struct CBViewCreator {
-    static func configureThemeChangeButton(for vc: CBBaseViewController, size: CGFloat = 30) {
+    static func configureThemeChangeButton(for vc: CBBaseViewController, size: CGFloat = 40) {
         let themeSwitchButton = CBButton()
         themeSwitchButton.heightConstant(size)
         themeSwitchButton.widthConstant(size)
-        themeSwitchButton.setBackgroundImage(UIImage(systemName: "lightbulb"), for: .normal)
+        themeSwitchButton.setBackgroundImage(UIImage(systemName: "lightbulb.circle"), for: .normal)
         themeSwitchButton.tintColor = .CBTheme.secondary ?? .systemGreen
         themeSwitchButton.addTapGestureRecognizer {
             self.themeChanged(vc: vc)
@@ -21,14 +21,19 @@ struct CBViewCreator {
     }
 
     static func themeChanged(vc: CBBaseViewController) {
+        var theme: UIUserInterfaceStyle = .dark
         switch vc.view.window?.traitCollection.userInterfaceStyle {
         case .light:
-            vc.view.window?.overrideUserInterfaceStyle = .dark
+            break
         case .dark:
-            vc.view.window?.overrideUserInterfaceStyle = .light
+            theme = .light
         default:
-            vc.view.window?.overrideUserInterfaceStyle = .dark
+            break
         }
+        UIView.animate(withDuration: 0.75, delay: 0.125, options: .curveEaseIn) {
+            vc.view.window?.overrideUserInterfaceStyle = theme
+        }
+
     }
     
     final class TimerView: UIView {
@@ -182,7 +187,8 @@ struct CBViewCreator {
         let buttonText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Show me the cube!", size: .large)
         
         showButton.layer.cornerRadius = CBConstants.UI.buttonCornerRadius
-        showButton.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
+        showButton.layer.borderColor = UIColor.CBTheme.secondary?.resolvedColor(with: UITraitCollection.current).cgColor
+        
         showButton.layer.borderWidth = 2
         showButton.setAttributedTitle(buttonText, for: .normal)
         if #available(iOS 15.0, *) {
@@ -252,7 +258,12 @@ struct CBViewCreator {
                 viewController.cube = cubeCopy
                 let timerVC = viewController.rootVC
                 timerVC?.cube = cubeCopy
-                viewController.updateCubeGraphic(with: cubeCopy)
+                let quarterTurn = 90 * CGFloat.pi / 180
+                UIView.animate(withDuration: 0.25, delay: 0.0, options: .curveEaseInOut) {
+                    stack.transform = CGAffineTransform(rotationAngle: -quarterTurn)
+                } completion: { Bool in
+                    viewController.updateCubeGraphic(with: cubeCopy)
+                }
             }
             
             rightTapView.trailing(stack.trailingAnchor)
@@ -276,7 +287,12 @@ struct CBViewCreator {
                 viewController.cube = cubeCopy
                 let timerVC = viewController.rootVC
                 timerVC?.cube = cubeCopy
-                viewController.updateCubeGraphic(with: cubeCopy)
+                let quarterTurn = 90 * CGFloat.pi / 180
+                UIView.animate(withDuration: 0.25, delay: 0.0, options: .curveEaseInOut) {
+                    stack.transform = CGAffineTransform(rotationAngle: quarterTurn)
+                } completion: { Bool in
+                    viewController.updateCubeGraphic(with: cubeCopy)
+                }
             }
         }
         
@@ -317,11 +333,6 @@ struct CBViewCreator {
         downFaceVStack.bottom(backFaceVStack.topAnchor, constant: -CBConstants.UI.defaultInsetX4)
     }
     
-    enum PossibleSide {
-        case left
-        case right
-    }
-    
     static func createLetterForCenterTile(in stackView: UIStackView, letter: String, on side: PossibleSide, color: UIColor = .black) {
         let letterView = CBLabel()
         letterView.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: letter, size: .small, color: color)
@@ -334,15 +345,6 @@ struct CBViewCreator {
         case .left:
             letterView.leading(stackView.leadingAnchor, constant: CBConstants.UI.defaultInsets)
         }
-    }
-    
-    enum CubeFace: String {
-        case up = "U"
-        case down = "D"
-        case back = "B"
-        case front = "F"
-        case left = "L"
-        case right = "R"
     }
     
     static func configureStackViewForFace(face: Surface, letter: CubeFace, hasBorder: Bool = true, cubeSize: CGFloat = CBConstants.defaultPuzzleSize, in container: CBView) -> CBStackView {

@@ -4,6 +4,7 @@
 //
 //  Created by Isaac Farr on 7/2/22.
 //
+import UIKit
 
 class TimerViewController: CBBaseViewController {
     var viewModel: CBViewCreator.TimerView?

@@ -34,8 +34,6 @@ class MenuViewController: CBBaseViewController {
         picker.dataSource = self
         CBConstraintHelper.constrain(picker, to: view)
     }
-    
-    
 }
 
 extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {

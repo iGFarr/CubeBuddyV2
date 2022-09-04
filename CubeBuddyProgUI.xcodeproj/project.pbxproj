@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A144C2028C44BF5009E1547 /* CBAVHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A144C1F28C44BF5009E1547 /* CBAVHelper.swift */; };
+		6A144C2328C44D50009E1547 /* FFFanfare.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 6A144C2228C44D50009E1547 /* FFFanfare.m4a */; };
 		6A7CCE0A286FFDB000598C88 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7CCE09286FFDB000598C88 /* AppDelegate.swift */; };
 		6A7CCE0C286FFDB000598C88 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7CCE0B286FFDB000598C88 /* SceneDelegate.swift */; };
 		6A7CCE0E286FFDB000598C88 /* CBBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7CCE0D286FFDB000598C88 /* CBBaseViewController.swift */; };
@@ -68,6 +70,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6A144C1F28C44BF5009E1547 /* CBAVHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBAVHelper.swift; sourceTree = "<group>"; };
+		6A144C2228C44D50009E1547 /* FFFanfare.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = FFFanfare.m4a; sourceTree = "<group>"; };
 		6A7CCE06286FFDB000598C88 /* CubeBuddyProgUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeBuddyProgUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A7CCE09286FFDB000598C88 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6A7CCE0B286FFDB000598C88 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -140,6 +144,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6A144C2128C44D50009E1547 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				6A144C2228C44D50009E1547 /* FFFanfare.m4a */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
 		6A7CCDFD286FFDB000598C88 = {
 			isa = PBXGroup;
 			children = (
@@ -202,6 +214,7 @@
 		6A7CCE3D287008F200598C88 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
+				6A144C2128C44D50009E1547 /* Sounds */,
 				6A7CCE09286FFDB000598C88 /* AppDelegate.swift */,
 				6A7CCE0B286FFDB000598C88 /* SceneDelegate.swift */,
 				6A7CCE0F286FFDB000598C88 /* Main.storyboard */,
@@ -230,10 +243,11 @@
 				6A7CCE402870095800598C88 /* UIColor+Extension.swift */,
 				6AACD4FB28717EF3006FB54B /* UIFont+Extension.swift */,
 				6AACD5052872F778006FB54B /* UIView+Extensions.swift */,
+				6AAF306028C2820A00870A00 /* UIStackView+Extension.swift */,
 				6AAF303A28B8CAB800870A00 /* UserDefaultsHelper.swift */,
 				6AAF304728B9D54A00870A00 /* NavigationController+TabBar+Ext.swift */,
 				6AAF305C28C07BD000870A00 /* CBConstraintHelper.swift */,
-				6AAF306028C2820A00870A00 /* UIStackView+Extension.swift */,
+				6A144C1F28C44BF5009E1547 /* CBAVHelper.swift */,
 			);
 			path = ExtensionsAndHelpers;
 			sourceTree = "<group>";
@@ -439,6 +453,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A144C2328C44D50009E1547 /* FFFanfare.m4a in Resources */,
 				6A7CCE19286FFDB100598C88 /* LaunchScreen.storyboard in Resources */,
 				6A7CCE16286FFDB100598C88 /* Assets.xcassets in Resources */,
 				6A7CCE11286FFDB000598C88 /* Main.storyboard in Resources */,
@@ -481,6 +496,7 @@
 				6AAF303328B8AD3D00870A00 /* SolveModel.swift in Sources */,
 				6AAF305F28C21AC100870A00 /* CBPickerView.swift in Sources */,
 				6AAF305728BF3FC200870A00 /* CBSlider.swift in Sources */,
+				6A144C2028C44BF5009E1547 /* CBAVHelper.swift in Sources */,
 				6AACD4FC28717EF3006FB54B /* UIFont+Extension.swift in Sources */,
 				6AAF305928BF3FE200870A00 /* CBSegmentedControl.swift in Sources */,
 				6AACD5062872F778006FB54B /* UIView+Extensions.swift in Sources */,

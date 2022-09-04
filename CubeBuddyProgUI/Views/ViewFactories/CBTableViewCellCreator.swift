@@ -8,11 +8,6 @@
 import Foundation
 import UIKit
 
-enum SeparatorPosition {
-    case top
-    case bottom
-    case topAndBottom
-}
 struct CBTableViewCellCreator {
     static func createAlertCellWith(actions: [UIAlertAction], alertTitle: String = "WARNING", alertMessage: String = "You are about to delete all your solves permanently.", for tableView: UITableView, in viewController: CBBaseTableViewController) -> CBBaseTableViewCell {
         let cell = CBBaseTableViewCell()

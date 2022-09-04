@@ -10,7 +10,7 @@ import UIKit
 class CBBaseTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        textLabel?.font = UIFont.CBFonts.primary
+        textLabel?.font = .CBFonts.primary
         backgroundColor = .clear
     }
     

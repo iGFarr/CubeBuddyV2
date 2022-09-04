@@ -8,27 +8,30 @@
 import UIKit
 
 extension UINavigationController {
-    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return visibleViewController?.supportedInterfaceOrientations ?? super.supportedInterfaceOrientations
-    }
 
-    open override var shouldAutorotate: Bool {
-        return visibleViewController?.shouldAutorotate ?? super.shouldAutorotate
-    }
-}
-
-extension UITabBarController {
-    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if let selected = selectedViewController {
-            return selected.supportedInterfaceOrientations
-        }
-        return super.supportedInterfaceOrientations
-    }
-
-    open override var shouldAutorotate: Bool {
-        if let selected = selectedViewController {
-            return selected.shouldAutorotate
+override open var shouldAutorotate: Bool {
+    get {
+        if let visibleVC = visibleViewController {
+            return visibleVC.shouldAutorotate
         }
         return super.shouldAutorotate
     }
 }
+
+override open var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation{
+    get {
+        if let visibleVC = visibleViewController {
+            return visibleVC.preferredInterfaceOrientationForPresentation
+        }
+        return super.preferredInterfaceOrientationForPresentation
+    }
+}
+
+override open var supportedInterfaceOrientations: UIInterfaceOrientationMask{
+    get {
+        if let visibleVC = visibleViewController {
+            return visibleVC.supportedInterfaceOrientations
+        }
+        return super.supportedInterfaceOrientations
+    }
+}}
