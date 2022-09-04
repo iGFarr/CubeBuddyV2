@@ -7,7 +7,7 @@ buttons on the side of each face.
   <img src="AppDemo-1.png" width="400" />
   <img src="AppDemo-2.png" width="400" /> 
 </p>
-<img src="AppDemo-3.png" width="400" />
-<img src="AppDemo-4.png" width="400" />
-<img src="AppDemo-5.png" width="400" />
-<img src="AppDemo-6.png" width="400" />
+<img src="AppDemo-3.png" width="800" />
+<img src="AppDemo-4.png" width="800" />
+<img src="AppDemo-5.png" width="800" />
+<img src="AppDemo-6.png" width="800" />
