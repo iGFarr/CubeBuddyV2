@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "Mégse";
 "Clear All"            = "Összes törlése";
+"Delete"               = "Törlés";
 "Menu"                 = "Menü";
 "Scramble"             = "Kavargás";
 "Scramble Length"      = "Scramble Length";

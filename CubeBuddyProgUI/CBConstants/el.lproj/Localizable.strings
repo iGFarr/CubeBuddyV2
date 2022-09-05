@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "Ακύρωση";
 "Clear All"            = "Εκκαθάριση όλων";
+"Delete"               = "Διαγραφή";
 "Menu"                 = "Μενού";
 "Scramble"             = "Scramble";
 "Scramble Length"      = "Μήκος αναπήδησης";

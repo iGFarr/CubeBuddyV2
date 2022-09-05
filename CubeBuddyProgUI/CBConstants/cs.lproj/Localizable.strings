@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "Zrušit";
 "Clear All"            = "Vymazat vše";
+"Delete"               = "Smazat";
 "Menu"                 = "Nabídka";
 "Scramble"             = "Scramble";
 "Scramble Length"      = "Délka zakódování";

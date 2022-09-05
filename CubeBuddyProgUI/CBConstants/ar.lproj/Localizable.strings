@@ -7,7 +7,9 @@
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
 
-"Clear All"            = "مسح الكل";
+"Cancel"               = "يلغي";
+"Clear All"            = "امسح الكل";
+"Delete"               = "حذف";
 "Menu"                 = "قائمة";
 "Scramble"             = "التدافع";
 "Scramble Length"      = "طول التدافع";

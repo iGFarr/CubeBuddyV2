@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "취소";
 "Clear All"            = "모두 지우기";
+"Delete"               = "삭제";
 "Menu"                 = "메뉴";
 "Scramble"             = "스크램블";
 "Scramble Length"      = "스크램블 길이";

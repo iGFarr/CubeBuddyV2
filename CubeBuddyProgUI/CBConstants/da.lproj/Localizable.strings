@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "Annuller";
 "Clear All"            = "Ryd alle";
+"Delete"               = "Slet";
 "Menu"                 = "Menu";
 "Scramble"             = "Scramble";
 "Scramble Length"      = "Scramble Længde";

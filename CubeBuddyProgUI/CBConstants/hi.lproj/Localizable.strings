@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "रद्द करें";
 "Clear All"            = "सभी साफ़ करें";
+"Delete"               = "हटाएं";
 "Menu"                 = "मेनू";
 "Scramble"             = "हाथापाई";
 "Scramble Length"      = "हाथापाई की लंबाई";

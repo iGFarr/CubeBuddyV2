@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "取消";
 "Clear All"            = "清除所有";
+"Delete"               = "刪除";
 "Menu"                 = "菜單";
 "Scramble"             = "爭奪";
 "Scramble Length"      = "打亂長度";

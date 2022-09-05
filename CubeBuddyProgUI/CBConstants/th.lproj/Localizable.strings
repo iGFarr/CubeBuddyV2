@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "ยกเลิก";
 "Clear All"            = "ล้างทั้งหมด";
+"Delete"               = "ลบ";
 "Menu"                 = "เมนู";
 "Scramble"             = "ช่วงชิง";
 "Scramble Length"      = "ความยาวช่วงชิง";

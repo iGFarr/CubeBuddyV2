@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "Odustani";
 "Clear All"            = "Obriši sve";
+"Delete"               = "Izbriši";
 "Menu"                 = "Izbornik";
 "Scramble"             = "Scramble";
 "Scramble Length"      = "Duljina kodiranja";

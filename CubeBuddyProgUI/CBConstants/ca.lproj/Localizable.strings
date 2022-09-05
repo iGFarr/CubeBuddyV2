@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "Cancel·la";
 "Clear All"            = "Esborra-ho tot";
+"Delete"               = "Suprimeix";
 "Menu"                 = "Menú";
 "Scramble"             = "Recorregut";
 "Scramble Length"      = "Longitud de l'escala";

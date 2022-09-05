@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "Anulează";
 "Clear All"            = "Ștergeți tot";
+"Delete"               = "Ștergeți";
 "Menu"                 = "Meniu";
 "Scramble"             = "Scramble";
 "Scramble Length"      = "Lungimea amestecului";

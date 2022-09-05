@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "キャンセル";
 "Clear All"            = "すべてクリア";
+"Delete"               = "削除";
 "Menu"                 = "メニュー";
 "Scramble"             = "スクランブル";
 "Scramble Length"      = "スクランブル長";

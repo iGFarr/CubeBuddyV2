@@ -5,8 +5,9 @@
   Created by Isaac Farr on 9/5/22.
   
 */
-
-"Clear All"            = "Borrar todo";
+"Cancel"               = "Cancelar";
+"Clear All"            = "Limpiar todo";
+"Delete"               = "Borrar";
 "Menu"                 = "Menú";
 "Scramble"             = "Revoltijo";
 "Scramble Length"      = "Longitud de codificación";

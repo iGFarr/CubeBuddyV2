@@ -18,18 +18,11 @@ class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let value = UIInterfaceOrientation.portrait.rawValue
-        UIDevice.current.setValue(value, forKey: "orientation")
         configureTimer()
         updateCubeGraphic(with: cube)
         work = DispatchWorkItem(block: {
             self.updateCubeGraphic(with: Cube())
         })
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        let value = UIInterfaceOrientation.portrait.rawValue
-        UIDevice.current.setValue(value, forKey: "orientation")
     }
     
     func updateCube(cube: Cube) {
@@ -99,13 +92,5 @@ class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate {
         view.addSubview(wipLabel)
         wipLabel.xAlignedWith(view)
         wipLabel.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80).isActive = true
-    }
-    
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
-    }
-
-    override var shouldAutorotate: Bool {
-        return true
     }
 }

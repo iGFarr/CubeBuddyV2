@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "Cancelar";
 "Clear All"            = "Borrar todo";
+"Delete"               = "Borrar";
 "Menu"                 = "Menú";
 "Scramble"             = "Revoltijo";
 "Scramble Length"      = "Longitud de codificación";

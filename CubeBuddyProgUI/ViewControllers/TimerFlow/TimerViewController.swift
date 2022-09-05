@@ -28,7 +28,7 @@ class TimerViewController: CBBaseViewController, CubeDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel?.delegate = self
-        title = CBConstants.CBMenuPickerPages.timer.rawValue
+        title = CBConstants.CBMenuPickerPages.timer.rawValue.localized()
         viewModel = CBViewCreator.TimerView()
         viewModel?.createTimerView(for: self, usingOptionsBar: true)
     }

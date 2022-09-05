@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "ביטול";
 "Clear All"            = "נקה הכל";
+"Delete"               = "מחק";
 "Menu"                 = "תפריט";
 "Scramble"             = "לטרוף";
 "Scramble Length"      = "אורך הטירוף";

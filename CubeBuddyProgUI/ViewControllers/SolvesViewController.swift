@@ -14,7 +14,7 @@ class SolvesViewController: CBBaseTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         solves = UserDefaultsHelper.getAllObjects(named: .solves)
-        title = CBConstants.CBMenuPickerPages.solves.rawValue
+        title = CBConstants.CBMenuPickerPages.solves.rawValue.localized()
         tableView.allowsMultipleSelection = true
         tableView.register(SolveCellModel.self, forCellReuseIdentifier: "solveCell")
     }
@@ -39,14 +39,14 @@ extension SolvesViewController {
         
         if indexPath.row == clearAllCellIndex {
             var actions = [UIAlertAction]()
-            actions.append(UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive, handler: { action in
+            actions.append(UIAlertAction(title: "Delete".localized(), style: UIAlertAction.Style.destructive, handler: { action in
                 self.deleteSolves()
                 self.solves.removeAll()
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
             }))
-            actions.append(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
+            actions.append(UIAlertAction(title: "Cancel".localized(), style: UIAlertAction.Style.default, handler: nil))
             
             cell = CBTableViewCellCreator.createAlertCellWith(actions: actions, for: tableView, in: self)
             return cell
@@ -68,7 +68,7 @@ extension SolvesViewController {
     }
     
     private func deleteSolves(){
-        let solves = [Solve]()
+        solves = [Solve]()
         UserDefaultsHelper.saveAllObjects(allObjects: solves, named: .solves)
     }
 }

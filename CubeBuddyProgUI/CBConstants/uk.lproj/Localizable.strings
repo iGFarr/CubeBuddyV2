@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "Скасувати";
 "Clear All"            = "Очистити все";
+"Delete"               = "Видалити";
 "Menu"                 = "Меню";
 "Scramble"             = "Scramble";
 "Scramble Length"      = "Довжина скремблування";

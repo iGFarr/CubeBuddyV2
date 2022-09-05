@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "Batal";
 "Clear All"            = "Kosongkan Semua";
+"Delete"               = "Padam";
 "Menu"                 = "Menu";
 "Scramble"             = "Berebut";
 "Scramble Length"      = "Panjang Perebutan";

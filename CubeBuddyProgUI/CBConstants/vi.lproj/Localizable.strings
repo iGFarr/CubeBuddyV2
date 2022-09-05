@@ -6,8 +6,9 @@
   
 */
 // Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
-
+"Cancel"               = "Hủy bỏ";
 "Clear All"            = "Xóa tất cả";
+"Delete"               = "Xóa";
 "Menu"                 = "Thực đơn";
 "Scramble"             = "Tranh giành";
 "Scramble Length"      = "Chiều dài xáo trộn";
