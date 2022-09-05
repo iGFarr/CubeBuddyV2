@@ -29,7 +29,7 @@ class SolveCellModel: CBBaseTableViewCell {
         solveTimeLabel.numberOfLines = 1
         puzzleLabel.numberOfLines = 1
         
-        puzzleLabel.constrainToCorner(.topRight, in: contentView)
+        puzzleLabel.constrainToEdgePosition(.topRight, in: contentView)
         CBConstraintHelper.constrain(stackView, to: contentView, usingInsets: true)
         stackView.addArrangedSubviews([
             solveTimeLabel,

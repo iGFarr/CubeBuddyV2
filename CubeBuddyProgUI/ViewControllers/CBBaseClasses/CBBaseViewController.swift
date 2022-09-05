@@ -14,7 +14,7 @@ class CBBaseViewController: UIViewController {
         didSet {
             UserDefaults.standard.set(soundsOn, forKey: UserDefaultsHelper.DefaultKeys.soundsOn.rawValue)
             soundsSwitchButton.removeFromSuperview()
-            CBViewCreator.configureSoundSwitchButton(for: self)
+            CBButtonCreator.configureSoundSwitchButton(for: self)
         }
     }
     lazy var explosionsOnSwitchButton = CBButton()
@@ -22,9 +22,10 @@ class CBBaseViewController: UIViewController {
         didSet {
             UserDefaults.standard.set(explosionsOn, forKey: UserDefaultsHelper.DefaultKeys.explosionsOn.rawValue)
             explosionsOnSwitchButton.removeFromSuperview()
-            CBViewCreator.configureExplosionsSwitchButton(for: self)
+            CBButtonCreator.configureExplosionsSwitchButton(for: self)
         }
     }
+    lazy var cubeResetButton = CBButton()
     override func viewDidLoad() {
         super.viewDidLoad()
         if UserDefaults.standard.integer(forKey: UserDefaultsHelper.DefaultKeys.firstLoad.rawValue) == 0 {

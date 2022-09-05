@@ -17,11 +17,12 @@ enum CBBasicFontSize: CGFloat {
     case iPad = 56
 }
 
-enum CornerPosition {
+enum EdgePosition {
     case topRight
     case topLeft
     case bottomRight
     case bottomLeft
+    case topCenter
 }
 
 enum CubeFace: String {

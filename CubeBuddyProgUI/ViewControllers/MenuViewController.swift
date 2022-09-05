@@ -22,7 +22,7 @@ class MenuViewController: CBBaseViewController {
         super.viewDidLoad()
         self.title = CBConstants.menuPageTitle
         createPickerWheel()
-        CBViewCreator.configureThemeChangeButton(for: self)
+        CBButtonCreator.configureThemeChangeButton(for: self)
     }
     
     override func viewWillAppear(_ animated: Bool) {

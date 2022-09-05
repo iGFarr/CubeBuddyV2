@@ -25,6 +25,7 @@ struct CBConstants {
         static let cubeFaceDimension: CGFloat = 90
         static let cubeTileDimension: CGFloat = 30
         static let cubeButtonWidth: CGFloat = isIpad ? 90 : 45
+        static let defaultButtonSize: CGFloat = 40
         static let defaultCornerRadius: CGFloat = isIpad ? 10 : 6
         static let defaultInsets: CGFloat = 8
         static let defaultInsetX4: CGFloat = 32

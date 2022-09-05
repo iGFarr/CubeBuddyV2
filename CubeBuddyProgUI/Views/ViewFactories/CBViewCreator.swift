@@ -8,76 +8,9 @@
 import UIKit
 
 class CBViewCreator {
-    static func configureSoundSwitchButton(for vc: CBBaseViewController, size: CGFloat = 40){
-        let soundSwitchButton = CBButton()
-        soundSwitchButton.heightConstant(size)
-        soundSwitchButton.widthConstant(size)
-        if vc.soundsOn {
-            soundSwitchButton.setBackgroundImage(UIImage(systemName: "speaker.fill"), for: .normal)
-        } else {
-            soundSwitchButton.setBackgroundImage(UIImage(systemName: "speaker"), for: .normal)
-        }
-        soundSwitchButton.tintColor = .CBTheme.secondary ?? .systemGreen
-        soundSwitchButton.addTapGestureRecognizer {
-            if vc.soundsOn {
-                vc.AVHelper.player.stop()
-            }
-            vc.soundsOn.toggle()
-            print("toggled")
-        }
-        soundSwitchButton.constrainToCorner(.topLeft, in: vc.view, safeArea: true)
-        vc.soundsSwitchButton = soundSwitchButton
-    }
-    
-    static func configureExplosionsSwitchButton(for vc: CBBaseViewController, size: CGFloat = 40){
-        let explosionsSwitchButton = CBButton()
-        explosionsSwitchButton.heightConstant(size)
-        explosionsSwitchButton.widthConstant(size)
-        if vc.explosionsOn {
-            explosionsSwitchButton.setBackgroundImage(UIImage(systemName: "atom"), for: .normal)
-        } else {
-            explosionsSwitchButton.setBackgroundImage(UIImage(systemName: "burn"), for: .normal)
-        }
-        explosionsSwitchButton.tintColor = .CBTheme.secondary ?? .systemGreen
-        explosionsSwitchButton.addTapGestureRecognizer {
-            vc.explosionsOn.toggle()
-            print("toggled")
-        }
-        explosionsSwitchButton.constrainToCorner(.topRight, in: vc.view, safeArea: true)
-        vc.explosionsOnSwitchButton = explosionsSwitchButton
-    }
-    
-    static func configureThemeChangeButton(for vc: CBBaseViewController, size: CGFloat = 40) {
-        let themeSwitchButton = CBButton()
-        themeSwitchButton.heightConstant(size)
-        themeSwitchButton.widthConstant(size)
-        themeSwitchButton.setBackgroundImage(UIImage(systemName: "lightbulb.circle"), for: .normal)
-        themeSwitchButton.tintColor = .CBTheme.secondary ?? .systemGreen
-        themeSwitchButton.addTapGestureRecognizer {
-            self.themeChanged(vc: vc)
-        }
-        themeSwitchButton.constrainToCorner(.topLeft, in: vc.view, safeArea: true)
-    }
-    
-    static func themeChanged(vc: CBBaseViewController) {
-        var theme: UIUserInterfaceStyle = .dark
-        switch vc.view.window?.traitCollection.userInterfaceStyle {
-        case .light:
-            break
-        case .dark:
-            theme = .light
-        default:
-            break
-        }
-        UIView.animate(withDuration: 0.75, delay: 0.125, options: .curveEaseIn) {
-            vc.view.window?.overrideUserInterfaceStyle = theme
-        }
-        
-    }
-    
     final class TimerView: UIView {
         var solves =  [Solve]()
-        var delegate: SliderDelegate?
+        var delegate: CubeDelegate?
         var timerRunning = false
         let scrambleLengthLabel = CBLabel()
         let scrambleLabel = CBLabel()
@@ -403,9 +336,9 @@ class CBViewCreator {
                 }
                 print(subview.center.x, view.center.x)
                 let timer = Timer(timeInterval: 0.001, repeats: true) { _ in
-                    transformAmount += 0.025
+                    transformAmount += 0.015
                     //                    subview.transform = CGAffineTransform(translationX: transformAmount * xTransform, y: transformAmount * yTransform)
-                    subview.transform = CGAffineTransform(rotationAngle: transformAmount).translatedBy(x: transformAmount * xTransform, y: transformAmount * yTransform)
+                    subview.transform = CGAffineTransform(rotationAngle: transformAmount/5).translatedBy(x: transformAmount * xTransform, y: transformAmount * yTransform)
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now()) { // Change `2.0` to the desired number of seconds.
                     RunLoop.current.add(timer, forMode: .default)

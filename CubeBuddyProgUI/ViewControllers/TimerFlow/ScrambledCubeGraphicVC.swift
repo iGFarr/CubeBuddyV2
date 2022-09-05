@@ -7,7 +7,12 @@
 
 import UIKit
 
-class ScrambledCubeGraphicVC: CBBaseViewController {
+class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate {
+    func updateCube(cube: Cube) {
+        self.cube = cube
+        updateCubeGraphic(with: self.cube)
+    }
+    
     var scramble = ""
     var cube = Cube()
     var rootVC: TimerViewController?
@@ -34,8 +39,9 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
         }
         CBViewCreator.createCubeGraphicView(for: self, with: cube)
         configureWipLabel()
-        CBViewCreator.configureSoundSwitchButton(for: self)
-        CBViewCreator.configureExplosionsSwitchButton(for: self)
+        CBButtonCreator.configureSoundSwitchButton(for: self)
+        CBButtonCreator.configureExplosionsSwitchButton(for: self)
+        CBButtonCreator.configureCubeResetButton(for: self)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -81,7 +87,7 @@ class ScrambledCubeGraphicVC: CBBaseViewController {
         }
         view.addSubview(wipLabel)
         wipLabel.xAlignedWith(view)
-        wipLabel.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40).isActive = true
+        wipLabel.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80).isActive = true
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {

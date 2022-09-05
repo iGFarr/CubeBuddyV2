@@ -6,12 +6,12 @@
 //
 import UIKit
 
-protocol SliderDelegate {
+protocol CubeDelegate {
     var cube: Cube { get set }
     func updateCube (cube: Cube) -> Void
 }
 
-class TimerViewController: CBBaseViewController, SliderDelegate {
+class TimerViewController: CBBaseViewController, CubeDelegate {
     func updateCube(cube: Cube) {
         self.cube = cube
     }
