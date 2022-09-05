@@ -84,7 +84,7 @@ class CBButtonCreator {
         default:
             break
         }
-        UIView.animate(withDuration: 0.50, delay: 0.05, options: .curveEaseIn) {
+        UIView.animate(withDuration: 0.50, delay: 0.05, options: .curveEaseOut) {
             vc.view.window?.overrideUserInterfaceStyle = theme
         }
     }
