@@ -16,6 +16,7 @@ class CBButtonCreator {
         cubeResetButton.setBackgroundImage(UIImage(systemName: "circle.grid.3x3.fill"), for: .normal)
         cubeResetButton.tintColor = .CBTheme.secondary ?? .systemGreen
         cubeResetButton.addTapGestureRecognizer {
+            delegate.cancelUpdate()
             delegate.updateCube(cube: Cube())
         }
         cubeResetButton.constrainToEdgePosition(.topCenter, in: vc.view, safeArea: true)
@@ -83,7 +84,7 @@ class CBButtonCreator {
         default:
             break
         }
-        UIView.animate(withDuration: 0.75, delay: 0.125, options: .curveEaseIn) {
+        UIView.animate(withDuration: 0.50, delay: 0.05, options: .curveEaseIn) {
             vc.view.window?.overrideUserInterfaceStyle = theme
         }
     }

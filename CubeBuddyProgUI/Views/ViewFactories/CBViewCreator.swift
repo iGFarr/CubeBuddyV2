@@ -313,9 +313,10 @@ class CBViewCreator {
                         if viewController.explosionsOn {
                             containerView.isUserInteractionEnabled = false
                             animationExplosion(view: containerView)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                                viewController.updateCubeGraphic(with: cubeCopy)
-                            }
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: viewController.work ?? DispatchWorkItem(block: {
+                                print("No work item loaded")
+                            }))
                         } else {
                             viewController.updateCubeGraphic(with: cubeCopy)
                         }

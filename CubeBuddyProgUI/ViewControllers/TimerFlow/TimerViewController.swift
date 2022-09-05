@@ -9,6 +9,13 @@ import UIKit
 protocol CubeDelegate {
     var cube: Cube { get set }
     func updateCube (cube: Cube) -> Void
+    func cancelUpdate () -> Void
+}
+
+extension CubeDelegate {
+    func cancelUpdate(){
+        print("Exectuing default implementation of cancelUpdate()")
+    }
 }
 
 class TimerViewController: CBBaseViewController, CubeDelegate {

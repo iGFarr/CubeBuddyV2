@@ -8,11 +8,7 @@
 import UIKit
 
 class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate {
-    func updateCube(cube: Cube) {
-        self.cube = cube
-        updateCubeGraphic(with: self.cube)
-    }
-    
+    var work: DispatchWorkItem?
     var scramble = ""
     var cube = Cube()
     var rootVC: TimerViewController?
@@ -26,11 +22,23 @@ class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate {
         UIDevice.current.setValue(value, forKey: "orientation")
         configureTimer()
         updateCubeGraphic(with: cube)
+        work = DispatchWorkItem(block: {
+            self.updateCubeGraphic(with: Cube())
+        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
         let value = UIInterfaceOrientation.portrait.rawValue
         UIDevice.current.setValue(value, forKey: "orientation")
+    }
+    
+    func updateCube(cube: Cube) {
+        self.cube = cube
+        updateCubeGraphic(with: self.cube)
+    }
+    
+    func cancelUpdate() {
+        work?.cancel()
     }
     
     func updateCubeGraphic(with cube: Cube){
