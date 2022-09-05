@@ -71,5 +71,5 @@ struct CBConstants {
     static let defaultPuzzleDescription = "3x3"
     static let defaultScrambleLength = 20
     static let defaultScrambleSliderValue: Float = 20.0
-    static let menuPageTitle = "Menu"
+    static let menuPageTitle = "Menu".localized()
 }

@@ -1,0 +1,22 @@
+/* 
+  Localizable.strings
+  CubeBuddyProgUI
+
+  Created by Isaac Farr on 9/5/22.
+  
+*/
+// Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
+
+"Clear All"            = "Wyczyść wszystko";
+"Menu"                 = "Menu";
+"Scramble"             = "Wyszyfruj";
+"Scramble Length"      = "Długość kodu";
+"Show Cube"            = "Pokaż mi kostkę!";
+"SOLVED"               = "ROZWIĄZANE";
+"Solves"               = "Rozwiązuje";
+"Stopwatch"            = "Stoper";
+"Time"                 = "Czas";
+"WARNING"              = "OSTRZEŻENIE";
+"WARNING MESSAGE"      = "Zamierzasz trwale usunąć wszystkie swoje rozwiązania.";
+
+

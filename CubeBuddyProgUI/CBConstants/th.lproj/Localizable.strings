@@ -1,0 +1,22 @@
+/* 
+  Localizable.strings
+  CubeBuddyProgUI
+
+  Created by Isaac Farr on 9/5/22.
+  
+*/
+// Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
+
+"Clear All"            = "ล้างทั้งหมด";
+"Menu"                 = "เมนู";
+"Scramble"             = "ช่วงชิง";
+"Scramble Length"      = "ความยาวช่วงชิง";
+"Show Cube"            = "แสดงลูกบาศก์ให้ฉันดู!";
+"SOLVED"               = "แก้ไขแล้ว";
+"Solves"               = "แก้";
+"Stopwatch"            = "นาฬิกาจับเวลา";
+"Time"                 = "เวลา";
+"WARNING"              = "คำเตือน";
+"WARNING MESSAGE"      = "คุณกำลังจะลบการแก้ทั้งหมดของคุณอย่างถาวร";
+
+

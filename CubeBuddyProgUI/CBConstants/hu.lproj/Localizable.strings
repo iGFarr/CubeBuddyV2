@@ -1,0 +1,22 @@
+/* 
+  Localizable.strings
+  CubeBuddyProgUI
+
+  Created by Isaac Farr on 9/5/22.
+  
+*/
+// Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
+
+"Clear All"            = "Összes törlése";
+"Menu"                 = "Menü";
+"Scramble"             = "Kavargás";
+"Scramble Length"      = "Scramble Length";
+"Show Cube"            = "Mutasd a kockát!";
+"SOLVED"               = "MEGOLDVA";
+"Solves"               = "Megoldja";
+"Stopwatch"            = "Stopperóra";
+"Time"                 = "Idő";
+"WARNING"              = "FIGYELEM";
+"WARNING MESSAGE"      = "Ön az összes megoldás végleges törlésére készül.";
+
+

@@ -40,7 +40,7 @@ struct CBBrain {
             scrambleArray.append(randomMove)
         }
         var scrambleString = scrambleArray.joined(separator: " ")
-        scrambleString = "Scramble:\n" + scrambleString
+        scrambleString = "Scramble".localized() + ":\n" + scrambleString
         return scrambleString
     }
     
@@ -72,7 +72,7 @@ struct CBBrain {
             milliString = "0" + String(msToHundredths)
         }
         
-        let formattedTimerString = "Time: \(useHours ? (hourString + ":"): "")\(useMinutes ? (minuteString + ":") : "")\(secondString):\(milliString)"
+        let formattedTimerString = "Time".localized() + ": \(useHours ? (hourString + ":"): "")\(useMinutes ? (minuteString + ":") : "")\(secondString):\(milliString)"
         return formattedTimerString
     }
 }

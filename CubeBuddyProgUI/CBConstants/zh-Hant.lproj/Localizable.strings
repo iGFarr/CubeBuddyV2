@@ -1,0 +1,22 @@
+/* 
+  Localizable.strings
+  CubeBuddyProgUI
+
+  Created by Isaac Farr on 9/5/22.
+  
+*/
+// Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
+
+"Clear All"            = "清除所有";
+"Menu"                 = "菜單";
+"Scramble"             = "爭奪";
+"Scramble Length"      = "打亂長度";
+"Show Cube"            = "給我看立方體！";
+"SOLVED"               = "解決";
+"Solves"               = "解決";
+"Stopwatch"            = "秒錶";
+"Time"                 = "時間";
+"WARNING"              = "警告";
+"WARNING MESSAGE"      = "您即將永久刪除所有解決方案。";
+
+

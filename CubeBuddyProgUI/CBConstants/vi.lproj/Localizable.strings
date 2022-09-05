@@ -1,0 +1,22 @@
+/* 
+  Localizable.strings
+  CubeBuddyProgUI
+
+  Created by Isaac Farr on 9/5/22.
+  
+*/
+// Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
+
+"Clear All"            = "Xóa tất cả";
+"Menu"                 = "Thực đơn";
+"Scramble"             = "Tranh giành";
+"Scramble Length"      = "Chiều dài xáo trộn";
+"Show Cube"            = "Cho tôi xem khối lập phương!";
+"SOLVED"               = "GIẢI QUYẾT";
+"Solves"               = "Giải quyết";
+"Stopwatch"            = "Đồng hồ bấm giờ";
+"Time"                 = "Thời gian";
+"WARNING"              = "CẢNH BÁO";
+"WARNING MESSAGE"      = "Bạn sắp xóa vĩnh viễn tất cả các giải pháp của mình.";
+
+

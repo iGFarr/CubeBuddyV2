@@ -39,6 +39,9 @@ class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate {
     
     func cancelUpdate() {
         work?.cancel()
+        work = DispatchWorkItem(block: {
+            self.updateCubeGraphic(with: Cube())
+        })
     }
     
     func updateCubeGraphic(with cube: Cube){
@@ -82,7 +85,7 @@ class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate {
         wipLabel.isHidden = false
         if self.selectedPuzzleSize == 3 {
             if self.cube == Cube() {
-                wipLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "SOLVED", size: .xxl)
+                wipLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "SOLVED".localized(), size: .xxl)
                 self.timer?.invalidate()
                 self.rootVC?.viewModel?.timer?.invalidate()
                 self.rootVC?.viewModel?.timerRunning = false

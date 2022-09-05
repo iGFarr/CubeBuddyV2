@@ -73,7 +73,7 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         let pickerLabel = CBLabel() //get picker label that come
         var title = CBConstants.UI.makeTextAttributedWithCBStyle(text: "", size: .large, textStyle: .headline)
         if row != emptyRowIndex {
-            title = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBConstants.CBMenuPickerPages.allCases[row - 1].rawValue, size: .large)
+            title = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBConstants.CBMenuPickerPages.allCases[row - 1].rawValue.localized(), size: .large)
         }
         pickerLabel.textAlignment = .left
         pickerLabel.attributedText = title //setting attributed text as title

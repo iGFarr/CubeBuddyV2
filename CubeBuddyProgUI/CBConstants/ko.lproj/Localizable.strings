@@ -1,0 +1,22 @@
+/* 
+  Localizable.strings
+  CubeBuddyProgUI
+
+  Created by Isaac Farr on 9/5/22.
+  
+*/
+// Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
+
+"Clear All"            = "모두 지우기";
+"Menu"                 = "메뉴";
+"Scramble"             = "스크램블";
+"Scramble Length"      = "스크램블 길이";
+"Show Cube"            = "큐브를 보여주세요!";
+"SOLVED"               = "해결됨";
+"Solves"               = "해결";
+"Stopwatch"            = "스톱워치";
+"Time"                 = "시간";
+"WARNING"              = "경고";
+"WARNING MESSAGE"      = "모든 해결 방법을 영구적으로 삭제하려고 합니다.";
+
+

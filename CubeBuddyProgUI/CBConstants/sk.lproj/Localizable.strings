@@ -1,0 +1,22 @@
+/* 
+  Localizable.strings
+  CubeBuddyProgUI
+
+  Created by Isaac Farr on 9/5/22.
+  
+*/
+// Translations are done manually currently. Please align '=' signs and keep in alphabetic order for convenience
+
+"Clear All"            = "Vymazať všetko";
+"Menu"                 = "Menu";
+"Scramble"             = "Scramble";
+"Scramble Length"      = "Dĺžka zakódovania";
+"Show Cube"            = "Ukáž mi kocku!";
+"SOLVED"               = "VYRIEŠENÉ";
+"Solves"               = "Rieši";
+"Stopwatch"            = "Stopky";
+"Time"                 = "Čas";
+"WARNING"              = "UPOZORNENIE";
+"WARNING MESSAGE"      = "Chystáte sa natrvalo odstrániť všetky svoje riešenia.";
+
+
