@@ -7,7 +7,7 @@ buttons on the side of each face.</p>
 <hr size="5">
 <p float="left">
   <img src="AppDemoGIF1.gif" width="400" />
-  <img src="AppDemo-GIF2.gif" width="400" height="850" /> 
+  <img src="AppDemo-GIF2.gif" width="400" height="845" /> 
 </p>
 <hr size="5">
 <div class="column" style="background-color:#FFB695;">
