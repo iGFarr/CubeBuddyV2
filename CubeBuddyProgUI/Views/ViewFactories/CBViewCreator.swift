@@ -155,7 +155,7 @@ class CBViewCreator {
                     scrambleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UI.doubleInset),
                     
                     timerButtonView.topAnchor.constraint(equalTo: optionsBar.bottomAnchor, constant: CBConstants.UI.defaultInsetX4),
-                    timerButtonView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+                    timerButtonView.bottomAnchor.constraint(equalTo: puzzleChoiceSegmentedControl.topAnchor),
                     timerButtonView.widthAnchor.constraint(equalTo: containerView.widthAnchor),
                     
                     runningTimerLabel.centerXAnchor.constraint(equalTo: timerButtonView.centerXAnchor),
@@ -397,9 +397,7 @@ class CBViewCreator {
         
         // All constraints and dimensions are based around 3x3, and then scaled down to fit for larger cubes. So the overall face dimension is equal to 3 * tile size + some spacing
         var stackViewDimension = CBConstants.defaultPuzzleSize * CBConstants.UI.cubeTileDimension + CBConstants.UI.defaultStackViewSpacing
-        if CBConstants.UI.isIpad {
-            stackViewDimension *= CBConstants.UI.iPadScaleMultiplier
-        }
+        stackViewDimension *= CBConstants.UI.scaleMultiplier
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
         stackView.heightConstant(stackViewDimension)
@@ -407,9 +405,7 @@ class CBViewCreator {
         container.addSubview(stackView)
         
         var tileDimension = CBConstants.UI.cubeTileDimension
-        if CBConstants.UI.isIpad {
-            tileDimension *= CBConstants.UI.iPadScaleMultiplier
-        }
+        tileDimension *= CBConstants.UI.scaleMultiplier
         for stack in 1...Int(cubeSize) {
             let hStack = CBStackView()
             stackView.addArrangedSubview(hStack)

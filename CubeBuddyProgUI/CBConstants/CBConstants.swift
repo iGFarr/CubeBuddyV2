@@ -24,12 +24,12 @@ struct CBConstants {
         static let cellSeparatorHeight: CGFloat = 2
         static let cubeFaceDimension: CGFloat = 90
         static let cubeTileDimension: CGFloat = 30
-        static let cubeButtonWidth: CGFloat = isIpad ? 90 : 45
-        static let defaultButtonSize: CGFloat = 40
-        static let defaultCornerRadius: CGFloat = isIpad ? 10 : 6
-        static let defaultInsets: CGFloat = 8
-        static let defaultInsetX4: CGFloat = 32
-        static let defaultStackViewSpacing: CGFloat = 16
+        static let cubeButtonWidth: CGFloat = 45 * scaleMultiplier
+        static let defaultButtonSize: CGFloat = isIpad ? 55 : 45
+        static let defaultCornerRadius: CGFloat = 6 * scaleMultiplier
+        static let defaultInsets: CGFloat = 8 * scaleMultiplier
+        static let defaultInsetX4: CGFloat = 32 * scaleMultiplier
+        static let defaultStackViewSpacing: CGFloat = 8 * scaleMultiplier
         static let doubleInset: CGFloat = 16
         static let halfInset: CGFloat = 4
         static var isIpad: Bool {
@@ -38,30 +38,22 @@ struct CBConstants {
         static var isPortraitMode: Bool {
             (UIDevice.current.orientation == .portrait) || (UIDevice.current.orientation == .portraitUpsideDown)
         }
-        static let iPadScaleMultiplier: CGFloat = 1.75
+        static var scaleMultiplier: CGFloat {
+            if isIpad {
+                return 1.5
+            }
+            if isSmallScreen {
+                return 0.8
+            }
+            return 1.0
+        }
         static let pickerRowHeight: CGFloat = isIpad ? 80 : 50
         static let pickerComponentWidth: CGFloat = isIpad ? 300 : 200
+        static var isSmallScreen: Bool {
+            UIScreen.main.bounds.width < 400 && UIScreen.main.bounds.height < 700
+        }
         static func makeTextAttributedWithCBStyle(text: String, size: CBBasicFontSize = .medium, color: UIColor = .CBTheme.secondary ?? .systemGreen, textStyle: UIFont.TextStyle = .subheadline, strokeWidth: Int = 0) -> NSAttributedString {
-            var adjustedSize = size
-            if Self.isIpad {
-                switch size {
-                case .mini:
-                    adjustedSize = .medium
-                case .small:
-                    adjustedSize = .large
-                case .medium:
-                    adjustedSize = .xl
-                case .large:
-                    adjustedSize = .xxl
-                case .xl:
-                    adjustedSize = .iPad
-                case .xxl:
-                    adjustedSize = .iPad
-                case .iPad:
-                    break
-                }
-            }
-            let font: UIFont = .CBFonts.returnCustomFont(size: adjustedSize, textStyle: textStyle)
+            let font: UIFont = .CBFonts.returnCustomFont(size: size, textStyle: textStyle)
             let textAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: color, .font: font, .strokeWidth: strokeWidth]
             return NSAttributedString(string: text, attributes: textAttributes)
         }

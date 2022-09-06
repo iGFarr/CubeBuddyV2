@@ -97,7 +97,7 @@ class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate {
         }
         view.addSubview(wipLabel)
         wipLabel.xAlignedWith(view)
-        wipLabel.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80).isActive = true
+        wipLabel.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80 * CBConstants.UI.scaleMultiplier).isActive = true
     }
     
     func changeCubeResetButtonColor(){
