@@ -73,6 +73,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-
+    
+    func loadSavedData() -> [Solve] {
+        let request = Solve.createFetchRequest()
+        var solves = [Solve]()
+        do {
+            solves = try persistentContainer.viewContext.fetch(request)
+            print("Got \(solves.count) commits")
+        } catch {
+            print("Fetch failed")
+        }
+        return solves
+    }
 }
 
+extension UIViewController {
+
+    var context : NSManagedObjectContext {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        return appDelegate.persistentContainer.viewContext
+    }
+    
+    func loadCoreData() -> [Solve] {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let request = Solve.createFetchRequest()
+        var solves = [Solve]()
+        do {
+            solves = try appDelegate.persistentContainer.viewContext.fetch(request)
+        } catch {
+            print("Fetching failed")
+        }
+        return solves
+    }
+
+    func saveCoreData() {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                // Replace this implementation with code to handle the error appropriately.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                let nserror = error as NSError
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
+    }
+}

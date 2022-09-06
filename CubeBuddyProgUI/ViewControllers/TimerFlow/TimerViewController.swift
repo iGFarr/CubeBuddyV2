@@ -34,6 +34,6 @@ class TimerViewController: CBBaseViewController, CubeDelegate {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        viewModel?.solves = UserDefaultsHelper.getAllObjects(named: .solves)
+        viewModel?.solves = self.loadCoreData()
     }
 }
