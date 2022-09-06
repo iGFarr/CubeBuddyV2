@@ -12,6 +12,8 @@
 		6A144C2528C5C986009E1547 /* CBButtonCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A144C2428C5C986009E1547 /* CBButtonCreator.swift */; };
 		6A144C3028C5EB04009E1547 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6A144C3228C5EB04009E1547 /* Localizable.strings */; };
 		6A144C3528C5EB94009E1547 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A144C3428C5EB94009E1547 /* String+Extension.swift */; };
+		6A5AC4A928C75A58007D39E4 /* Solve+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5AC4A728C75A58007D39E4 /* Solve+CoreDataClass.swift */; };
+		6A5AC4AA28C75A58007D39E4 /* Solve+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5AC4A828C75A58007D39E4 /* Solve+CoreDataProperties.swift */; };
 		6A7CCE0A286FFDB000598C88 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7CCE09286FFDB000598C88 /* AppDelegate.swift */; };
 		6A7CCE0C286FFDB000598C88 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7CCE0B286FFDB000598C88 /* SceneDelegate.swift */; };
 		6A7CCE0E286FFDB000598C88 /* CBBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7CCE0D286FFDB000598C88 /* CBBaseViewController.swift */; };
@@ -32,7 +34,6 @@
 		6AACD5042872F0AD006FB54B /* CBViewCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AACD5032872F0AD006FB54B /* CBViewCreator.swift */; };
 		6AACD5062872F778006FB54B /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AACD5052872F778006FB54B /* UIView+Extensions.swift */; };
 		6AACD5092876DE07006FB54B /* CBBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AACD5082876DE07006FB54B /* CBBrain.swift */; };
-		6AAF303328B8AD3D00870A00 /* SolveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF303228B8AD3D00870A00 /* SolveModel.swift */; };
 		6AAF303628B8AE7C00870A00 /* SolveCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF303428B8AE7C00870A00 /* SolveCellModel.swift */; };
 		6AAF303928B8AF2600870A00 /* CBBaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF303828B8AF2600870A00 /* CBBaseTableViewController.swift */; };
 		6AAF303B28B8CAB800870A00 /* UserDefaultsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF303A28B8CAB800870A00 /* UserDefaultsHelper.swift */; };
@@ -114,6 +115,8 @@
 		6A5AC4A428C61A51007D39E4 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6A5AC4A528C61A56007D39E4 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6A5AC4A628C61A5C007D39E4 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6A5AC4A728C75A58007D39E4 /* Solve+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Solve+CoreDataClass.swift"; sourceTree = "<group>"; };
+		6A5AC4A828C75A58007D39E4 /* Solve+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Solve+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		6A7CCE06286FFDB000598C88 /* CubeBuddyProgUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeBuddyProgUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A7CCE09286FFDB000598C88 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6A7CCE0B286FFDB000598C88 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -138,7 +141,6 @@
 		6AACD5032872F0AD006FB54B /* CBViewCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBViewCreator.swift; sourceTree = "<group>"; };
 		6AACD5052872F778006FB54B /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		6AACD5082876DE07006FB54B /* CBBrain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBBrain.swift; sourceTree = "<group>"; };
-		6AAF303228B8AD3D00870A00 /* SolveModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolveModel.swift; sourceTree = "<group>"; };
 		6AAF303428B8AE7C00870A00 /* SolveCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolveCellModel.swift; sourceTree = "<group>"; };
 		6AAF303828B8AF2600870A00 /* CBBaseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBBaseTableViewController.swift; sourceTree = "<group>"; };
 		6AAF303A28B8CAB800870A00 /* UserDefaultsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsHelper.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 		6A7CCDFD286FFDB000598C88 = {
 			isa = PBXGroup;
 			children = (
+				6A5AC4A728C75A58007D39E4 /* Solve+CoreDataClass.swift */,
 				6A7CCE08286FFDB000598C88 /* CubeBuddyProgUI */,
 				6A7CCE3C286FFFB500598C88 /* Tests */,
 				6A7CCE07286FFDB000598C88 /* Products */,
@@ -346,7 +349,7 @@
 		6AAF303D28B8D6E600870A00 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				6AAF303228B8AD3D00870A00 /* SolveModel.swift */,
+				6A5AC4A828C75A58007D39E4 /* Solve+CoreDataProperties.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -576,7 +579,7 @@
 				6A7CCE14286FFDB000598C88 /* CubeBuddyProgUI.xcdatamodeld in Sources */,
 				6AAF306328C285F100870A00 /* CBBaseTableViewCell.swift in Sources */,
 				6AAF304128B915F900870A00 /* CoreRubiksCube.swift in Sources */,
-				6AAF303328B8AD3D00870A00 /* SolveModel.swift in Sources */,
+				6A5AC4AA28C75A58007D39E4 /* Solve+CoreDataProperties.swift in Sources */,
 				6AAF305F28C21AC100870A00 /* CBPickerView.swift in Sources */,
 				6AAF305728BF3FC200870A00 /* CBSlider.swift in Sources */,
 				6A144C2028C44BF5009E1547 /* CBAVHelper.swift in Sources */,
@@ -593,6 +596,7 @@
 				6A7CCE0A286FFDB000598C88 /* AppDelegate.swift in Sources */,
 				6AACD4FE287191FB006FB54B /* SolvesViewController.swift in Sources */,
 				6AAF305128BE260800870A00 /* CBButton.swift in Sources */,
+				6A5AC4A928C75A58007D39E4 /* Solve+CoreDataClass.swift in Sources */,
 				6AAF304828B9D54A00870A00 /* NavigationController+TabBar+Ext.swift in Sources */,
 				6A7CCE0C286FFDB000598C88 /* SceneDelegate.swift in Sources */,
 				6AAF303B28B8CAB800870A00 /* UserDefaultsHelper.swift in Sources */,

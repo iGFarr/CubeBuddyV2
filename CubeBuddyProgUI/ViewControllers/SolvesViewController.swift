@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class SolvesViewController: CBBaseTableViewController {
     private var solves = [Solve]()
@@ -13,14 +14,14 @@ class SolvesViewController: CBBaseTableViewController {
     private let clearAllCell = 1
     override func viewDidLoad() {
         super.viewDidLoad()
-        solves = UserDefaultsHelper.getAllObjects(named: .solves)
+        solves = loadCoreData()
         title = CBConstants.CBMenuPickerPages.solves.rawValue.localized()
         tableView.allowsMultipleSelection = true
         tableView.register(SolveCellModel.self, forCellReuseIdentifier: "solveCell")
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        solves = UserDefaultsHelper.getAllObjects(named: .solves)
+        solves = loadCoreData()
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -68,7 +69,18 @@ extension SolvesViewController {
     }
     
     private func deleteSolves(){
-        solves = [Solve]()
-        UserDefaultsHelper.saveAllObjects(allObjects: solves, named: .solves)
+        let context = ( UIApplication.shared.delegate as! AppDelegate ).persistentContainer.viewContext
+        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Solve")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+        do
+        {
+            try context.execute(deleteRequest)
+            try context.save()
+        }
+        catch
+        {
+            print ("There was an error")
+        }
+        saveCoreData()
     }
 }
