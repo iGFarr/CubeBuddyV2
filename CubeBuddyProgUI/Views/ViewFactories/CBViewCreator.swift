@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class CBViewCreator {
     final class TimerView: UIView {
@@ -22,7 +23,6 @@ class CBViewCreator {
         
         override init(frame: CGRect) {
             super.init(frame: frame)
-            self.solves = UserDefaultsHelper.getAllObjects(named: .solves)
         }
         
         required init?(coder: NSCoder) {
@@ -52,8 +52,7 @@ class CBViewCreator {
             }
         }
         
-        func createTimerView(for viewController: TimerViewController, usingOptionsBar: Bool = false) {
-            
+        func createTimerView(for viewController: TimerViewController, usingOptionsBar: Bool = false) {            
             func timerUpdatesUI(){
                 self.timeElapsed += 0.01
                 let formattedTimerString = CBBrain.formatTimeForTimerLabel(timeElapsed: self.timeElapsed)
@@ -100,10 +99,15 @@ class CBViewCreator {
                         scrambleLabel.isHidden = true
                     }
                 } else {
-                    let newSolve = Solve(scramble: scrambleLabel.text ?? "No scramble", time: runningTimerLabel.text ?? "No timer", puzzle: "\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + 3)x\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + 3)")
-                    self.solves.append(newSolve)
-                    UserDefaultsHelper.saveAllObjects(allObjects: solves, named: .solves)
-                    print(solves.count)
+
+                    let newSolve = NSManagedObject(entity: NSEntityDescription.entity(forEntityName: "Solve", in: viewController.context) ?? NSEntityDescription(), insertInto: viewController.context)
+                    newSolve.setValue(scrambleLabel.text ?? "No scramble", forKey: "scramble")
+                    newSolve.setValue(runningTimerLabel.text ?? "No timer", forKey: "time")
+                    newSolve.setValue("\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + 3)x\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + 3)", forKey: "puzzle")
+
+                    
+//                    self.solves.a
+                    viewController.saveCoreData()
                     let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(floor(scrambleLengthSlider.value))), size: .large)
                     scrambleLabel.attributedText = scrambleText
                     self.timerRunning = false

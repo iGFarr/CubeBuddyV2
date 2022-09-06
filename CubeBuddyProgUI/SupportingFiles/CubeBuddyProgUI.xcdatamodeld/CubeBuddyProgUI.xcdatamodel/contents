@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="false" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Solve" representedClassName="Solve" syncable="YES">
+        <attribute name="puzzle" attributeType="String" defaultValueString="No puzzle"/>
+        <attribute name="scramble" attributeType="String" defaultValueString="No scramble"/>
+        <attribute name="time" attributeType="String" defaultValueString="No time"/>
+    </entity>
+    <elements>
+        <element name="Solve" positionX="-63" positionY="-18" width="128" height="74"/>
+    </elements>
 </model>
