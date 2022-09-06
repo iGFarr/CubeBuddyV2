@@ -10,7 +10,13 @@ import UIKit
 class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate {
     var work: DispatchWorkItem?
     var scramble = ""
-    var cube = Cube()
+    var cube = Cube() {
+        didSet {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                self.changeCubeResetButtonColor()
+            }
+        }
+    }
     var rootVC: TimerViewController?
     var timer: Timer?
     var timeElapsed = 0.00
@@ -92,5 +98,10 @@ class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate {
         view.addSubview(wipLabel)
         wipLabel.xAlignedWith(view)
         wipLabel.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80).isActive = true
+    }
+    
+    func changeCubeResetButtonColor(){
+        self.cubeResetButton.removeFromSuperview()
+        CBButtonCreator.configureCubeResetButton(for: self)
     }
 }

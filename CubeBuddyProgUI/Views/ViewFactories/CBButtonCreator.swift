@@ -14,7 +14,7 @@ class CBButtonCreator {
         cubeResetButton.heightConstant(size)
         cubeResetButton.widthConstant(size)
         cubeResetButton.setBackgroundImage(UIImage(systemName: "circle.grid.3x3.fill"), for: .normal)
-        cubeResetButton.tintColor = .CBTheme.secondary ?? .systemGreen
+        cubeResetButton.tintColor = delegate.cube == Cube() ? (.CBTheme.secondary ?? .systemGreen) :  .systemRed
         cubeResetButton.addTapGestureRecognizer {
             delegate.cancelUpdate()
             delegate.updateCube(cube: Cube())
