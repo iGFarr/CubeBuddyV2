@@ -44,7 +44,7 @@ struct CBBrain {
         return scrambleString
     }
     
-    // Formats times as Time NN:NN. Adding 00 pairs as necessary. e.g. at 60 seconds, outputs Time 01:00:00
+    // Formats times as Time (conditionally shown** NN:) + NN:NN. Adding number pairs to the left as necessary. e.g. at 61.5 seconds, outputs Time 01:01:50. At 5 seconds, shows 05:00
     static func formatTimeForTimerLabel(timeElapsed: Double) -> String {
         let hours = Int(timeElapsed) / 3600
         let hourString = String(hours)

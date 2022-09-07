@@ -16,7 +16,6 @@ class SolvesViewController: CBBaseTableViewController {
         super.viewDidLoad()
         solves = loadCoreData()
         title = CBConstants.CBMenuPickerPages.solves.rawValue.localized()
-        tableView.allowsMultipleSelection = true
         tableView.register(SolveCellModel.self, forCellReuseIdentifier: "solveCell")
     }
     
@@ -33,11 +32,10 @@ extension SolvesViewController {
         return UITableView.automaticDimension
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.solves.count > 0 ? solves.count + clearAllCell : 0
+        return solves.count + clearAllCell
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = CBBaseTableViewCell()
-        
         if indexPath.row == clearAllCellIndex {
             var actions = [UIAlertAction]()
             actions.append(UIAlertAction(title: "Delete".localized(), style: UIAlertAction.Style.destructive, handler: { action in
@@ -50,12 +48,18 @@ extension SolvesViewController {
             actions.append(UIAlertAction(title: "Cancel".localized(), style: UIAlertAction.Style.default, handler: nil))
             
             cell = CBTableViewCellCreator.createAlertCellWith(actions: actions, for: tableView, in: self)
+            if solves.count == 0 {
+                cell.isHidden = true
+            } else {
+                cell.isHidden = false
+            }
             return cell
         }
         
         guard solves.count > indexPath.row - clearAllCell else { return cell }
         let solve = solves[solves.count - indexPath.row]
         cell = CBTableViewCellCreator.createSolveCell(for: tableView, at: indexPath, with: solve)
+        cell.selectionStyle = .none
         return cell
     }
     
@@ -66,6 +70,25 @@ extension SolvesViewController {
             return nil
         }
         return indexPath
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let currentSolveIndex = solves.count - indexPath.row
+            let solve = solves[currentSolveIndex]
+            context.delete(solve)
+            solves.remove(at: currentSolveIndex)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            do
+            {
+                try context.save()
+            }
+            catch
+            {
+                print ("There was an error")
+            }
+            tableView.reloadData()
+        }
     }
     
     private func deleteSolves(){
