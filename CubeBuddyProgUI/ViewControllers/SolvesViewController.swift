@@ -81,6 +81,5 @@ extension SolvesViewController {
         {
             print ("There was an error")
         }
-        saveCoreData()
     }
 }

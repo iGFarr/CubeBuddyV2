@@ -30,8 +30,8 @@ struct CBConstants {
         static let defaultInsets: CGFloat = 8 * scaleMultiplier
         static let defaultInsetX4: CGFloat = 32 * scaleMultiplier
         static let defaultStackViewSpacing: CGFloat = 8 * scaleMultiplier
-        static let doubleInset: CGFloat = 16
-        static let halfInset: CGFloat = 4
+        static let doubleInset: CGFloat = 16 * scaleMultiplier
+        static let halfInset: CGFloat = 4 * scaleMultiplier
         static var isIpad: Bool {
             UIDevice.current.userInterfaceIdiom == .pad
         }
@@ -43,14 +43,20 @@ struct CBConstants {
                 return 1.5
             }
             if isSmallScreen {
-                return 0.8
+                return 0.7
+            }
+            if isVerySmallScreen {
+                return 0.5
             }
             return 1.0
         }
-        static let pickerRowHeight: CGFloat = isIpad ? 80 : 50
-        static let pickerComponentWidth: CGFloat = isIpad ? 300 : 200
+        static let pickerRowHeight: CGFloat = 50 * scaleMultiplier
+        static let pickerComponentWidth: CGFloat = 200 * scaleMultiplier
         static var isSmallScreen: Bool {
             UIScreen.main.bounds.width < 400 && UIScreen.main.bounds.height < 700
+        }
+        static var isVerySmallScreen: Bool {
+            UIScreen.main.bounds.width < 350 && UIScreen.main.bounds.height < 600
         }
         static func makeTextAttributedWithCBStyle(text: String, size: CBBasicFontSize = .medium, color: UIColor = .CBTheme.secondary ?? .systemGreen, textStyle: UIFont.TextStyle = .subheadline, strokeWidth: Int = 0) -> NSAttributedString {
             let font: UIFont = .CBFonts.returnCustomFont(size: size, textStyle: textStyle)
