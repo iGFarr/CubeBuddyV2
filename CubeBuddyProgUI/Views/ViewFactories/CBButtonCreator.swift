@@ -20,17 +20,12 @@ class CBButtonCreator {
                 delegate.cancelUpdate()
                 delegate.updateCube(cube: Cube())
             } else {
-                let alert = UIAlertController(title: "WARNING".localized(), message: "Are you sure you want to scramble the cube?", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "NO", style: .cancel))
-                alert.addAction(UIAlertAction(title: "YES", style: .destructive, handler: { action in
-                    delegate.cancelUpdate()
-                    var scrambledCube = Cube()
-                    scrambledCube = scrambledCube.makeMoves(scrambledCube.convertStringToMoveList(scramble: CBBrain.getScramble(length: 30).dropFirst(("Scramble".localized() + ":\n").count).split(separator: " ").map { move in
-                        String(move)
-                    }))
-                    delegate.updateCube(cube: scrambledCube)
+                delegate.cancelUpdate()
+                var scrambledCube = Cube()
+                scrambledCube = scrambledCube.makeMoves(scrambledCube.convertStringToMoveList(scramble: CBBrain.getScramble(length: 30).dropFirst(("Scramble".localized() + ":\n").count).split(separator: " ").map { move in
+                    String(move)
                 }))
-                vc.present(alert, animated: true)
+                delegate.updateCube(cube: scrambledCube)
             }
         }
         cubeResetButton.constrainToEdgePosition(.topCenter, in: vc.view, safeArea: true)
