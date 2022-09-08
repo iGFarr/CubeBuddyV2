@@ -26,14 +26,11 @@ class SolveCellModel: CBBaseTableViewCell {
     }
     
     private func setup() {
-        solveTimeLabel.numberOfLines = 1
-        puzzleLabel.numberOfLines = 1
-        
         puzzleLabel.constrainToEdgePosition(.topRight, in: contentView)
-        CBConstraintHelper.constrain(stackView, to: contentView, usingInsets: true)
         stackView.addArrangedSubviews([
             solveTimeLabel,
             scrambleLabel
         ])
+        CBConstraintHelper.constrain(stackView, to: contentView, usingInsets: true)
     }
 }

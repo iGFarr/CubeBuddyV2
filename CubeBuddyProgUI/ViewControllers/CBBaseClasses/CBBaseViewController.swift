@@ -37,5 +37,9 @@ class CBBaseViewController: UIViewController {
         }
         view.backgroundColor = .CBTheme.primary
     }
+    
+    override func viewWillLayoutSubviews() {
+        view.frame = UIScreen.main.bounds
+    }
 }
     

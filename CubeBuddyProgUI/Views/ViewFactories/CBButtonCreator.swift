@@ -16,8 +16,22 @@ class CBButtonCreator {
         cubeResetButton.setBackgroundImage(UIImage(systemName: "circle.grid.3x3.fill"), for: .normal)
         cubeResetButton.tintColor = delegate.cube == Cube() ? (.CBTheme.secondary ?? .systemGreen) :  .systemRed
         cubeResetButton.addTapGestureRecognizer {
-            delegate.cancelUpdate()
-            delegate.updateCube(cube: Cube())
+            if delegate.cube != Cube() {
+                delegate.cancelUpdate()
+                delegate.updateCube(cube: Cube())
+            } else {
+                let alert = UIAlertController(title: "WARNING".localized(), message: "Are you sure you want to scramble the cube?", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "NO", style: .cancel))
+                alert.addAction(UIAlertAction(title: "YES", style: .destructive, handler: { action in
+                    delegate.cancelUpdate()
+                    var scrambledCube = Cube()
+                    scrambledCube = scrambledCube.makeMoves(scrambledCube.convertStringToMoveList(scramble: CBBrain.getScramble(length: 30).dropFirst(("Scramble".localized() + ":\n").count).split(separator: " ").map { move in
+                        String(move)
+                    }))
+                    delegate.updateCube(cube: scrambledCube)
+                }))
+                vc.present(alert, animated: true)
+            }
         }
         cubeResetButton.constrainToEdgePosition(.topCenter, in: vc.view, safeArea: true)
         vc.cubeResetButton = cubeResetButton

@@ -26,7 +26,7 @@ class MenuViewController: CBBaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        picker.selectRow(emptyRowIndex, inComponent: emptyRowIndex, animated: true)
+        picker.selectRow(emptyRowIndex, inComponent: emptyRowIndex, animated: false)
     }
     
     private func createPickerWheel(){
@@ -60,7 +60,9 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         
         if let vc = viewControllerTitles[title] {
             vc.modalPresentationStyle = .fullScreen
-            navigationController?.pushViewController(vc, animated: true)
+            DispatchQueue.main.async {
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
         }
     }
     

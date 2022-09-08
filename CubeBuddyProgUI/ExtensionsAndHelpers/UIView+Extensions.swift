@@ -144,3 +144,9 @@ extension UIView {
         }
     }
 }
+
+extension UIView {
+    var isAnimating: Bool {
+        return (self.layer.animationKeys()?.count ?? 0) > 0
+    }
+}
