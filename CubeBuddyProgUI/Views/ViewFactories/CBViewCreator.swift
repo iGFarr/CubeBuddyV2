@@ -336,7 +336,6 @@ class CBViewCreator {
                 } else if subview.center.x > view.center.x {
                     xTransform = 1
                 }
-                print(subview.center.x, view.center.x)
                 let timer = Timer(timeInterval: 0.001, repeats: true) { _ in
                     transformAmount += 0.015
                     //                    subview.transform = CGAffineTransform(translationX: transformAmount * xTransform, y: transformAmount * yTransform)
@@ -381,7 +380,7 @@ class CBViewCreator {
         backFaceVStack.bottom(containerView.bottomAnchor, constant: -CBConstants.UI.doubleInset)
         
         downFaceVStack.xAlignedWith(containerView)
-        downFaceVStack.bottom(containerView.bottomAnchor, constant: CBConstants.UI.isPortraitMode ? -CBConstants.UI.defaultInsetX4 : -CBConstants.UI.doubleInset)
+        downFaceVStack.bottom(containerView.bottomAnchor, constant: -CBConstants.UI.defaultInsetX4)
     }
     
     static func createLetterForCenterTile(in stackView: UIStackView, letter: String, color: UIColor = .black) {

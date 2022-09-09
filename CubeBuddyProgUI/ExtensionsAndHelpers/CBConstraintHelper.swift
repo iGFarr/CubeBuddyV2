@@ -51,3 +51,9 @@ struct CBConstraintHelper {
         ])
     }
 }
+
+extension CGFloat {
+    var scaled: CGFloat {
+        self * CBConstants.UI.scaleMultiplier
+    }
+}

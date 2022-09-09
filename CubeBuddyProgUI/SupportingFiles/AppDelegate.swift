@@ -79,7 +79,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var solves = [Solve]()
         do {
             solves = try persistentContainer.viewContext.fetch(request)
-            print("Got \(solves.count) commits")
         } catch {
             print("Fetch failed")
         }

@@ -47,7 +47,6 @@ class CBButtonCreator {
                 vc.AVHelper.player.stop()
             }
             vc.soundsOn.toggle()
-            print("toggled")
         }
         soundSwitchButton.constrainToEdgePosition(.topLeft, in: vc.view, safeArea: true)
         vc.soundsSwitchButton = soundSwitchButton
@@ -65,7 +64,6 @@ class CBButtonCreator {
         explosionsSwitchButton.tintColor = .CBTheme.secondary ?? .systemGreen
         explosionsSwitchButton.addTapGestureRecognizer {
             vc.explosionsOn.toggle()
-            print("toggled")
         }
         explosionsSwitchButton.constrainToEdgePosition(.topRight, in: vc.view, safeArea: true)
         vc.explosionsOnSwitchButton = explosionsSwitchButton

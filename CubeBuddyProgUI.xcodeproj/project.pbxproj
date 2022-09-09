@@ -199,7 +199,6 @@
 		6A7CCDFD286FFDB000598C88 = {
 			isa = PBXGroup;
 			children = (
-				6A5AC4A728C75A58007D39E4 /* Solve+CoreDataClass.swift */,
 				6A7CCE08286FFDB000598C88 /* CubeBuddyProgUI */,
 				6A7CCE3C286FFFB500598C88 /* Tests */,
 				6A7CCE07286FFDB000598C88 /* Products */,
@@ -349,6 +348,7 @@
 		6AAF303D28B8D6E600870A00 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				6A5AC4A728C75A58007D39E4 /* Solve+CoreDataClass.swift */,
 				6A5AC4A828C75A58007D39E4 /* Solve+CoreDataProperties.swift */,
 			);
 			path = Data;

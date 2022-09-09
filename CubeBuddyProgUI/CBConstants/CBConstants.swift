@@ -20,18 +20,18 @@ struct CBConstants {
     }
     
     struct UI {
-        static let buttonCornerRadius: CGFloat = 10
+        static let buttonCornerRadius = CGFloat(10).scaled
         static let cellSeparatorHeight: CGFloat = 2
         static let cubeFaceDimension: CGFloat = 90
         static let cubeTileDimension: CGFloat = 30
-        static let cubeButtonWidth: CGFloat = 45 * scaleMultiplier
+        static let cubeButtonWidth = CGFloat(45).scaled
         static let defaultButtonSize: CGFloat = isIpad ? 55 : 45
-        static let defaultCornerRadius: CGFloat = 6 * scaleMultiplier
-        static let defaultInsets: CGFloat = 8 * scaleMultiplier
-        static let defaultInsetX4: CGFloat = 32 * scaleMultiplier
-        static let defaultStackViewSpacing: CGFloat = 8 * scaleMultiplier
-        static let doubleInset: CGFloat = 16 * scaleMultiplier
-        static let halfInset: CGFloat = 4 * scaleMultiplier
+        static let defaultCornerRadius = CGFloat(6).scaled
+        static let defaultInsets = CGFloat(8).scaled
+        static let defaultInsetX4 = CGFloat(32).scaled
+        static let defaultStackViewSpacing = CGFloat(8).scaled
+        static let doubleInset = CGFloat(16).scaled
+        static let halfInset = CGFloat(14).scaled
         static var isIpad: Bool {
             UIDevice.current.userInterfaceIdiom == .pad
         }
@@ -50,8 +50,8 @@ struct CBConstants {
             }
             return 1.0
         }
-        static let pickerRowHeight: CGFloat = 50 * scaleMultiplier
-        static let pickerComponentWidth: CGFloat = 200 * scaleMultiplier
+        static let pickerRowHeight = CGFloat(50).scaled
+        static let pickerComponentWidth = CGFloat(200).scaled
         static var isSmallScreen: Bool {
             UIScreen.main.bounds.width < 400 && UIScreen.main.bounds.height < 700
         }
