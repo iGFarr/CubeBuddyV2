@@ -6,8 +6,13 @@
 //
 
 import UIKit
+import SwiftUI
 
-class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate {
+protocol GraphicPresenter {
+    func show3DGraphic()
+}
+
+class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate, GraphicPresenter {
     var work: DispatchWorkItem?
     var scramble = ""
     var cube = Cube() {
@@ -52,6 +57,7 @@ class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate {
         CBButtonCreator.configureSoundSwitchButton(for: self)
         CBButtonCreator.configureExplosionsSwitchButton(for: self)
         CBButtonCreator.configureCubeResetButton(for: self)
+        CBButtonCreator.configure3DGraphicButton(for: self)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -103,5 +109,13 @@ class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate {
     func changeCubeResetButtonColor(){
         self.cubeResetButton.removeFromSuperview()
         CBButtonCreator.configureCubeResetButton(for: self)
+    }
+    
+    func show3DGraphic(){
+        let vc = UIHostingController(rootView: ContentView())
+        vc.modalPresentationStyle = .fullScreen
+        DispatchQueue.main.async {
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }

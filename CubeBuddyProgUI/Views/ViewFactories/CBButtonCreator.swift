@@ -69,6 +69,20 @@ class CBButtonCreator {
         vc.explosionsOnSwitchButton = explosionsSwitchButton
     }
     
+    static func configure3DGraphicButton(for vc: CBBaseViewController, size: CGFloat = CBConstants.UI.defaultButtonSize){
+        let graphicPresenterButton = CBButton()
+        guard let delegate = vc as? GraphicPresenter else { return }
+        graphicPresenterButton.heightConstant(size)
+        graphicPresenterButton.widthConstant(size)
+        graphicPresenterButton.setBackgroundImage(UIImage(systemName: "rotate.3d"), for: .normal)
+        graphicPresenterButton.tintColor = .CBTheme.secondary ?? .systemGreen
+        graphicPresenterButton.addTapGestureRecognizer {
+            delegate.show3DGraphic()
+        }
+        graphicPresenterButton.constrainToEdgePosition(.bottomRight, in: vc.view, safeArea: true)
+        vc.present3DButton = graphicPresenterButton
+    }
+    
     static func configureThemeChangeButton(for vc: CBBaseViewController, size: CGFloat = CBConstants.UI.defaultButtonSize) {
         let themeSwitchButton = CBButton()
         themeSwitchButton.heightConstant(size)

@@ -53,7 +53,7 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return CBConstants.CBMenuPickerPages.allCases.count + emptyRow
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         guard row != emptyRowIndex else { return }
         let title = CBConstants.CBMenuPickerPages.allCases[row - emptyRow].rawValue
@@ -69,7 +69,7 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
         return CBConstants.UI.pickerRowHeight
     }
-
+    
     /// row title attribution
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         let pickerLabel = CBLabel() //get picker label that come

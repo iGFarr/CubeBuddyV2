@@ -26,6 +26,7 @@ class CBBaseViewController: UIViewController {
         }
     }
     lazy var cubeResetButton = CBButton()
+    lazy var present3DButton = CBButton()
     override func viewDidLoad() {
         super.viewDidLoad()
         if UserDefaults.standard.integer(forKey: UserDefaultsHelper.DefaultKeys.firstLoad.rawValue) == 0 {
