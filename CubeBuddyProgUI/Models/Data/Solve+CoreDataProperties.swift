@@ -19,7 +19,7 @@ extension Solve {
     @NSManaged public var scramble: String
     @NSManaged public var time: String
     @NSManaged public var puzzle: String
-
+    @NSManaged public var date: String
 }
 
 extension Solve : Identifiable {

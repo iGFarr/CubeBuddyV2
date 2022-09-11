@@ -12,6 +12,7 @@ class SolveCellModel: CBBaseTableViewCell {
     let solveTimeLabel = CBLabel()
     let scrambleLabel = CBLabel()
     let puzzleLabel = CBLabel()
+    let dateLabel = CBLabel()
     let stackView = CBVStackView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -29,6 +30,7 @@ class SolveCellModel: CBBaseTableViewCell {
         puzzleLabel.constrainToEdgePosition(.topRight, in: contentView)
         stackView.addArrangedSubviews([
             solveTimeLabel,
+            dateLabel,
             scrambleLabel
         ])
         CBConstraintHelper.constrain(stackView, to: contentView, usingInsets: true)

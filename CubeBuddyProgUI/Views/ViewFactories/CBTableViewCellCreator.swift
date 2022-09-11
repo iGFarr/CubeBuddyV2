@@ -29,7 +29,8 @@ struct CBTableViewCellCreator {
         let cell = table.dequeueReusableCell(withIdentifier: "solveCell", for: indexPath) as! SolveCellModel
         cell.solveTimeLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: solve.time)
         cell.scrambleLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: solve.scramble)
-        cell.puzzleLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: solve.puzzle)
+        cell.puzzleLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: solve.puzzle, size: .small)
+        cell.dateLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: solve.date, size: .small)
         return cell
     }
     

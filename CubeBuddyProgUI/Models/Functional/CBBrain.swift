@@ -75,4 +75,13 @@ struct CBBrain {
         let formattedTimerString = "Time".localized() + ": \(useHours ? (hourString + ":"): "")\(useMinutes ? (minuteString + ":") : "")\(secondString):\(milliString)"
         return formattedTimerString
     }
+    
+    static func formatDate() -> String {
+        let now = Date()
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone.current
+        formatter.dateFormat = "MM-dd-YYYY HH:mm"
+        let dateString = formatter.string(from: now)
+        return dateString
+    }
 }

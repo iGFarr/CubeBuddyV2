@@ -104,6 +104,7 @@ class CBViewCreator {
                     newSolve.setValue(floor(scrambleLengthSlider.value) != 0 ? (scrambleLabel.text ?? "No scramble") : "No Scramble", forKey: "scramble")
                     newSolve.setValue(runningTimerLabel.text ?? "No timer", forKey: "time")
                     newSolve.setValue("\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + 3)x\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + 3)", forKey: "puzzle")
+                    newSolve.setValue(CBBrain.formatDate(), forKey: "date")
                     viewController.saveCoreData()
                     let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(floor(scrambleLengthSlider.value))), size: .large)
                     scrambleLabel.attributedText = scrambleText
