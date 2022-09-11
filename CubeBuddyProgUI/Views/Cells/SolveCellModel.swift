@@ -28,10 +28,14 @@ class SolveCellModel: CBBaseTableViewCell {
     
     private func setup() {
         puzzleLabel.constrainToEdgePosition(.topRight, in: contentView)
+        dateLabel.constrainToEdgePosition(.bottomRight, in: contentView)
+        let spacerLabel = CBLabel()
+        spacerLabel.text = " " // Something interesting I learned from this, even a single white space grants the label
+                               // some intrinsic height. Without the space, this fails to provide the desired constraints.
         stackView.addArrangedSubviews([
             solveTimeLabel,
-            dateLabel,
-            scrambleLabel
+            scrambleLabel,
+            spacerLabel // Will replace this eventually. Just using this to make additional space to keep date label exposed.
         ])
         CBConstraintHelper.constrain(stackView, to: contentView, usingInsets: true)
     }
