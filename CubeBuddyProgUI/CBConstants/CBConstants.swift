@@ -35,9 +35,7 @@ struct CBConstants {
         static var isIpad: Bool {
             UIDevice.current.userInterfaceIdiom == .pad
         }
-        static var isPortraitMode: Bool {
-            (UIDevice.current.orientation == .portrait) || (UIDevice.current.orientation == .portraitUpsideDown)
-        }
+
         static var scaleMultiplier: CGFloat {
             if isIpad {
                 return 1.5
