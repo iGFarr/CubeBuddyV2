@@ -22,7 +22,6 @@ struct CBConstants {
     struct UI {
         static let buttonCornerRadius = CGFloat(10).scaled
         static let cellSeparatorHeight: CGFloat = 2
-        static let cubeFaceDimension: CGFloat = 90
         static let cubeTileDimension: CGFloat = 30
         static let cubeButtonWidth = CGFloat(45).scaled
         static let defaultButtonSize: CGFloat = isIpad ? 55 : 45
