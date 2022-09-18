@@ -339,10 +339,9 @@ class CBViewCreator {
                 }
                 let timer = Timer(timeInterval: 0.001, repeats: true) { _ in
                     transformAmount += 0.015
-                    //                    subview.transform = CGAffineTransform(translationX: transformAmount * xTransform, y: transformAmount * yTransform)
                     subview.transform = CGAffineTransform(rotationAngle: transformAmount/5).translatedBy(x: transformAmount * xTransform, y: transformAmount * yTransform)
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now()) { // Change `2.0` to the desired number of seconds.
+                DispatchQueue.main.asyncAfter(deadline: .now()) {
                     RunLoop.current.add(timer, forMode: .default)
                 }
             }
