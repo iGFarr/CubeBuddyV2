@@ -40,7 +40,6 @@
 		6AAF303B28B8CAB800870A00 /* UserDefaultsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF303A28B8CAB800870A00 /* UserDefaultsHelper.swift */; };
 		6AAF304128B915F900870A00 /* CoreRubiksCube.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF304028B915F900870A00 /* CoreRubiksCube.swift */; };
 		6AAF304328B9BCAA00870A00 /* ScrambledCubeGraphicVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF304228B9BCAA00870A00 /* ScrambledCubeGraphicVC.swift */; };
-		6AAF304828B9D54A00870A00 /* NavigationController+TabBar+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF304728B9D54A00870A00 /* NavigationController+TabBar+Ext.swift */; };
 		6AAF304B28BCAEE200870A00 /* CBLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF304A28BCAEE200870A00 /* CBLabel.swift */; };
 		6AAF304D28BCAFC600870A00 /* CBVStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF304C28BCAFC600870A00 /* CBVStackView.swift */; };
 		6AAF304F28BD040F00870A00 /* CBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF304E28BD040F00870A00 /* CBView.swift */; };
@@ -148,7 +147,6 @@
 		6AAF303A28B8CAB800870A00 /* UserDefaultsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsHelper.swift; sourceTree = "<group>"; };
 		6AAF304028B915F900870A00 /* CoreRubiksCube.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreRubiksCube.swift; sourceTree = "<group>"; };
 		6AAF304228B9BCAA00870A00 /* ScrambledCubeGraphicVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrambledCubeGraphicVC.swift; sourceTree = "<group>"; };
-		6AAF304728B9D54A00870A00 /* NavigationController+TabBar+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationController+TabBar+Ext.swift"; sourceTree = "<group>"; };
 		6AAF304A28BCAEE200870A00 /* CBLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBLabel.swift; sourceTree = "<group>"; };
 		6AAF304C28BCAFC600870A00 /* CBVStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBVStackView.swift; sourceTree = "<group>"; };
 		6AAF304E28BD040F00870A00 /* CBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBView.swift; sourceTree = "<group>"; };
@@ -299,7 +297,6 @@
 				6AACD5052872F778006FB54B /* UIView+Extensions.swift */,
 				6AAF306028C2820A00870A00 /* UIStackView+Extension.swift */,
 				6AAF303A28B8CAB800870A00 /* UserDefaultsHelper.swift */,
-				6AAF304728B9D54A00870A00 /* NavigationController+TabBar+Ext.swift */,
 				6AAF305C28C07BD000870A00 /* CBConstraintHelper.swift */,
 				6A144C1F28C44BF5009E1547 /* CBAVHelper.swift */,
 				6A144C3428C5EB94009E1547 /* String+Extension.swift */,
@@ -608,7 +605,6 @@
 				6AACD4FE287191FB006FB54B /* SolvesViewController.swift in Sources */,
 				6AAF305128BE260800870A00 /* CBButton.swift in Sources */,
 				6A5AC4A928C75A58007D39E4 /* Solve+CoreDataClass.swift in Sources */,
-				6AAF304828B9D54A00870A00 /* NavigationController+TabBar+Ext.swift in Sources */,
 				6A7CCE0C286FFDB000598C88 /* SceneDelegate.swift in Sources */,
 				6AAF303B28B8CAB800870A00 /* UserDefaultsHelper.swift in Sources */,
 				6A5AC4AD28CBC717007D39E4 /* CubeGraphic3D.swift in Sources */,

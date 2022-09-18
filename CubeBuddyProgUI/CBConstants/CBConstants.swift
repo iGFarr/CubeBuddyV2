@@ -22,7 +22,7 @@ struct CBConstants {
     struct UI {
         static let buttonCornerRadius = CGFloat(10).scaled
         static let cellSeparatorHeight: CGFloat = 2
-        static let cubeTileDimension: CGFloat = 30
+        static let cubeTileDimension = CGFloat(30).scaled
         static let cubeButtonWidth = CGFloat(45).scaled
         static let defaultButtonSize: CGFloat = isIpad ? 55 : 45
         static let defaultCornerRadius = CGFloat(6).scaled
@@ -30,7 +30,7 @@ struct CBConstants {
         static let defaultInsetX4 = CGFloat(32).scaled
         static let defaultStackViewSpacing = CGFloat(8).scaled
         static let doubleInset = CGFloat(16).scaled
-        static let halfInset = CGFloat(14).scaled
+        static let halfInset = CGFloat(4).scaled
         static var isIpad: Bool {
             UIDevice.current.userInterfaceIdiom == .pad
         }

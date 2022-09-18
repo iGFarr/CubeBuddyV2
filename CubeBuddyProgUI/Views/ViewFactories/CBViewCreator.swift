@@ -32,11 +32,12 @@ class CBViewCreator {
         @objc
         func sliderValueChanged() {
             UserDefaults.standard.setValue(scrambleLengthSlider.value, forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
-            scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length".localized() + ": " + String(Int(floor(scrambleLengthSlider.value))), size: .small)
+            let sliderValueRoundedDown = Int(floor(scrambleLengthSlider.value))
+            scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length".localized() + ": " + String(sliderValueRoundedDown), size: .small)
             if timerRunning == false {
-                let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(floor(scrambleLengthSlider.value))), size: .large)
+                let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: sliderValueRoundedDown), size: .large)
                 scrambleLabel.attributedText = scrambleText
-                if Int(floor(scrambleLengthSlider.value)) < 1 {
+                if sliderValueRoundedDown < 1 {
                     scrambleLabel.isHidden = true
                 } else {
                     scrambleLabel.isHidden = false
@@ -59,10 +60,10 @@ class CBViewCreator {
                 self.runningTimerLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: formattedTimerString, size: .xl)
             }
             
-            puzzleChoiceSegmentedControl.selectedSegmentIndex = 0
-            puzzleChoiceSegmentedControl.selectedSegmentTintColor = .CBTheme.secondary
             let unselectedColor: UIColor = .CBTheme.secondary ?? .systemGreen
             let selectedColor: UIColor = .CBTheme.primary ?? .systemBlue
+            puzzleChoiceSegmentedControl.selectedSegmentIndex = 0
+            puzzleChoiceSegmentedControl.selectedSegmentTintColor = .CBTheme.secondary
             puzzleChoiceSegmentedControl.setTitleTextAttributes([
                 .font: UIFont.CBFonts.returnCustomFont(size: .small),
                 .foregroundColor: unselectedColor
@@ -71,6 +72,7 @@ class CBViewCreator {
                 .font: UIFont.CBFonts.returnCustomFont(size: .small),
                 .foregroundColor: selectedColor
             ], for: .selected)
+            
             scrambleLengthSlider.thumbTintColor = .CBTheme.secondary
             scrambleLengthSlider.maximumValue = 40
             scrambleLengthSlider.minimumValue = 0
@@ -80,12 +82,14 @@ class CBViewCreator {
             if scrambleLengthSlider.value == 0 {
                 scrambleLabel.isHidden = true
             }
-            scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length".localized() + ": " + String(Int(floor(scrambleLengthSlider.value))), size: .small)
             
-            let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(floor(scrambleLengthSlider.value))), size: .large)
+            let sliderValueRoundedDown = Int(floor(scrambleLengthSlider.value))
+            scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length".localized() + ": " + String(sliderValueRoundedDown), size: .small)
+            let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: sliderValueRoundedDown), size: .large)
             scrambleLabel.attributedText = scrambleText
             
             func timerButtonViewPressed(){
+                let sliderValueRoundedDown = floor(scrambleLengthSlider.value)
                 timer?.invalidate()
                 if self.timerRunning == false && self.timeElapsed == 0.00 {
                     timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
@@ -93,27 +97,26 @@ class CBViewCreator {
                     }
                     timer?.fire()
                     self.timerRunning = true
-                    if floor(scrambleLengthSlider.value) != 0 {
+                    if sliderValueRoundedDown != 0 {
                         scrambleLabel.isHidden = false
-                    } else if floor(scrambleLengthSlider.value) == 0 {
+                    } else if sliderValueRoundedDown == 0 {
                         scrambleLabel.isHidden = true
                     }
                 } else {
-
                     let newSolve = NSManagedObject(entity: NSEntityDescription.entity(forEntityName: "Solve", in: viewController.context) ?? NSEntityDescription(), insertInto: viewController.context)
                     newSolve.setValue(floor(scrambleLengthSlider.value) != 0 ? (scrambleLabel.text ?? "No scramble") : "No Scramble", forKey: "scramble")
                     newSolve.setValue(runningTimerLabel.text ?? "No timer", forKey: "time")
-                    newSolve.setValue("\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + 3)x\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + 3)", forKey: "puzzle")
+                    newSolve.setValue("\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + Int(CBConstants.defaultPuzzleSize))x\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + Int(CBConstants.defaultPuzzleSize))", forKey: "puzzle")
                     newSolve.setValue(CBBrain.formatDate(), forKey: "date")
                     viewController.saveCoreData()
-                    let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(floor(scrambleLengthSlider.value))), size: .large)
+                    let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(sliderValueRoundedDown)), size: .large)
                     scrambleLabel.attributedText = scrambleText
                     self.timerRunning = false
                     self.timeElapsed = 0.00
                     viewController.cube = Cube()
-                    if floor(scrambleLengthSlider.value) != 0 && scrambleLabel.isHidden {
+                    if sliderValueRoundedDown != 0 && scrambleLabel.isHidden {
                         scrambleLabel.isHidden = false
-                    } else if floor(scrambleLengthSlider.value) == 0 {
+                    } else if sliderValueRoundedDown == 0 {
                         scrambleLabel.isHidden = true
                     }
                 }
@@ -206,7 +209,7 @@ class CBViewCreator {
             cubeGraphicVC.scramble = vc.viewModel?.scrambleLabel.text ?? ""
             cubeGraphicVC.cube = cube
             cubeGraphicVC.rootVC = vc
-            cubeGraphicVC.selectedPuzzleSize = CGFloat((vc.viewModel?.puzzleChoiceSegmentedControl.selectedSegmentIndex ?? 0) + 3)
+            cubeGraphicVC.selectedPuzzleSize = CGFloat(vc.viewModel?.puzzleChoiceSegmentedControl.selectedSegmentIndex ?? 0) + CBConstants.defaultPuzzleSize
             vc.modalPresentationStyle = .fullScreen
             vc.navigationController?.pushViewController(cubeGraphicVC, animated: true)
         }
@@ -232,6 +235,7 @@ class CBViewCreator {
         func configureTappableViewsForStack(stack: UIStackView, faceToTurn: CubeFace) {
             let leftTapView = CBView()
             let rightTapView = CBView()
+            let quarterTurn = CGFloat.pi / 2
             stack.addSubviews([
                 leftTapView, rightTapView
             ])
@@ -256,7 +260,6 @@ class CBViewCreator {
                 viewController.cube = cubeCopy
                 let timerVC = viewController.rootVC
                 timerVC?.cube = cubeCopy
-                let quarterTurn = 90 * CGFloat.pi / 180
                 UIView.animate(withDuration: 0.25, delay: 0.0, options: .curveEaseInOut) {
                     stack.transform = CGAffineTransform(rotationAngle: -quarterTurn)
                 } completion: { Bool in
@@ -302,7 +305,6 @@ class CBViewCreator {
                 viewController.cube = cubeCopy
                 let timerVC = viewController.rootVC
                 timerVC?.cube = cubeCopy
-                let quarterTurn = 90 * CGFloat.pi / 180
                 UIView.animate(withDuration: 0.25, delay: 0.0, options: .curveEaseInOut) {
                     stack.transform = CGAffineTransform(rotationAngle: quarterTurn)
                 } completion: { Bool in
@@ -330,6 +332,7 @@ class CBViewCreator {
         }
         func animationExplosion(view: UIView){
             for subview in view.subviews {
+                // Magnitude coefficients
                 var xTransform: CGFloat = [1, -1, 2, -2].randomElement() ?? 1
                 let yTransform: CGFloat = [1, -1, 2, -2].randomElement() ?? 1
                 if subview.center.x < (view.center.x - CBConstants.UI.defaultInsets) {
@@ -384,7 +387,7 @@ class CBViewCreator {
     
     static func createLetterForCenterTile(in stackView: UIStackView, letter: String, color: UIColor = .black) {
         let letterView = CBLabel()
-        letterView.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: letter, size: .small, color: color)
+        letterView.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: letter, size: .medium, strokeWidth: 6)
         stackView.superview?.addSubview(letterView)
         letterView.yAlignedWith(stackView)
         letterView.xAlignedWith(stackView)
@@ -395,15 +398,12 @@ class CBViewCreator {
         
         // All constraints and dimensions are based around 3x3, and then scaled down to fit for larger cubes. So the overall face dimension is equal to 3 * tile size + some spacing
         var stackViewDimension = CBConstants.defaultPuzzleSize * CBConstants.UI.cubeTileDimension + CBConstants.UI.defaultStackViewSpacing
-        stackViewDimension *= CBConstants.UI.scaleMultiplier
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
         stackView.heightConstant(stackViewDimension)
         stackView.widthConstant(stackViewDimension)
         container.addSubview(stackView)
         
-        var tileDimension = CBConstants.UI.cubeTileDimension
-        tileDimension *= CBConstants.UI.scaleMultiplier
         for stack in 1...Int(cubeSize) {
             let hStack = CBStackView()
             stackView.addArrangedSubview(hStack)
@@ -413,7 +413,7 @@ class CBViewCreator {
             for square in 1...Int(cubeSize) {
                 let tileSquare = CBView()
                 tileSquare.backgroundColor = .black
-                tileSquare.widthConstant(tileDimension * (CBConstants.defaultPuzzleSize / cubeSize))
+                tileSquare.widthConstant(CBConstants.UI.cubeTileDimension * (CBConstants.defaultPuzzleSize / cubeSize))
                 tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
                 tileSquare.layer.borderWidth = 2
                 tileSquare.layer.cornerRadius = CBConstants.UI.defaultCornerRadius * (CBConstants.defaultPuzzleSize / (1.5 * cubeSize))
@@ -454,7 +454,7 @@ class CBViewCreator {
                 }
                 hStack.addArrangedSubview(tileSquare)
             }
-            hStack.heightConstant(tileDimension * (CBConstants.defaultPuzzleSize / cubeSize))
+            hStack.heightConstant(CBConstants.UI.cubeTileDimension * (CBConstants.defaultPuzzleSize / cubeSize))
         }
         if hasBorder {
             stackView.layer.borderColor = UIColor.CBTheme.secondary?.cgColor

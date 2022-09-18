@@ -25,7 +25,7 @@ class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate, GraphicPresent
     var rootVC: TimerViewController?
     var timer: Timer?
     var timeElapsed = 0.00
-    var selectedPuzzleSize: CGFloat = 3
+    var selectedPuzzleSize = CBConstants.defaultPuzzleSize
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,7 +88,7 @@ class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate, GraphicPresent
         wipLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "WIP", size: .xxl, color: .systemRed)
         wipLabel.textColor = .systemRed
         wipLabel.isHidden = false
-        if self.selectedPuzzleSize == 3 {
+        if self.selectedPuzzleSize == CBConstants.defaultPuzzleSize {
             if self.cube == Cube() {
                 wipLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "SOLVED".localized(), size: .xxl)
                 self.timer?.invalidate()
