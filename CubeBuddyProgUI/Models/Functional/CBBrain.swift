@@ -76,8 +76,8 @@ struct CBBrain {
         return formattedTimerString
     }
     
-    static func formatDate() -> String {
-        let now = Date()
+    static func formatDate(_ date: Date = Date()) -> String {
+        let now = date
         let formatter = DateFormatter()
         formatter.timeZone = TimeZone.current
         formatter.setLocalizedDateFormatFromTemplate("MM-dd-YYYY HH:mm")
