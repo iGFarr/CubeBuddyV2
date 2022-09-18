@@ -1,3 +1,10 @@
+//
+//  CubeGraphic3D.swift
+//  CubeBuddyProgUI
+//
+//  Created by Isaac Farr on 9/2/22.
+//  (Extension of Mark Lucking's work)
+
 import SwiftUI
 import SceneKit
 

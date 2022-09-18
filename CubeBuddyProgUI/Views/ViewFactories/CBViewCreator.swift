@@ -64,11 +64,11 @@ class CBViewCreator {
             let unselectedColor: UIColor = .CBTheme.secondary ?? .systemGreen
             let selectedColor: UIColor = .CBTheme.primary ?? .systemBlue
             puzzleChoiceSegmentedControl.setTitleTextAttributes([
-                .font: UIFont.CBFonts.returnCustomFont(size: CBConstants.UI.isIpad ? .medium : .small),
+                .font: UIFont.CBFonts.returnCustomFont(size: .small),
                 .foregroundColor: unselectedColor
             ], for: .normal)
             puzzleChoiceSegmentedControl.setTitleTextAttributes([
-                .font: UIFont.CBFonts.returnCustomFont(size: CBConstants.UI.isIpad ? .medium : .small),
+                .font: UIFont.CBFonts.returnCustomFont(size: .small),
                 .foregroundColor: selectedColor
             ], for: .selected)
             scrambleLengthSlider.thumbTintColor = .CBTheme.secondary

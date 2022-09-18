@@ -282,7 +282,6 @@
 		6A7CCE3E2870090300598C88 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				6A5AC4AB28CBC703007D39E4 /* SwiftUI */,
 				6AAF304528B9BD7200870A00 /* CBBaseClasses */,
 				6AAF304428B9BD4200870A00 /* TimerFlow */,
 				6A7CCE422870116700598C88 /* MenuViewController.swift */,
@@ -368,6 +367,7 @@
 		6AAF304428B9BD4200870A00 /* TimerFlow */ = {
 			isa = PBXGroup;
 			children = (
+				6A5AC4AB28CBC703007D39E4 /* SwiftUI */,
 				6A7CCE4728701E3400598C88 /* TimerViewController.swift */,
 				6AAF304228B9BCAA00870A00 /* ScrambledCubeGraphicVC.swift */,
 			);

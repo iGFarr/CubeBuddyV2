@@ -80,7 +80,7 @@ struct CBBrain {
         let now = Date()
         let formatter = DateFormatter()
         formatter.timeZone = TimeZone.current
-        formatter.dateFormat = "MM-dd-YYYY HH:mm"
+        formatter.setLocalizedDateFormatFromTemplate("MM-dd-YYYY HH:mm")
         let dateString = formatter.string(from: now)
         return dateString
     }
