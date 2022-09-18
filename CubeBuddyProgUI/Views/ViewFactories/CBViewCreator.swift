@@ -361,7 +361,6 @@ class CBViewCreator {
         configureTappableViewsForStack(stack: backFaceVStack, faceToTurn: .back)
         
         guard let view = viewController.view else { return }
-        view.addSubview(containerView)
         CBConstraintHelper.constrain(containerView, toSafeAreaOf: view, usingInsets: true)
         
         upFaceVStack.xAlignedWith(containerView)
