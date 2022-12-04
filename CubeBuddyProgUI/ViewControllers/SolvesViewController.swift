@@ -14,13 +14,13 @@ class SolvesViewController: CBBaseTableViewController {
     private let clearAllCell = 1
     override func viewDidLoad() {
         super.viewDidLoad()
-        solves = loadCoreData(retrievableObject: Solve())
+        solves = Self.loadCoreData(retrievableObject: Solve())
         title = CBConstants.CBMenuPickerPages.solves.rawValue.localized()
         tableView.register(SolveCellModel.self, forCellReuseIdentifier: "solveCell")
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        solves = loadCoreData(retrievableObject: Solve())
+        solves = Self.loadCoreData(retrievableObject: Solve())
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }

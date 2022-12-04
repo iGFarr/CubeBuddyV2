@@ -16,6 +16,7 @@ class CBViewCreator {
         let scrambleLengthLabel = CBLabel()
         let scrambleLabel = CBLabel()
         let runningTimerLabel = CBLabel()
+        let ao5Label = CBLabel()
         let scrambleLengthSlider = CBSlider()
         let puzzleChoiceSegmentedControl = CBSegmentedControl(items: ["3x3", "4x4", "5x5", "6x6", "7x7"])
         var timeElapsed = 0.00
@@ -88,7 +89,7 @@ class CBViewCreator {
             let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: sliderValueRoundedDown), size: .large)
             scrambleLabel.attributedText = scrambleText
             
-            func timerButtonViewPressed(){
+            func timerButtonViewPressed(completion: (() -> ())? = nil){
                 let sliderValueRoundedDown = floor(scrambleLengthSlider.value)
                 timer?.invalidate()
                 if self.timerRunning == false && self.timeElapsed == 0.00 {
@@ -106,8 +107,16 @@ class CBViewCreator {
                     let newSolve = NSManagedObject(entity: NSEntityDescription.entity(forEntityName: "Solve", in: viewController.context) ?? NSEntityDescription(), insertInto: viewController.context)
                     newSolve.setValue(floor(scrambleLengthSlider.value) != 0 ? (scrambleLabel.text ?? "No scramble") : "No Scramble", forKey: "scramble")
                     newSolve.setValue(runningTimerLabel.text ?? "No timer", forKey: "time")
+                    newSolve.setValue(self.timeElapsed, forKey: "timeAsDouble")
                     newSolve.setValue("\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + Int(CBConstants.defaultPuzzleSize))x\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + Int(CBConstants.defaultPuzzleSize))", forKey: "puzzle")
                     newSolve.setValue(CBBrain.formatDate(), forKey: "date")
+                    let numberFormatter = DateComponentsFormatter()
+                    if let average = CBBrain.retrieveRecentAverage() {
+                        let formattedTime = CBBrain.formatTimeForTimerLabel(timeElapsed: average).dropFirst("Time: ".count)
+                        ao5Label.text = "Ao5:\n\(formattedTime)"
+                    } else {
+                        ao5Label.text = "Keep solving to get your Ao5!"
+                    }
                     viewController.saveCoreData()
                     let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(sliderValueRoundedDown)), size: .large)
                     scrambleLabel.attributedText = scrambleText
@@ -141,13 +150,13 @@ class CBViewCreator {
                 optionsBar,
                 timerButtonView,
                 scrambleLabel,
+                runningTimerLabel,
+                ao5Label,
                 scrambleLengthSlider,
                 scrambleLengthLabel,
                 puzzleChoiceSegmentedControl
             ])
-            
-            timerButtonView.addSubview(runningTimerLabel)
-            
+            ao5Label.font = UIFont.CBFonts.returnCustomFont(size: .large, textStyle: .headline)
             NSLayoutConstraint.activate(
                 [
                     optionsBar.topAnchor.constraint(equalTo: containerView.topAnchor),
@@ -176,7 +185,12 @@ class CBViewCreator {
                     puzzleChoiceSegmentedControl.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
                     puzzleChoiceSegmentedControl.widthAnchor.constraint(equalTo: containerView.widthAnchor, constant: -CBConstants.UI.doubleInset),
                     puzzleChoiceSegmentedControl.heightAnchor.constraint(equalToConstant: CBConstants.UI.isIpad ? 60 : 30),
-                    puzzleChoiceSegmentedControl.bottomAnchor.constraint(equalTo: scrambleLengthLabel.topAnchor, constant: -CBConstants.UI.defaultInsets)
+                    puzzleChoiceSegmentedControl.bottomAnchor.constraint(equalTo: scrambleLengthLabel.topAnchor, constant: -CBConstants.UI.defaultInsets),
+                    
+                    ao5Label.widthAnchor.constraint(equalTo: containerView.widthAnchor),
+                    ao5Label.bottomAnchor.constraint(equalTo: puzzleChoiceSegmentedControl.topAnchor, constant: -CBConstants.UI.doubleInset),
+                    ao5Label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
+                    ao5Label.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UI.doubleInset),
                 ])
         }
     }

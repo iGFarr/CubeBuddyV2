@@ -82,7 +82,7 @@ extension UIViewController {
         return appDelegate.persistentContainer.viewContext
     }
     
-    func loadCoreData(retrievableObject: RetrievableCDObject) -> [RetrievableCDObject] {
+    static func loadCoreData(retrievableObject: RetrievableCDObject) -> [RetrievableCDObject] {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let request = type(of: retrievableObject).createFetchRequest()
         var data: [RetrievableCDObject] = []

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct CBBrain {
     static func getScramble(length numMoves: Int = CBConstants.defaultScrambleLength) -> String {
@@ -83,5 +84,25 @@ struct CBBrain {
         formatter.setLocalizedDateFormatFromTemplate("MM-dd-YYYY HH:mm")
         let dateString = formatter.string(from: now)
         return dateString
+    }
+    
+    static func retrieveRecentAverage() -> Double? {
+        guard let solves = UIViewController.loadCoreData(retrievableObject: Solve()) as? [Solve], solves.count >= 5 else {
+            print("No solves to load yet")
+            return nil
+        }
+        var lastFiveSolves = solves[(solves.count - 5)...(solves.count - 1)]
+        lastFiveSolves.sort { $0 > $1 }
+        lastFiveSolves.removeLast()
+        lastFiveSolves.removeFirst()
+        print("Last 5")
+        var average = 0.0
+        var total = 0.0
+        for solve in lastFiveSolves {
+            print(solve.time)
+            total += solve.timeAsDouble
+        }
+        average = total / 3.0
+        return average
     }
 }

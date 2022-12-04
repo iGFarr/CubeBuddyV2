@@ -5,8 +5,9 @@
         <attribute name="puzzle" attributeType="String" defaultValueString="No puzzle"/>
         <attribute name="scramble" attributeType="String" defaultValueString="No scramble"/>
         <attribute name="time" attributeType="String" defaultValueString="No time"/>
+        <attribute name="timeAsDouble" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
     </entity>
     <elements>
-        <element name="Solve" positionX="-63" positionY="-18" width="128" height="89"/>
+        <element name="Solve" positionX="-63" positionY="-18" width="128" height="104"/>
     </elements>
 </model>
