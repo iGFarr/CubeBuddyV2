@@ -14,6 +14,7 @@ struct UserDefaultsHelper {
         case soundsOn = "sounds on"
         case firstLoad = "first load"
         case explosionsOn = "explosions on"
+        case customAvgX = "xValue"
     }
 //    These aren't being used anymore, but going to keep them around just in case.
 //

@@ -17,13 +17,18 @@ class CBViewCreator {
         let scrambleLabel = CBLabel()
         let runningTimerLabel = CBLabel()
         let ao5Label = CBLabel()
+        let aoxLabel = CBLabel()
+        var xForCustomAvg: Int = 12
+        let xStepper = CBStepper()
         let scrambleLengthSlider = CBSlider()
+        let deleteLastSolveButton = CBButton()
         let puzzleChoiceSegmentedControl = CBSegmentedControl(items: ["3x3", "4x4", "5x5", "6x6", "7x7"])
         var timeElapsed = 0.00
         var timer: Timer?
         
         override init(frame: CGRect) {
             super.init(frame: frame)
+            updateAverages()
         }
         
         required init?(coder: NSCoder) {
@@ -54,7 +59,14 @@ class CBViewCreator {
             }
         }
         
-        func createTimerView(for viewController: TimerViewController, usingOptionsBar: Bool = false) {            
+        @objc
+        func stepperValueChanged(){
+            UserDefaults.standard.setValue(xStepper.value, forKey: UserDefaultsHelper.DefaultKeys.customAvgX.rawValue)
+            xForCustomAvg = Int(xStepper.value)
+            updateAverages()
+        }
+        
+        func createTimerView(for viewController: TimerViewController, usingOptionsBar: Bool = false) {
             func timerUpdatesUI(){
                 self.timeElapsed += 0.01
                 let formattedTimerString = CBBrain.formatTimeForTimerLabel(timeElapsed: self.timeElapsed)
@@ -79,7 +91,17 @@ class CBViewCreator {
             scrambleLengthSlider.minimumValue = 0
             let scrambleLength = UserDefaults.standard.float(forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
             scrambleLengthSlider.setValue(scrambleLength, animated: false)
+            let stepperInitialValue = UserDefaults.standard.double(forKey: UserDefaultsHelper.DefaultKeys.customAvgX.rawValue)
+            xStepper.value = stepperInitialValue
+            xStepper.layer.borderColor = UIColor.CBTheme.secondary?.resolvedColor(with: UITraitCollection.current).cgColor
+            xStepper.layer.borderWidth = 2
+            xStepper.layer.cornerRadius = CBConstants.UI.buttonCornerRadius
+            xStepper.setDecrementImage(xStepper.decrementImage(for: .normal), for: .normal)
+            xStepper.setIncrementImage(xStepper.incrementImage(for: .normal), for: .normal)
+            xStepper.tintColor = .CBTheme.secondary
+            xStepper.minimumValue = 2
             scrambleLengthSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
+            xStepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)
             if scrambleLengthSlider.value == 0 {
                 scrambleLabel.isHidden = true
             }
@@ -110,13 +132,8 @@ class CBViewCreator {
                     newSolve.setValue(self.timeElapsed, forKey: "timeAsDouble")
                     newSolve.setValue("\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + Int(CBConstants.defaultPuzzleSize))x\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + Int(CBConstants.defaultPuzzleSize))", forKey: "puzzle")
                     newSolve.setValue(CBBrain.formatDate(), forKey: "date")
-                    let numberFormatter = DateComponentsFormatter()
-                    if let average = CBBrain.retrieveRecentAverage() {
-                        let formattedTime = CBBrain.formatTimeForTimerLabel(timeElapsed: average).dropFirst("Time: ".count)
-                        ao5Label.text = "Ao5:\n\(formattedTime)"
-                    } else {
-                        ao5Label.text = "Keep solving to get your Ao5!"
-                    }
+                    
+                    updateAverages()
                     viewController.saveCoreData()
                     let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(sliderValueRoundedDown)), size: .large)
                     scrambleLabel.attributedText = scrambleText
@@ -152,11 +169,29 @@ class CBViewCreator {
                 scrambleLabel,
                 runningTimerLabel,
                 ao5Label,
+                aoxLabel,
+                xStepper,
+                deleteLastSolveButton,
                 scrambleLengthSlider,
                 scrambleLengthLabel,
                 puzzleChoiceSegmentedControl
             ])
-            ao5Label.font = UIFont.CBFonts.returnCustomFont(size: .large, textStyle: .headline)
+            ao5Label.font = UIFont.CBFonts.returnCustomFont(size: .medium, textStyle: .headline)
+            aoxLabel.font = UIFont.CBFonts.returnCustomFont(size: .medium, textStyle: .headline)
+
+            deleteLastSolveButton.layer.cornerRadius = CBConstants.UI.buttonCornerRadius
+            let buttonText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Delete Last", size: .small)
+            deleteLastSolveButton.tintColor = .systemRed
+            deleteLastSolveButton.layer.borderColor = UIColor.CBTheme.secondary?.resolvedColor(with: UITraitCollection.current).cgColor
+            deleteLastSolveButton.layer.borderWidth = 2
+            deleteLastSolveButton.clipsToBounds = true
+            if #available(iOS 15.0, *) {
+                deleteLastSolveButton.configuration = .filled()
+            }
+            deleteLastSolveButton.setAttributedTitle(buttonText, for: .normal)
+            deleteLastSolveButton.addTapGestureRecognizer {
+                self.deleteLastSolve(from: viewController)
+            }
             NSLayoutConstraint.activate(
                 [
                     optionsBar.topAnchor.constraint(equalTo: containerView.topAnchor),
@@ -187,14 +222,71 @@ class CBViewCreator {
                     puzzleChoiceSegmentedControl.heightAnchor.constraint(equalToConstant: CBConstants.UI.isIpad ? 60 : 30),
                     puzzleChoiceSegmentedControl.bottomAnchor.constraint(equalTo: scrambleLengthLabel.topAnchor, constant: -CBConstants.UI.defaultInsets),
                     
+                    deleteLastSolveButton.bottomAnchor.constraint(equalTo: puzzleChoiceSegmentedControl.topAnchor, constant: -CBConstants.UI.doubleInset),
+                    deleteLastSolveButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
+                    
                     ao5Label.widthAnchor.constraint(equalTo: containerView.widthAnchor),
-                    ao5Label.bottomAnchor.constraint(equalTo: puzzleChoiceSegmentedControl.topAnchor, constant: -CBConstants.UI.doubleInset),
+                    ao5Label.bottomAnchor.constraint(equalTo: xStepper.topAnchor, constant: -CBConstants.UI.defaultInsets),
                     ao5Label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
                     ao5Label.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UI.doubleInset),
+                    
+                    aoxLabel.widthAnchor.constraint(equalTo: containerView.widthAnchor),
+                    aoxLabel.bottomAnchor.constraint(equalTo: deleteLastSolveButton.topAnchor, constant: -CBConstants.UI.defaultInsets),
+                    aoxLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
+                    aoxLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UI.doubleInset),
+                    
+                    xStepper.leadingAnchor.constraint(equalTo: aoxLabel.leadingAnchor),
+                    xStepper.bottomAnchor.constraint(equalTo: aoxLabel.topAnchor, constant: -CBConstants.UI.defaultInsets)
                 ])
         }
+        
+        func deleteLastSolve(from vc: UIViewController) {
+            let alert = UIAlertController(title: "Are you sure?", message: "Your last solve will be permanently deleted", preferredStyle: .alert)
+            let delete = UIAlertAction(title: "Delete".localized(), style: UIAlertAction.Style.destructive, handler: { action in
+                guard let solve = UIViewController.loadCoreData(retrievableObject: Solve()).last as? Solve  else {
+                    print("No solve to delete")
+                    return
+                }
+                if !self.solves.isEmpty {
+                    self.solves.removeLast()
+                }
+                let context = UIViewController().context
+                context.delete(solve)
+                do
+                {
+                    try context.save()
+                }
+                catch
+                {
+                    print ("There was an error")
+                }
+                self.updateAverages()
+            })
+            let cancel = UIAlertAction(title: "Cancel".localized(), style: UIAlertAction.Style.default, handler: nil)
+            alert.addAction(cancel)
+            alert.addAction(delete)
+            vc.present(alert, animated: true, completion: nil)
+        }
+        func updateAverages(){
+            xForCustomAvg = Int(UserDefaults.standard.double(forKey: UserDefaultsHelper.DefaultKeys.customAvgX.rawValue))
+            if let average = CBBrain.retrieveRecentAverageOf(xForCustomAvg) {
+                let formattedTime = CBBrain.formatTimeForTimerLabel(timeElapsed: average).dropFirst("Time: ".count)
+                aoxLabel.text = "Ao\(xForCustomAvg)(x):\n\(formattedTime)"
+            } else {
+                aoxLabel.text = "Ao\(xForCustomAvg)(x):\nNot enough solves yet"
+            }
+            
+            if let averageOf5 = CBBrain.retrieveRecentAverageOf() {
+                let formattedTime = CBBrain.formatTimeForTimerLabel(timeElapsed: averageOf5).dropFirst("Time: ".count)
+                ao5Label.text = "Ao5:\n\(formattedTime)"
+            } else {
+                ao5Label.text = "Ao5:\nNot enough solves yet"
+            }
+        }
+
     }
-    
+        
+        
     static func createOptionsBar(for vc: TimerViewController) -> CBView {
         let optionsBar = CBView()
         let showButton = CBButton()

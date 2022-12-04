@@ -86,23 +86,30 @@ struct CBBrain {
         return dateString
     }
     
-    static func retrieveRecentAverage() -> Double? {
-        guard let solves = UIViewController.loadCoreData(retrievableObject: Solve()) as? [Solve], solves.count >= 5 else {
-            print("No solves to load yet")
+    static func retrieveRecentAverageOf(_ number: Int = 5) -> Double? {
+        guard let solves = UIViewController.loadCoreData(retrievableObject: Solve()) as? [Solve], solves.count >= number, number > 2 else {
+            print("Not enough solves to compute average")
             return nil
         }
-        var lastFiveSolves = solves[(solves.count - 5)...(solves.count - 1)]
-        lastFiveSolves.sort { $0 > $1 }
-        lastFiveSolves.removeLast()
-        lastFiveSolves.removeFirst()
-        print("Last 5")
+        var lastXSolves = solves[(solves.count - number)...(solves.count - 1)]
+        lastXSolves.sort { $0 > $1 }
+        print("Last \(number)")
         var average = 0.0
         var total = 0.0
-        for solve in lastFiveSolves {
+        for solve in lastXSolves {
             print(solve.time)
             total += solve.timeAsDouble
         }
-        average = total / 3.0
+        if !lastXSolves.isEmpty {
+            lastXSolves.removeLast()
+            lastXSolves.removeFirst()
+        }
+        print("Best and worst removed")
+        for solve in lastXSolves {
+            print(solve.time)
+            total += solve.timeAsDouble
+        }
+        average = total / Double(number)
         return average
     }
 }

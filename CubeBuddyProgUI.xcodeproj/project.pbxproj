@@ -54,6 +54,7 @@
 		6AAF306128C2820A00870A00 /* UIStackView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF306028C2820A00870A00 /* UIStackView+Extension.swift */; };
 		6AAF306328C285F100870A00 /* CBBaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF306228C285F100870A00 /* CBBaseTableViewCell.swift */; };
 		6AAF306528C3659A00870A00 /* CBEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAF306428C3659A00870A00 /* CBEnums.swift */; };
+		6ADADE32293CE9E700DDF2C5 /* CBStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ADADE31293CE9E700DDF2C5 /* CBStepper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -161,6 +162,7 @@
 		6AAF306028C2820A00870A00 /* UIStackView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extension.swift"; sourceTree = "<group>"; };
 		6AAF306228C285F100870A00 /* CBBaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBBaseTableViewCell.swift; sourceTree = "<group>"; };
 		6AAF306428C3659A00870A00 /* CBEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBEnums.swift; sourceTree = "<group>"; };
+		6ADADE31293CE9E700DDF2C5 /* CBStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBStepper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -401,6 +403,7 @@
 				6AAF305828BF3FE200870A00 /* CBSegmentedControl.swift */,
 				6AAF305A28C0737500870A00 /* CBHStackView.swift */,
 				6AAF305E28C21AC100870A00 /* CBPickerView.swift */,
+				6ADADE31293CE9E700DDF2C5 /* CBStepper.swift */,
 			);
 			path = CBKit;
 			sourceTree = "<group>";
@@ -576,6 +579,7 @@
 			files = (
 				6A7CCE0E286FFDB000598C88 /* CBBaseViewController.swift in Sources */,
 				6AACD500287196A6006FB54B /* CubeNoobYoutubePlayerVC.swift in Sources */,
+				6ADADE32293CE9E700DDF2C5 /* CBStepper.swift in Sources */,
 				6AAF304328B9BCAA00870A00 /* ScrambledCubeGraphicVC.swift in Sources */,
 				6AAF305D28C07BD000870A00 /* CBConstraintHelper.swift in Sources */,
 				6AAF304D28BCAFC600870A00 /* CBVStackView.swift in Sources */,

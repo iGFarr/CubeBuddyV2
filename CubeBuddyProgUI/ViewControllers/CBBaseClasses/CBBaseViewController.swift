@@ -32,7 +32,7 @@ class CBBaseViewController: UIViewController {
         if UserDefaults.standard.integer(forKey: UserDefaultsHelper.DefaultKeys.firstLoad.rawValue) == 0 {
             UserDefaults.standard.set(1, forKey: UserDefaultsHelper.DefaultKeys.firstLoad.rawValue)
             UserDefaults.standard.setValue(CBConstants.defaultScrambleSliderValue, forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
-
+            UserDefaults.standard.setValue(12.0, forKey: UserDefaultsHelper.DefaultKeys.customAvgX.rawValue)
             soundsOn = true
             explosionsOn = true
         }
