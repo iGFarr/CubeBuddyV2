@@ -10,10 +10,10 @@ import Foundation
 import CoreData
 
 
-extension Solve {
+extension Solve: RetrievableCDObject {
 
-    @nonobjc public class func createFetchRequest() -> NSFetchRequest<Solve> {
-        return NSFetchRequest<Solve>(entityName: "Solve")
+    @nonobjc public class func createFetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        return NSFetchRequest(entityName: "Solve")
     }
 
     @NSManaged public var scramble: String
@@ -26,3 +26,6 @@ extension Solve : Identifiable {
 
 }
 
+protocol RetrievableCDObject {
+    static func createFetchRequest() -> NSFetchRequest<NSFetchRequestResult>
+}

@@ -9,18 +9,18 @@ import UIKit
 import CoreData
 
 class SolvesViewController: CBBaseTableViewController {
-    private var solves = [Solve]()
+    private var solves = [RetrievableCDObject]()
     private let clearAllCellIndex = 0
     private let clearAllCell = 1
     override func viewDidLoad() {
         super.viewDidLoad()
-        solves = loadCoreData()
+        solves = loadCoreData(retrievableObject: Solve())
         title = CBConstants.CBMenuPickerPages.solves.rawValue.localized()
         tableView.register(SolveCellModel.self, forCellReuseIdentifier: "solveCell")
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        solves = loadCoreData()
+        solves = loadCoreData(retrievableObject: Solve())
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -59,8 +59,9 @@ extension SolvesViewController {
         }
         
         guard solves.count > indexPath.row - clearAllCell else { return cell }
-        let solve = solves[solves.count - indexPath.row]
-        cell = CBTableViewCellCreator.createSolveCell(for: tableView, at: indexPath, with: solve)
+        if let solve = solves[solves.count - indexPath.row] as? Solve {
+            cell = CBTableViewCellCreator.createSolveCell(for: tableView, at: indexPath, with: solve)
+        }
         cell.selectionStyle = .none
         return cell
     }
@@ -77,7 +78,10 @@ extension SolvesViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let currentSolveIndex = solves.count - indexPath.row
-            let solve = solves[currentSolveIndex]
+            guard let solve = solves[currentSolveIndex] as? Solve  else {
+                print("No solve to delete")
+                return
+            }
             context.delete(solve)
             solves.remove(at: currentSolveIndex)
             tableView.deleteRows(at: [indexPath], with: .fade)

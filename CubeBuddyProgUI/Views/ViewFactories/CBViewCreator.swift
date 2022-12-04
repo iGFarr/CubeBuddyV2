@@ -10,7 +10,7 @@ import CoreData
 
 class CBViewCreator {
     final class TimerView: UIView {
-        var solves =  [Solve]()
+        var solves =  [RetrievableCDObject]()
         var delegate: CubeDelegate?
         var timerRunning = false
         let scrambleLengthLabel = CBLabel()

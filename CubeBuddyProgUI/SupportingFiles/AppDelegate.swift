@@ -73,17 +73,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-    
-    func loadSavedData() -> [Solve] {
-        let request = Solve.createFetchRequest()
-        var solves = [Solve]()
-        do {
-            solves = try persistentContainer.viewContext.fetch(request)
-        } catch {
-            print("Fetch failed")
-        }
-        return solves
-    }
 }
 
 extension UIViewController {
@@ -93,16 +82,16 @@ extension UIViewController {
         return appDelegate.persistentContainer.viewContext
     }
     
-    func loadCoreData() -> [Solve] {
+    func loadCoreData(retrievableObject: RetrievableCDObject) -> [RetrievableCDObject] {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let request = Solve.createFetchRequest()
-        var solves = [Solve]()
+        let request = type(of: retrievableObject).createFetchRequest()
+        var data: [RetrievableCDObject] = []
         do {
-            solves = try appDelegate.persistentContainer.viewContext.fetch(request)
+            data = try appDelegate.persistentContainer.viewContext.fetch(request) as? [RetrievableCDObject] ?? [RetrievableCDObject]()
         } catch {
             print("Fetching failed")
         }
-        return solves
+        return data
     }
 
     func saveCoreData() {
