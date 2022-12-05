@@ -98,7 +98,6 @@ extension SolvesViewController {
     }
     
     private func deleteSolves(){
-        let context = ( UIApplication.shared.delegate as! AppDelegate ).persistentContainer.viewContext
         let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Solve")
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
         do

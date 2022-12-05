@@ -14,7 +14,7 @@ protocol CubeDelegate {
 
 extension CubeDelegate {
     func cancelUpdate(){
-        print("Exectuing default implementation of cancelUpdate()")
+        print("Executing default implementation of cancelUpdate()")
     }
 }
 
@@ -35,5 +35,9 @@ class TimerViewController: CBBaseViewController, CubeDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         viewModel?.solves = Self.loadCoreData(retrievableObject: Solve())
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        viewModel?.updateAverages()
     }
 }

@@ -251,6 +251,30 @@ public struct Cube: CustomStringConvertible, Equatable {
         }
     }
     
+    public static func getTileForLetterFrom(_ surface: Surface, letter: Character) -> Tile {
+        switch letter {
+        case "a":
+            return surface.a
+        case "b":
+            return surface.b
+        case "c":
+            return surface.c
+        case "d":
+            return surface.d
+        case "e":
+            return surface.e
+        case "f":
+            return surface.f
+        case "g":
+            return surface.g
+        case "h":
+            return surface.h
+        case "i":
+            return surface.i
+        default:
+            return surface.a
+        }
+    }
     func convertStringToMoveList(scramble: [String]) -> [Movement] {
         // Created by Isaac Farr
         var movements = [Movement]()

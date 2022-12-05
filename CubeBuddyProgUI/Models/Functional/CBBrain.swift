@@ -87,18 +87,17 @@ struct CBBrain {
     }
     
     static func retrieveRecentAverageOf(_ number: Int = 5) -> Double? {
-        guard let solves = UIViewController.loadCoreData(retrievableObject: Solve()) as? [Solve], solves.count >= number, number > 2 else {
+        guard let solves = UIViewController.loadCoreData(retrievableObject: Solve()) as? [Solve], solves.count >= number, number >= 3 else {
             print("Not enough solves to compute average")
             return nil
         }
         var lastXSolves = solves[(solves.count - number)...(solves.count - 1)]
         lastXSolves.sort { $0 > $1 }
-        print("Last \(number)")
+        print("Last \(number) from CoreData")
         var average = 0.0
         var total = 0.0
         for solve in lastXSolves {
             print(solve.time)
-            total += solve.timeAsDouble
         }
         if !lastXSolves.isEmpty {
             lastXSolves.removeLast()
@@ -109,7 +108,32 @@ struct CBBrain {
             print(solve.time)
             total += solve.timeAsDouble
         }
-        average = total / Double(number)
+        average = total / Double(number - 2)
+        return average
+    }
+    static func retrieveFromSolveSetAvgOf(_ number: Int = 5, solves: [Solve]) -> Double? {
+        guard solves.count >= number, number >= 3 else {
+            print("Not enough solves to compute average")
+            return nil
+        }
+        var lastXSolves = solves[(solves.count - number)...(solves.count - 1)]
+        lastXSolves.sort { $0 > $1 }
+        print("Last \(number) from set")
+        var average = 0.0
+        var total = 0.0
+        for solve in lastXSolves {
+            print(solve.time)
+        }
+        if !lastXSolves.isEmpty {
+            lastXSolves.removeLast()
+            lastXSolves.removeFirst()
+        }
+        print("Best and worst removed")
+        for solve in lastXSolves {
+            print(solve.time)
+            total += solve.timeAsDouble
+        }
+        average = total / Double(number - 2)
         return average
     }
 }

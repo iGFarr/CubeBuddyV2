@@ -11,17 +11,21 @@ import CoreData
 class CBViewCreator {
     final class TimerView: UIView {
         var solves =  [RetrievableCDObject]()
+        var recentSolves = [RetrievableCDObject]()
         var delegate: CubeDelegate?
         var timerRunning = false
         let scrambleLengthLabel = CBLabel()
         let scrambleLabel = CBLabel()
         let runningTimerLabel = CBLabel()
         let ao5Label = CBLabel()
+        let ao5CurrentLabel = CBLabel()
+        let recentSessionTimesLabel = CBLabel()
         let aoxLabel = CBLabel()
         var xForCustomAvg: Int = 12
         let xStepper = CBStepper()
         let scrambleLengthSlider = CBSlider()
         let deleteLastSolveButton = CBButton()
+        let deleteAllButton = CBButton()
         let puzzleChoiceSegmentedControl = CBSegmentedControl(items: ["3x3", "4x4", "5x5", "6x6", "7x7"])
         var timeElapsed = 0.00
         var timer: Timer?
@@ -41,7 +45,7 @@ class CBViewCreator {
             let sliderValueRoundedDown = Int(floor(scrambleLengthSlider.value))
             scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length".localized() + ": " + String(sliderValueRoundedDown), size: .small)
             if timerRunning == false {
-                let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: sliderValueRoundedDown), size: .large)
+                let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: sliderValueRoundedDown), size: .medium)
                 scrambleLabel.attributedText = scrambleText
                 if sliderValueRoundedDown < 1 {
                     scrambleLabel.isHidden = true
@@ -70,7 +74,7 @@ class CBViewCreator {
             func timerUpdatesUI(){
                 self.timeElapsed += 0.01
                 let formattedTimerString = CBBrain.formatTimeForTimerLabel(timeElapsed: self.timeElapsed)
-                self.runningTimerLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: formattedTimerString, size: .xl)
+                self.runningTimerLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: formattedTimerString, size: .large)
             }
             
             let unselectedColor: UIColor = .CBTheme.secondary ?? .systemGreen
@@ -99,7 +103,7 @@ class CBViewCreator {
             xStepper.setDecrementImage(xStepper.decrementImage(for: .normal), for: .normal)
             xStepper.setIncrementImage(xStepper.incrementImage(for: .normal), for: .normal)
             xStepper.tintColor = .CBTheme.secondary
-            xStepper.minimumValue = 2
+            xStepper.minimumValue = 3
             scrambleLengthSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
             xStepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)
             if scrambleLengthSlider.value == 0 {
@@ -108,7 +112,7 @@ class CBViewCreator {
             
             let sliderValueRoundedDown = Int(floor(scrambleLengthSlider.value))
             scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length".localized() + ": " + String(sliderValueRoundedDown), size: .small)
-            let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: sliderValueRoundedDown), size: .large)
+            let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: sliderValueRoundedDown), size: .medium)
             scrambleLabel.attributedText = scrambleText
             
             func timerButtonViewPressed(completion: (() -> ())? = nil){
@@ -132,10 +136,11 @@ class CBViewCreator {
                     newSolve.setValue(self.timeElapsed, forKey: "timeAsDouble")
                     newSolve.setValue("\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + Int(CBConstants.defaultPuzzleSize))x\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + Int(CBConstants.defaultPuzzleSize))", forKey: "puzzle")
                     newSolve.setValue(CBBrain.formatDate(), forKey: "date")
-                    
-                    updateAverages()
+                    recentSolves.append(newSolve as! RetrievableCDObject)
                     viewController.saveCoreData()
-                    let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(sliderValueRoundedDown)), size: .large)
+                    updateRecentSessionLabel()
+                    updateAverages()
+                    let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(sliderValueRoundedDown)), size: .medium)
                     scrambleLabel.attributedText = scrambleText
                     self.timerRunning = false
                     self.timeElapsed = 0.00
@@ -146,6 +151,7 @@ class CBViewCreator {
                         scrambleLabel.isHidden = true
                     }
                 }
+                updateAccessibilityLabel()
             }
             
             guard let view = viewController.view else { return }
@@ -160,7 +166,9 @@ class CBViewCreator {
             timerButtonView.addTapGestureRecognizer {
                 timerButtonViewPressed()
             }
-            self.runningTimerLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Time".localized() + ": 00:00", size: .xl)
+            timerButtonView.isAccessibilityElement = true
+            updateAccessibilityLabel()
+            self.runningTimerLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Time".localized() + ": 00:00", size: .large)
             
             CBConstraintHelper.constrain(containerView, toSafeAreaOf: view, usingInsets: false)
             containerView.addSubviews([
@@ -168,19 +176,25 @@ class CBViewCreator {
                 timerButtonView,
                 scrambleLabel,
                 runningTimerLabel,
+                ao5CurrentLabel,
                 ao5Label,
                 aoxLabel,
+                recentSessionTimesLabel,
                 xStepper,
                 deleteLastSolveButton,
+                deleteAllButton,
                 scrambleLengthSlider,
                 scrambleLengthLabel,
                 puzzleChoiceSegmentedControl
             ])
-            ao5Label.font = UIFont.CBFonts.returnCustomFont(size: .medium, textStyle: .headline)
-            aoxLabel.font = UIFont.CBFonts.returnCustomFont(size: .medium, textStyle: .headline)
+            ao5Label.font = UIFont.CBFonts.returnCustomFont(size: .small, textStyle: .headline)
+            aoxLabel.font = UIFont.CBFonts.returnCustomFont(size: .small, textStyle: .headline)
+            ao5CurrentLabel.font = UIFont.CBFonts.returnCustomFont(size: .small, textStyle: .headline)
+            recentSessionTimesLabel.font = UIFont.CBFonts.returnCustomFont(size: .small, textStyle: .headline)
+            recentSessionTimesLabel.numberOfLines = 0
 
             deleteLastSolveButton.layer.cornerRadius = CBConstants.UI.buttonCornerRadius
-            let buttonText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Delete Last", size: .small)
+            var buttonText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Delete Last", size: .small)
             deleteLastSolveButton.tintColor = .systemRed
             deleteLastSolveButton.layer.borderColor = UIColor.CBTheme.secondary?.resolvedColor(with: UITraitCollection.current).cgColor
             deleteLastSolveButton.layer.borderWidth = 2
@@ -191,6 +205,20 @@ class CBViewCreator {
             deleteLastSolveButton.setAttributedTitle(buttonText, for: .normal)
             deleteLastSolveButton.addTapGestureRecognizer {
                 self.deleteLastSolve(from: viewController)
+            }
+            
+            deleteAllButton.layer.cornerRadius = CBConstants.UI.buttonCornerRadius
+            buttonText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Delete All", size: .small)
+            deleteAllButton.tintColor = .systemRed
+            deleteAllButton.layer.borderColor = UIColor.CBTheme.secondary?.resolvedColor(with: UITraitCollection.current).cgColor
+            deleteAllButton.layer.borderWidth = 2
+            deleteAllButton.clipsToBounds = true
+            if #available(iOS 15.0, *) {
+                deleteAllButton.configuration = .filled()
+            }
+            deleteAllButton.setAttributedTitle(buttonText, for: .normal)
+            deleteAllButton.addTapGestureRecognizer {
+                self.deleteAllSolves(from: viewController)
             }
             NSLayoutConstraint.activate(
                 [
@@ -222,33 +250,56 @@ class CBViewCreator {
                     puzzleChoiceSegmentedControl.heightAnchor.constraint(equalToConstant: CBConstants.UI.isIpad ? 60 : 30),
                     puzzleChoiceSegmentedControl.bottomAnchor.constraint(equalTo: scrambleLengthLabel.topAnchor, constant: -CBConstants.UI.defaultInsets),
                     
-                    deleteLastSolveButton.bottomAnchor.constraint(equalTo: puzzleChoiceSegmentedControl.topAnchor, constant: -CBConstants.UI.doubleInset),
+                    deleteLastSolveButton.bottomAnchor.constraint(equalTo: deleteAllButton.topAnchor, constant: -CBConstants.UI.defaultInsets),
                     deleteLastSolveButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
                     
+                    deleteAllButton.bottomAnchor.constraint(equalTo: puzzleChoiceSegmentedControl.topAnchor, constant: -CBConstants.UI.doubleInset),
+                    deleteAllButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
+                    
+                    ao5CurrentLabel.widthAnchor.constraint(equalTo: containerView.widthAnchor),
+                    ao5CurrentLabel.bottomAnchor.constraint(equalTo: ao5Label.topAnchor, constant: -CBConstants.UI.defaultInsets),
+                    ao5CurrentLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
+                    ao5CurrentLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UI.doubleInset),
+                    
                     ao5Label.widthAnchor.constraint(equalTo: containerView.widthAnchor),
-                    ao5Label.bottomAnchor.constraint(equalTo: xStepper.topAnchor, constant: -CBConstants.UI.defaultInsets),
+                    ao5Label.bottomAnchor.constraint(equalTo: aoxLabel.topAnchor, constant: -CBConstants.UI.defaultInsets),
                     ao5Label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
                     ao5Label.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UI.doubleInset),
                     
                     aoxLabel.widthAnchor.constraint(equalTo: containerView.widthAnchor),
-                    aoxLabel.bottomAnchor.constraint(equalTo: deleteLastSolveButton.topAnchor, constant: -CBConstants.UI.defaultInsets),
+                    aoxLabel.bottomAnchor.constraint(equalTo: xStepper.topAnchor, constant: -CBConstants.UI.defaultInsets),
                     aoxLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
                     aoxLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UI.doubleInset),
                     
                     xStepper.leadingAnchor.constraint(equalTo: aoxLabel.leadingAnchor),
-                    xStepper.bottomAnchor.constraint(equalTo: aoxLabel.topAnchor, constant: -CBConstants.UI.defaultInsets)
+                    xStepper.bottomAnchor.constraint(equalTo: deleteLastSolveButton.topAnchor, constant: -CBConstants.UI.defaultInsets),
+                    
+                    recentSessionTimesLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UI.defaultInsets),
+                    recentSessionTimesLabel.bottomAnchor.constraint(equalTo: deleteAllButton.bottomAnchor),
+                    recentSessionTimesLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 200)
                 ])
+            
+            func updateAccessibilityLabel() {
+                if timerRunning {
+                    timerButtonView.accessibilityLabel = "Stop"
+                } else {
+                    timerButtonView.accessibilityLabel = "Start"
+                }
+            }
         }
         
         func deleteLastSolve(from vc: UIViewController) {
-            let alert = UIAlertController(title: "Are you sure?", message: "Your last solve will be permanently deleted", preferredStyle: .alert)
+            guard let solve = UIViewController.loadCoreData(retrievableObject: Solve()).last as? Solve  else {
+                print("No solve to delete")
+                return
+            }
+            let alert = UIAlertController(title: "Are you sure?", message: "Your last solve will be permanently deleted from memory, and from the current session.", preferredStyle: .alert)
             let delete = UIAlertAction(title: "Delete".localized(), style: UIAlertAction.Style.destructive, handler: { action in
-                guard let solve = UIViewController.loadCoreData(retrievableObject: Solve()).last as? Solve  else {
-                    print("No solve to delete")
-                    return
-                }
                 if !self.solves.isEmpty {
                     self.solves.removeLast()
+                }
+                if !self.recentSolves.isEmpty {
+                    self.recentSolves.removeLast()
                 }
                 let context = UIViewController().context
                 context.delete(solve)
@@ -261,27 +312,83 @@ class CBViewCreator {
                     print ("There was an error")
                 }
                 self.updateAverages()
+                self.updateRecentSessionLabel()
             })
             let cancel = UIAlertAction(title: "Cancel".localized(), style: UIAlertAction.Style.default, handler: nil)
             alert.addAction(cancel)
             alert.addAction(delete)
             vc.present(alert, animated: true, completion: nil)
         }
-        func updateAverages(){
+        
+        func deleteAllSolves(from vc: UIViewController) {
+            guard let _ = UIViewController.loadCoreData(retrievableObject: Solve()).last as? Solve  else {
+                print("No solve to delete")
+                return
+            }
+            let alert = UIAlertController(title: "Are you sure?", message: "ALL of your solve data will be deleted, as well as the current session.", preferredStyle: .alert)
+            let delete = UIAlertAction(title: "Delete".localized(), style: UIAlertAction.Style.destructive, handler: { action in
+                if !self.solves.isEmpty {
+                    self.solves.removeAll()
+                }
+                if !self.recentSolves.isEmpty {
+                    self.recentSolves.removeAll()
+                }
+                let context = UIViewController().context
+                let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Solve")
+                let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+                do
+                {
+                    try context.execute(deleteRequest)
+                    try context.save()
+                }
+                catch
+                {
+                    print ("There was an error")
+                }
+                self.updateAverages()
+                self.updateRecentSessionLabel()
+            })
+            let cancel = UIAlertAction(title: "Cancel".localized(), style: UIAlertAction.Style.default, handler: nil)
+            alert.addAction(cancel)
+            alert.addAction(delete)
+            vc.present(alert, animated: true, completion: nil)
+        }
+        
+        func updateAverages() {
             xForCustomAvg = Int(UserDefaults.standard.double(forKey: UserDefaultsHelper.DefaultKeys.customAvgX.rawValue))
             if let average = CBBrain.retrieveRecentAverageOf(xForCustomAvg) {
                 let formattedTime = CBBrain.formatTimeForTimerLabel(timeElapsed: average).dropFirst("Time: ".count)
-                aoxLabel.text = "Ao\(xForCustomAvg)(x):\n\(formattedTime)"
+                aoxLabel.text = "Ao\(xForCustomAvg)(custom-all):\n\(formattedTime)"
             } else {
-                aoxLabel.text = "Ao\(xForCustomAvg)(x):\nNot enough solves yet"
+                aoxLabel.text = "Ao\(xForCustomAvg)(custom-all):\nN/A"
             }
             
             if let averageOf5 = CBBrain.retrieveRecentAverageOf() {
                 let formattedTime = CBBrain.formatTimeForTimerLabel(timeElapsed: averageOf5).dropFirst("Time: ".count)
-                ao5Label.text = "Ao5:\n\(formattedTime)"
+                ao5Label.text = "Ao5(all):\n\(formattedTime)"
             } else {
-                ao5Label.text = "Ao5:\nNot enough solves yet"
+                ao5Label.text = "Ao5(all):\nN/A"
             }
+            
+            if let solveSet = recentSolves as? [Solve], let averageOfCurrent = CBBrain.retrieveFromSolveSetAvgOf(solves: solveSet), recentSolves.count >= 5 {
+                let formattedTime = CBBrain.formatTimeForTimerLabel(timeElapsed: averageOfCurrent).dropFirst("Time: ".count)
+                ao5CurrentLabel.text = "Ao5(current):\n\(formattedTime)"
+            } else {
+                ao5CurrentLabel.text = "Ao5(current):\nN/A"
+            }
+        }
+        
+        func updateRecentSessionLabel(){
+            recentSessionTimesLabel.text = ""
+            guard !recentSolves.isEmpty, var labelText = recentSessionTimesLabel.text else { return }
+            if recentSolves.count > 5 {
+                recentSolves.removeFirst()
+            }
+            for solve in recentSolves.reversed() {
+                guard let solve = solve as? Solve else { return }
+                labelText += "\n\(CBBrain.formatTimeForTimerLabel(timeElapsed: solve.timeAsDouble).dropFirst("Time: ".count))"
+            }
+            recentSessionTimesLabel.text = labelText
         }
 
     }
@@ -524,38 +631,42 @@ class CBViewCreator {
                 tileSquare.layer.borderWidth = 2
                 tileSquare.layer.cornerRadius = CBConstants.UI.defaultCornerRadius * (CBConstants.defaultPuzzleSize / (1.5 * cubeSize))
                 
+                // Leaving this bad logic to show PE's my flow from initial implementation to critical enhancements
                 switch stack {
-                case 1:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: face.a)
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: face.b)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: face.c)
-                    }
-                case 2:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: face.d)
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: face.e)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: face.f)
-                    }
-                case 3:
-                    if square == 1 {
-                        tileSquare.backgroundColor = getColorForTile(tile: face.g)
-                    }
-                    if square == 2 {
-                        tileSquare.backgroundColor = getColorForTile(tile: face.h)
-                    }
-                    if square == 3 {
-                        tileSquare.backgroundColor = getColorForTile(tile: face.i)
-                    }
+//                case 1:
+//                    if square == 1 {
+//                        tileSquare.backgroundColor = getColorForTile(tile: face.a)
+//                    }
+//                    if square == 2 {
+//                        tileSquare.backgroundColor = getColorForTile(tile: face.b)
+//                    }
+//                    if square == 3 {
+//                        tileSquare.backgroundColor = getColorForTile(tile: face.c)
+//                    }
+//                case 2:
+//                    if square == 1 {
+//                        tileSquare.backgroundColor = getColorForTile(tile: face.d)
+//                    }
+//                    if square == 2 {
+//                        tileSquare.backgroundColor = getColorForTile(tile: face.e)
+//                    }
+//                    if square == 3 {
+//                        tileSquare.backgroundColor = getColorForTile(tile: face.f)
+//                    }
+//                case 3:
+//                    if square == 1 {
+//                        tileSquare.backgroundColor = getColorForTile(tile: face.g)
+//                    }
+//                    if square == 2 {
+//                        tileSquare.backgroundColor = getColorForTile(tile: face.h)
+//                    }
+//                    if square == 3 {
+//                        tileSquare.backgroundColor = getColorForTile(tile: face.i)
+//                    }
                 default:
+                    let characterCode = Int(("a" as UnicodeScalar).value - 1) + ((stack - 1) * 3) + (square)
+                    let character = (Character(UnicodeScalar(characterCode) ?? UnicodeScalar(65)))
+                    tileSquare.backgroundColor = getColorForTile(tile: Cube.getTileForLetterFrom(face, letter: character))
                     break
                 }
                 hStack.addArrangedSubview(tileSquare)

@@ -95,7 +95,7 @@ class ScrambledCubeGraphicVC: CBBaseViewController, CubeDelegate, GraphicPresent
                 self.rootVC?.viewModel?.timer?.invalidate()
                 self.rootVC?.viewModel?.timerRunning = false
                 self.rootVC?.viewModel?.timeElapsed = 0.00
-                let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(self.rootVC?.viewModel?.scrambleLengthSlider.value ?? CBConstants.defaultScrambleSliderValue)), size: .large)
+                let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(self.rootVC?.viewModel?.scrambleLengthSlider.value ?? CBConstants.defaultScrambleSliderValue)), size: .medium)
                 self.rootVC?.viewModel?.scrambleLabel.attributedText = scrambleText
             } else {
                 wipLabel.isHidden = true
