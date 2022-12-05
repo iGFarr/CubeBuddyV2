@@ -47,6 +47,9 @@ class CBViewCreator {
             if timerRunning == false {
                 let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: sliderValueRoundedDown), size: .medium)
                 scrambleLabel.attributedText = scrambleText
+                var accessibilityText = scrambleText.string.replacingOccurrences(of: " ", with: "\n \n")
+                accessibilityText = accessibilityText.replacingOccurrences(of: "'", with: "Prime")
+                scrambleLabel.accessibilityLabel = accessibilityText
                 if sliderValueRoundedDown < 1 {
                     scrambleLabel.isHidden = true
                 } else {
@@ -114,6 +117,9 @@ class CBViewCreator {
             scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length".localized() + ": " + String(sliderValueRoundedDown), size: .small)
             let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: sliderValueRoundedDown), size: .medium)
             scrambleLabel.attributedText = scrambleText
+            var accessibilityText = scrambleText.string.replacingOccurrences(of: " ", with: "\n \n")
+            accessibilityText = accessibilityText.replacingOccurrences(of: "'", with: "Prime")
+            scrambleLabel.accessibilityLabel = accessibilityText
             
             func timerButtonViewPressed(completion: (() -> ())? = nil){
                 let sliderValueRoundedDown = floor(scrambleLengthSlider.value)
@@ -142,6 +148,9 @@ class CBViewCreator {
                     updateAverages()
                     let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(sliderValueRoundedDown)), size: .medium)
                     scrambleLabel.attributedText = scrambleText
+                    var accessibilityText = scrambleText.string.replacingOccurrences(of: " ", with: "\n \n")
+                    accessibilityText = accessibilityText.replacingOccurrences(of: "'", with: "Prime")
+                    scrambleLabel.accessibilityLabel = accessibilityText
                     self.timerRunning = false
                     self.timeElapsed = 0.00
                     viewController.cube = Cube()
