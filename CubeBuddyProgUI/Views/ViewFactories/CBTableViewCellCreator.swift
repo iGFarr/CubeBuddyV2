@@ -9,18 +9,32 @@ import Foundation
 import UIKit
 
 struct CBTableViewCellCreator {
-    static func createAlertCellWith(actions: [UIAlertAction], alertTitle: String = "WARNING".localized(), alertMessage: String = "WARNING MESSAGE".localized(), for tableView: UITableView, in viewController: CBBaseTableViewController) -> CBBaseTableViewCell {
+//    let deleteClosure: (UIAlertAction) -> Void = { action in
+//        self.deleteSolves()
+//        self.solves.removeAll()
+//        DispatchQueue.main.async {
+//            self.tableView.reloadData()
+//        }
+//    }
+    static func getCancelDeleteAlertWithClosure(_ deleteAction: @escaping (UIAlertAction) -> Void, alertTitle: String = "WARNING".localized(), alertMessage: String = "WARNING MESSAGE".localized(), in viewController: UIViewController) {
+        var actions = [UIAlertAction]()
+        actions.append(UIAlertAction(title: "Cancel".localized(), style: UIAlertAction.Style.default, handler: nil))
+        actions.append(UIAlertAction(title: "Delete".localized(), style: UIAlertAction.Style.destructive, handler: deleteAction))
+        let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
+        for action in actions {
+            alert.addAction(action)
+        }
+        viewController.present(alert, animated: true, completion: nil)
+    }
+    
+    static func createAlertCellWith(actions: [UIAlertAction]? = nil, alertTitle: String = "WARNING".localized(), alertMessage: String = "WARNING MESSAGE".localized(), for tableView: UITableView, in viewController: UIViewController, deleteAction: @escaping (UIAlertAction) -> Void) -> CBBaseTableViewCell {
         let cell = CBBaseTableViewCell()
         cell.textLabel?.textAlignment = .center
         cell.textLabel?.text = "Clear All".localized()
         cell.textLabel?.textColor = .systemRed
         createCellSeparator(for: cell, at: .topAndBottom)
         cell.addTapGestureRecognizer {
-            let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
-            for action in actions {
-                alert.addAction(action)
-            }
-            viewController.present(alert, animated: true, completion: nil)
+            getCancelDeleteAlertWithClosure(deleteAction, alertTitle: alertTitle, alertMessage: alertMessage, in: viewController)
         }
         return cell
     }

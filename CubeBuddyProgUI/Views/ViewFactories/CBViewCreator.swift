@@ -21,7 +21,7 @@ class CBViewCreator {
         let ao5CurrentLabel = CBLabel()
         let recentSessionTimesLabel = CBLabel()
         let aoxLabel = CBLabel()
-        var xForCustomAvg: Int = 12
+        var xForCustomAvg: Int = Int(UserDefaultsHelper.getDoubleForKeyIfPresent(key: .customAvgX))
         let xStepper = CBStepper()
         let scrambleLengthSlider = CBSlider()
         let deleteLastSolveButton = CBButton()
@@ -42,7 +42,7 @@ class CBViewCreator {
         
         @objc
         func sliderValueChanged() {
-            UserDefaultsHelper.setFloatFor(key: UserDefaultsHelper.DefaultKeys.Floats.scrambleLength, value: scrambleLengthSlider.value)
+            UserDefaultsHelper.setFloatFor(key: .scrambleLength, value: scrambleLengthSlider.value)
             let sliderValueRoundedDown = Int(floor(scrambleLengthSlider.value))
             scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length".localized() + ": \(sliderValueRoundedDown)", size: .small)
             if !timerRunning {
@@ -83,10 +83,8 @@ class CBViewCreator {
             
             scrambleLengthSlider.maximumValue = 40
             scrambleLengthSlider.minimumValue = 0
-            let scrambleLength = UserDefaultsHelper.getFloatForKeyIfPresent(key: .scrambleLength)
-            scrambleLengthSlider.setValue(scrambleLength, animated: false)
-            let stepperInitialValue = UserDefaultsHelper.getDoubleForKeyIfPresent(key: .customAvgX)
-            xStepper.value = stepperInitialValue
+            scrambleLengthSlider.setValue(UserDefaultsHelper.getFloatForKeyIfPresent(key: .scrambleLength), animated: false)
+            xStepper.value = UserDefaultsHelper.getDoubleForKeyIfPresent(key: .customAvgX)
             xStepper.minimumValue = 3
             scrambleLengthSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
             xStepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)
@@ -95,7 +93,7 @@ class CBViewCreator {
                 scrambleLabel.isHidden = true
             }
             
-            scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length".localized() + ": " + String(sliderValueRoundedDown), size: .small)
+            scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length".localized() + ": \(sliderValueRoundedDown)", size: .small)
             let scrambleText = CBBrain.getAttributedScrambleTextOfLength(sliderValueRoundedDown)
             scrambleLabel.attributedText = scrambleText
             scrambleLabel.accessibilityLabel = CBBrain.getAccessibilityLabelFor(scramble: scrambleText.string)
@@ -114,12 +112,14 @@ class CBViewCreator {
                     newSolve.setValue(floor(scrambleLengthSlider.value) != 0 ? (scrambleLabel.text ?? "No scramble") : "No Scramble", forKey: "scramble")
                     newSolve.setValue(runningTimerLabel.text ?? "No timer", forKey: "time")
                     newSolve.setValue(self.timeElapsed, forKey: "timeAsDouble")
-                    newSolve.setValue("\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + Int(CBConstants.defaultPuzzleSize))x\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + Int(CBConstants.defaultPuzzleSize))", forKey: "puzzle")
+                    let selecedPuzzleSize = self.puzzleChoiceSegmentedControl.selectedSegmentIndex + Int(CBConstants.defaultPuzzleSize)
+                    newSolve.setValue("\(selecedPuzzleSize)x\(selecedPuzzleSize)", forKey: "puzzle")
                     newSolve.setValue(CBBrain.formatDate(), forKey: "date")
                     
                     recentSolves.append(newSolve as! RetrievableCDObject)
-                    let recentSolvesAsSet: NSOrderedSet = .init(array: recentSolves)
-                    updateSessionsWithRecentSolvesAsSet(recentSolvesAsSet)
+                    // Having some Core Data context management issues. Will finish implementing saving separate solve sessions later
+//                    let recentSolvesAsSet: NSOrderedSet = .init(array: recentSolves)
+//                    updateSessionsWithRecentSolvesAsSet(recentSolvesAsSet)
                     AppDelegate.saveCoreData()
                     updateRecentSessionLabel()
                     updateAverages()
@@ -304,8 +304,7 @@ class CBViewCreator {
                 print("No solve to delete")
                 return
             }
-            let alert = UIAlertController(title: "Are you sure?", message: "Your last solve will be permanently deleted from memory, and from the current session.", preferredStyle: .alert)
-            let delete = UIAlertAction(title: "Delete".localized(), style: UIAlertAction.Style.destructive, handler: { action in
+            let deleteAction: (UIAlertAction) -> Void = { action in
                 if !self.solves.isEmpty {
                     self.solves.removeLast()
                 }
@@ -324,11 +323,9 @@ class CBViewCreator {
                 }
                 self.updateAverages()
                 self.updateRecentSessionLabel()
-            })
-            let cancel = UIAlertAction(title: "Cancel".localized(), style: UIAlertAction.Style.default, handler: nil)
-            alert.addAction(cancel)
-            alert.addAction(delete)
-            vc.present(alert, animated: true, completion: nil)
+            }
+            CBTableViewCellCreator.getCancelDeleteAlertWithClosure(deleteAction, alertTitle: "Are you sure?", alertMessage: "Your last solve will be permanently deleted from memory, and from the current session.", in: vc)
+ 
         }
         
         func deleteAllSolves(from vc: UIViewController) {
@@ -336,8 +333,7 @@ class CBViewCreator {
                 print("No solve to delete")
                 return
             }
-            let alert = UIAlertController(title: "Are you sure?", message: "ALL of your solve data will be deleted, as well as the current session.", preferredStyle: .alert)
-            let delete = UIAlertAction(title: "Delete".localized(), style: UIAlertAction.Style.destructive, handler: { action in
+            let deleteAction: (UIAlertAction) -> Void = { action in
                 if !self.solves.isEmpty {
                     self.solves.removeAll()
                 }
@@ -358,11 +354,8 @@ class CBViewCreator {
                 }
                 self.updateAverages()
                 self.updateRecentSessionLabel()
-            })
-            let cancel = UIAlertAction(title: "Cancel".localized(), style: UIAlertAction.Style.default, handler: nil)
-            alert.addAction(cancel)
-            alert.addAction(delete)
-            vc.present(alert, animated: true, completion: nil)
+            }
+            CBTableViewCellCreator.getCancelDeleteAlertWithClosure(deleteAction, alertTitle: "Are you sure?", alertMessage: "ALL of your solve data will be deleted, as well as the current session.", in: vc)
         }
         
         func updateAverages() {
@@ -635,44 +628,9 @@ class CBViewCreator {
                 tileSquare.layer.borderColor = UIColor.CBTheme.secondary?.cgColor
                 tileSquare.layer.borderWidth = 2
                 tileSquare.layer.cornerRadius = CBConstants.UI.defaultCornerRadius * (CBConstants.defaultPuzzleSize / (1.5 * cubeSize))
-                
-                // Leaving this bad logic to show PE's my flow from initial implementation to critical enhancements
-                switch stack {
-//                case 1:
-//                    if square == 1 {
-//                        tileSquare.backgroundColor = getColorForTile(tile: face.a)
-//                    }
-//                    if square == 2 {
-//                        tileSquare.backgroundColor = getColorForTile(tile: face.b)
-//                    }
-//                    if square == 3 {
-//                        tileSquare.backgroundColor = getColorForTile(tile: face.c)
-//                    }
-//                case 2:
-//                    if square == 1 {
-//                        tileSquare.backgroundColor = getColorForTile(tile: face.d)
-//                    }
-//                    if square == 2 {
-//                        tileSquare.backgroundColor = getColorForTile(tile: face.e)
-//                    }
-//                    if square == 3 {
-//                        tileSquare.backgroundColor = getColorForTile(tile: face.f)
-//                    }
-//                case 3:
-//                    if square == 1 {
-//                        tileSquare.backgroundColor = getColorForTile(tile: face.g)
-//                    }
-//                    if square == 2 {
-//                        tileSquare.backgroundColor = getColorForTile(tile: face.h)
-//                    }
-//                    if square == 3 {
-//                        tileSquare.backgroundColor = getColorForTile(tile: face.i)
-//                    }
-                default:
-                    let characterCode = Int(("a" as UnicodeScalar).value - 1) + ((stack - 1) * 3) + square
-                    let character = (Character(UnicodeScalar(characterCode) ?? UnicodeScalar(65)))
-                    tileSquare.backgroundColor = getColorForTile(tile: Cube.getTileForLetterFrom(face, letter: character))
-                }
+                let characterCode = Int(("a" as UnicodeScalar).value - 1) + ((stack - 1) * 3) + square
+                let character = (Character(UnicodeScalar(characterCode) ?? UnicodeScalar(65)))
+                tileSquare.backgroundColor = getColorForTile(tile: Cube.getTileForLetterFrom(face, letter: character))
                 hStack.addArrangedSubview(tileSquare)
             }
             hStack.heightConstant(CBConstants.UI.cubeTileDimension * (CBConstants.defaultPuzzleSize / cubeSize))

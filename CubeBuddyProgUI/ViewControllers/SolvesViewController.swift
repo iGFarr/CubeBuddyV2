@@ -38,18 +38,15 @@ extension SolvesViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = CBBaseTableViewCell()
+        let deleteClosure: (UIAlertAction) -> Void = { action in
+            self.deleteSolves()
+            self.solves.removeAll()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
         if indexPath.row == clearAllCellIndex {
-            var actions = [UIAlertAction]()
-            actions.append(UIAlertAction(title: "Delete".localized(), style: UIAlertAction.Style.destructive, handler: { action in
-                self.deleteSolves()
-                self.solves.removeAll()
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            }))
-            actions.append(UIAlertAction(title: "Cancel".localized(), style: UIAlertAction.Style.default, handler: nil))
-            
-            cell = CBTableViewCellCreator.createAlertCellWith(actions: actions, for: tableView, in: self)
+            cell = CBTableViewCellCreator.createAlertCellWith(for: tableView, in: self, deleteAction: deleteClosure)
             if solves.count == 0 {
                 cell.isHidden = true
             } else {

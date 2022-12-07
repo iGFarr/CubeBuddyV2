@@ -22,9 +22,7 @@ class CBButtonCreator {
             } else {
                 delegate.cancelUpdate()
                 var scrambledCube = Cube()
-                scrambledCube = scrambledCube.makeMoves(scrambledCube.convertStringToMoveList(scramble: CBBrain.getScramble(length: 30).dropFirst(("Scramble".localized() + ":\n").count).split(separator: " ").map { move in
-                    String(move)
-                }))
+                scrambledCube = CBBrain.makeMovesFromString(cube: scrambledCube, text: CBBrain.getScramble(length: 30))
                 delegate.updateCube(cube: scrambledCube)
             }
         }
