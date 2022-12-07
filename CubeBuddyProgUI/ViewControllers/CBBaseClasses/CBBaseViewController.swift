@@ -8,7 +8,7 @@
 import UIKit
 
 class CBBaseViewController: UIViewController {
-    let AVHelper = CBAVHelper()
+    lazy var AVHelper: CBAVHelper = CBAVHelper()
     lazy var soundsSwitchButton = CBButton()
     var soundsOn: Bool = UserDefaultsHelper.getBoolForKeyIfPresent(key: .soundsOn) {
         didSet {

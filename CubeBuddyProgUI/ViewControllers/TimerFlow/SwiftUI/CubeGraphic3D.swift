@@ -60,6 +60,7 @@ struct GameView: View {
                 fingerDrag
             )
     }
+    
 }
 
 enum Direct {

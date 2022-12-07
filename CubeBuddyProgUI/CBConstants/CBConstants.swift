@@ -37,13 +37,13 @@ struct CBConstants {
 
         static var scaleMultiplier: CGFloat {
             if isIpad {
-                return 1.5
+                return 1.3
             }
             if isSmallScreen {
-                return 0.7
+                return 0.65
             }
             if isVerySmallScreen {
-                return 0.5
+                return 0.45
             }
             return 1.0
         }
