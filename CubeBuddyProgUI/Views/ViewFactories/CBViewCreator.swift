@@ -237,17 +237,14 @@ class CBViewCreator {
                     deleteAllButton.bottomAnchor.constraint(equalTo: puzzleChoiceSegmentedControl.topAnchor, constant: -CBConstants.UI.doubleInset),
                     deleteAllButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
                     
-                    ao5CurrentLabel.widthAnchor.constraint(equalTo: containerView.widthAnchor),
                     ao5CurrentLabel.bottomAnchor.constraint(equalTo: ao5Label.topAnchor, constant: -CBConstants.UI.defaultInsets),
                     ao5CurrentLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
                     ao5CurrentLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UI.doubleInset),
                     
-                    ao5Label.widthAnchor.constraint(equalTo: containerView.widthAnchor),
                     ao5Label.bottomAnchor.constraint(equalTo: aoxLabel.topAnchor, constant: -CBConstants.UI.defaultInsets),
                     ao5Label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
                     ao5Label.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UI.doubleInset),
                     
-                    aoxLabel.widthAnchor.constraint(equalTo: containerView.widthAnchor),
                     aoxLabel.bottomAnchor.constraint(equalTo: xStepper.topAnchor, constant: -CBConstants.UI.defaultInsets),
                     aoxLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: CBConstants.UI.doubleInset),
                     aoxLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -CBConstants.UI.doubleInset),
@@ -361,14 +358,14 @@ class CBViewCreator {
         func updateAverages() {
             xForCustomAvg = Int(UserDefaultsHelper.getDoubleForKeyIfPresent(key: .customAvgX))
             if let average = CBBrain.retrieveRecentAverageOf(xForCustomAvg) {
-                let formattedTime = CBBrain.formatTimeForTimerLabel(timeElapsed: average).dropFirst("Time: ".count)
+                let formattedTime = CBBrain.formatTimeForTimerLabel(timeElapsed: average, droppingPrefix: true)
                 aoxLabel.text = "Ao\(xForCustomAvg)(custom-all):\n\(formattedTime)"
             } else {
                 aoxLabel.text = "Ao\(xForCustomAvg)(custom-all):\nN/A"
             }
             
             if let averageOf5 = CBBrain.retrieveRecentAverageOf() {
-                let formattedTime = CBBrain.formatTimeForTimerLabel(timeElapsed: averageOf5).dropFirst("Time: ".count)
+                let formattedTime = CBBrain.formatTimeForTimerLabel(timeElapsed: averageOf5, droppingPrefix: true)
                 ao5Label.text = "Ao5(all):\n\(formattedTime)"
             } else {
                 ao5Label.text = "Ao5(all):\nN/A"
@@ -608,7 +605,7 @@ class CBViewCreator {
         let stackView = CBStackView()
         
         // All constraints and dimensions are based around 3x3, and then scaled down to fit for larger cubes. So the overall face dimension is equal to 3 * tile size + some spacing
-        var stackViewDimension = CBConstants.defaultPuzzleSize * CBConstants.UI.cubeTileDimension + CBConstants.UI.defaultStackViewSpacing
+        let stackViewDimension = CBConstants.defaultPuzzleSize * CBConstants.UI.cubeTileDimension + CBConstants.UI.defaultStackViewSpacing
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
         stackView.heightConstant(stackViewDimension)
