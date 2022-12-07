@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+// CBBrain is for global utility functions
 struct CBBrain {
     static func getScramble(length numMoves: Int = CBConstants.defaultScrambleLength) -> String {
         let cubeMoves = ["U", "D", "R", "L", "F", "B"]

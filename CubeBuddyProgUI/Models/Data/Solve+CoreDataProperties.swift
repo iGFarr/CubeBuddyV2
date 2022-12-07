@@ -23,14 +23,14 @@ extension Solve: RetrievableCDObject, Comparable {
     @NSManaged public var timeAsDouble: Double
     
     public static func >(lhs: Solve, rhs: Solve) -> Bool {
-        if lhs.timeAsDouble > rhs.timeAsDouble ?? 0.0 {
+        if lhs.timeAsDouble > rhs.timeAsDouble {
             return true
         }
         return false
     }
     
     public static func <(lhs: Solve, rhs: Solve) -> Bool {
-        if lhs.timeAsDouble > rhs.timeAsDouble ?? 0.0 {
+        if lhs.timeAsDouble > rhs.timeAsDouble {
             return false
         }
         return true

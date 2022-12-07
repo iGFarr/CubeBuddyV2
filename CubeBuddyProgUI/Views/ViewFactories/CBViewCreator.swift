@@ -26,6 +26,7 @@ class CBViewCreator {
         let scrambleLengthSlider = CBSlider()
         let deleteLastSolveButton = CBButton()
         let deleteAllButton = CBButton()
+        let selectedSession = 1
         let puzzleChoiceSegmentedControl = CBSegmentedControl(items: ["3x3", "4x4", "5x5", "6x6", "7x7"])
         var timeElapsed = 0.00
         var timer: Timer?
@@ -142,7 +143,10 @@ class CBViewCreator {
                     newSolve.setValue(self.timeElapsed, forKey: "timeAsDouble")
                     newSolve.setValue("\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + Int(CBConstants.defaultPuzzleSize))x\(self.puzzleChoiceSegmentedControl.selectedSegmentIndex + Int(CBConstants.defaultPuzzleSize))", forKey: "puzzle")
                     newSolve.setValue(CBBrain.formatDate(), forKey: "date")
+                    
                     recentSolves.append(newSolve as! RetrievableCDObject)
+                    let recentSolvesAsSet: NSOrderedSet = .init(array: recentSolves)
+                    updateSessionsWithRecentSolvesAsSet(recentSolvesAsSet)
                     viewController.saveCoreData()
                     updateRecentSessionLabel()
                     updateAverages()
@@ -201,7 +205,7 @@ class CBViewCreator {
             ao5CurrentLabel.font = UIFont.CBFonts.returnCustomFont(size: .small, textStyle: .headline)
             recentSessionTimesLabel.font = UIFont.CBFonts.returnCustomFont(size: .small, textStyle: .headline)
             recentSessionTimesLabel.numberOfLines = 0
-
+            
             deleteLastSolveButton.layer.cornerRadius = CBConstants.UI.buttonCornerRadius
             var buttonText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Delete Last", size: .small)
             deleteLastSolveButton.tintColor = .systemRed
@@ -294,6 +298,53 @@ class CBViewCreator {
                 } else {
                     timerButtonView.accessibilityLabel = "Start"
                 }
+            }
+            
+            func updateSessionsWithRecentSolvesAsSet(_ solveSet: NSOrderedSet) {
+                let sessionsRequest = SolveSession.createFetchRequest()
+                do {
+                    let results = try viewController.context.fetch(sessionsRequest)
+                    if results.isEmpty {
+                        let newSolveSession = NSManagedObject(entity: NSEntityDescription.entity(forEntityName: "SolveSession", in: viewController.context) ?? NSEntityDescription(), insertInto: viewController.context)
+                        newSolveSession.setValue(solveSet, forKey: "solves")
+                        newSolveSession.setValue(selectedSession, forKey: "sessionId")
+                        viewController.saveCoreData()
+                    }
+                    for (ind, result) in results.enumerated() {
+                        if let result = result as? SolveSession, result.sessionId == selectedSession {
+                            for solve in result.solves {
+                                if let solve = solve as? Solve {
+                                    print("From Session: \(solve.time)")
+                                }
+                            }
+                            result.solves = solveSet
+                            try viewController.context.save()
+                        } else {
+                            let newSolveSession = NSManagedObject(entity: NSEntityDescription.entity(forEntityName: "SolveSession", in: viewController.context) ?? NSEntityDescription(), insertInto: viewController.context)
+                            newSolveSession.setValue(solveSet, forKey: "solves")
+                            newSolveSession.setValue(selectedSession, forKey: "sessionId")
+                            viewController.saveCoreData()
+                        }
+                    }
+                    try viewController.context.save()
+                } catch let error as NSError {
+                    print(error.localizedDescription)
+                }
+                
+                
+                //                if sessions.count < selectedSession {
+                //                    let newSolveSession = NSManagedObject(entity: NSEntityDescription.entity(forEntityName: "SolveSession", in: viewController.context) ?? NSEntityDescription(), insertInto: viewController.context)
+                //                    newSolveSession.setValue(solveSet, forKey: "solves")
+                //                    viewController.saveCoreData()
+                //                } else {
+                //                    let sessionsRequest = SolveSession.createFetchRequest()
+                //                    do {
+                //                        let results = try viewController.context.fetch(sessionsRequest)
+                //                        try viewController.context.save()
+                //                    } catch let error as NSError {
+                //                        print(error.localizedDescription)
+                //                    }
+                //                }
             }
         }
         
@@ -390,10 +441,8 @@ class CBViewCreator {
         func updateRecentSessionLabel(){
             recentSessionTimesLabel.text = ""
             guard !recentSolves.isEmpty, var labelText = recentSessionTimesLabel.text else { return }
-            if recentSolves.count > 5 {
-                recentSolves.removeFirst()
-            }
-            for solve in recentSolves.reversed() {
+            let countToGoTo = recentSolves.count >= 5 ? 5 : recentSolves.count
+            for solve in recentSolves.reversed()[0..<countToGoTo] {
                 guard let solve = solve as? Solve else { return }
                 labelText += "\n\(CBBrain.formatTimeForTimerLabel(timeElapsed: solve.timeAsDouble).dropFirst("Time: ".count))"
             }
@@ -673,10 +722,9 @@ class CBViewCreator {
 //                        tileSquare.backgroundColor = getColorForTile(tile: face.i)
 //                    }
                 default:
-                    let characterCode = Int(("a" as UnicodeScalar).value - 1) + ((stack - 1) * 3) + (square)
+                    let characterCode = Int(("a" as UnicodeScalar).value - 1) + ((stack - 1) * 3) + square
                     let character = (Character(UnicodeScalar(characterCode) ?? UnicodeScalar(65)))
                     tileSquare.backgroundColor = getColorForTile(tile: Cube.getTileForLetterFrom(face, letter: character))
-                    break
                 }
                 hStack.addArrangedSubview(tileSquare)
             }
