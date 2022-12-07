@@ -10,17 +10,17 @@ import UIKit
 class CBBaseViewController: UIViewController {
     let AVHelper = CBAVHelper()
     lazy var soundsSwitchButton = CBButton()
-    var soundsOn: Bool = UserDefaults.standard.bool(forKey: UserDefaultsHelper.DefaultKeys.soundsOn.rawValue) {
+    var soundsOn: Bool = UserDefaultsHelper.getBoolForKeyIfPresent(key: .soundsOn) {
         didSet {
-            UserDefaults.standard.set(soundsOn, forKey: UserDefaultsHelper.DefaultKeys.soundsOn.rawValue)
+            UserDefaultsHelper.setBoolFor(key: .soundsOn, value: soundsOn)
             soundsSwitchButton.removeFromSuperview()
             CBButtonCreator.configureSoundSwitchButton(for: self)
         }
     }
     lazy var explosionsOnSwitchButton = CBButton()
-    var explosionsOn: Bool = UserDefaults.standard.bool(forKey: UserDefaultsHelper.DefaultKeys.explosionsOn.rawValue) {
+    var explosionsOn: Bool = UserDefaultsHelper.getBoolForKeyIfPresent(key: .explosionsOn) {
         didSet {
-            UserDefaults.standard.set(explosionsOn, forKey: UserDefaultsHelper.DefaultKeys.explosionsOn.rawValue)
+            UserDefaultsHelper.setBoolFor(key: .explosionsOn, value: explosionsOn)
             explosionsOnSwitchButton.removeFromSuperview()
             CBButtonCreator.configureExplosionsSwitchButton(for: self)
         }
@@ -29,10 +29,12 @@ class CBBaseViewController: UIViewController {
     lazy var present3DButton = CBButton()
     override func viewDidLoad() {
         super.viewDidLoad()
-        if UserDefaults.standard.integer(forKey: UserDefaultsHelper.DefaultKeys.firstLoad.rawValue) == 0 {
-            UserDefaults.standard.set(1, forKey: UserDefaultsHelper.DefaultKeys.firstLoad.rawValue)
-            UserDefaults.standard.setValue(CBConstants.defaultScrambleSliderValue, forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
-            UserDefaults.standard.setValue(12.0, forKey: UserDefaultsHelper.DefaultKeys.customAvgX.rawValue)
+        // This block will execute on first load to set defaults
+        if UserDefaultsHelper.getIntForKeyIfPresent(key: .firstLoad) == 0 {
+            UserDefaultsHelper.setIntFor(key: .firstLoad, value: 1)
+            UserDefaultsHelper.setFloatFor(key: .scrambleLength, value: CBConstants.defaultScrambleSliderValue)
+            UserDefaultsHelper.setDoubleFor(key: .customAvgX, value: 12.0)
+            UserDefaultsHelper.setIntFor(key: .selectedSession, value: 1)
             soundsOn = true
             explosionsOn = true
         }

@@ -14,6 +14,7 @@ class CubeNoobYoutubePlayerVC: CBBaseViewController {
     private var url: URL?
     override func viewDidLoad() {
         super.viewDidLoad()
+        webView.translatesAutoresizingMaskIntoConstraints = false
         self.title = CBConstants.CBMenuPickerPages.cubeNoob.rawValue
         webView.addObserver(self, forKeyPath: "URL", options: .new, context: nil)
         

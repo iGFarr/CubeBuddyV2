@@ -59,25 +59,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
 
     // MARK: - Core Data Saving support
-
-    func saveContext () {
-        let context = persistentContainer.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nserror = error as NSError
-                print("error saving context: \(error)")
-            }
-        }
-    }
-}
-
-extension UIViewController {
-
-    var context : NSManagedObjectContext {
+    
+    static var context : NSManagedObjectContext {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistentContainer.viewContext
     }
@@ -94,9 +77,7 @@ extension UIViewController {
         return data
     }
 
-    func saveCoreData() {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let context = appDelegate.persistentContainer.viewContext
+    static func saveCoreData() {
         if context.hasChanges {
             do {
                 try context.save()
@@ -108,4 +89,8 @@ extension UIViewController {
             }
         }
     }
+}
+
+extension UIViewController {
+
 }
