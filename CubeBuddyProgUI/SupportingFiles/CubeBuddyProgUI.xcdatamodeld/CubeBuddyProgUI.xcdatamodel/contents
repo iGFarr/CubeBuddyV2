@@ -9,7 +9,7 @@
     </entity>
     <entity name="SolveSession" representedClassName="SolveSession" syncable="YES">
         <attribute name="sessionId" attributeType="Integer 64" defaultValueString="1" usesScalarValueType="YES"/>
-        <relationship name="solves" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Solve"/>
+        <relationship name="solves" optional="YES" toMany="YES" maxCount="2000" deletionRule="Nullify" ordered="YES" destinationEntity="Solve"/>
     </entity>
     <elements>
         <element name="Solve" positionX="-63" positionY="-18" width="128" height="104"/>

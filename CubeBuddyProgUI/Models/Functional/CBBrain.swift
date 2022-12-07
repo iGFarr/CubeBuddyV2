@@ -46,8 +46,12 @@ struct CBBrain {
         return scrambleString
     }
     
+    static func getAttributedScrambleTextOfLength(_ length: Int) -> NSAttributedString {
+        return CBConstants.UI.makeTextAttributedWithCBStyle(text: getScramble(length: length))
+    }
+    
     // Formats times as Time (conditionally shown** NN:) + NN:NN. Adding number pairs to the left as necessary. e.g. at 61.5 seconds, outputs Time 01:01:50. At 5 seconds, shows 05:00
-    static func formatTimeForTimerLabel(timeElapsed: Double) -> String {
+    static func formatTimeForTimerLabel(timeElapsed: Double, droppingPrefix: Bool = false) -> String {
         let hours = Int(timeElapsed) / 3600
         let hourString = String(hours)
         
@@ -75,7 +79,7 @@ struct CBBrain {
         }
         
         let formattedTimerString = "Time".localized() + ": \(useHours ? (hourString + ":"): "")\(useMinutes ? (minuteString + ":") : "")\(secondString):\(milliString)"
-        return formattedTimerString
+        return droppingPrefix ? String(formattedTimerString.dropFirst("Time: ".count)) : formattedTimerString
     }
     
     static func formatDate(_ date: Date = Date()) -> String {
@@ -88,53 +92,53 @@ struct CBBrain {
     }
     
     static func retrieveRecentAverageOf(_ number: Int = 5) -> Double? {
-        guard let solves = UIViewController.loadCoreData(retrievableObject: Solve()) as? [Solve], solves.count >= number, number >= 3 else {
-            print("Not enough solves to compute average")
+        guard let solves = AppDelegate.loadCoreData(retrievableObject: Solve()) as? [Solve], solves.count >= number, number >= 3 else {
             return nil
         }
         var lastXSolves = solves[(solves.count - number)...(solves.count - 1)]
         lastXSolves.sort { $0 > $1 }
-        print("Last \(number) from CoreData")
         var average = 0.0
         var total = 0.0
-        for solve in lastXSolves {
-            print(solve.time)
-        }
         if !lastXSolves.isEmpty {
             lastXSolves.removeLast()
             lastXSolves.removeFirst()
         }
-        print("Best and worst removed")
         for solve in lastXSolves {
-            print(solve.time)
+            total += solve.timeAsDouble
+        }
+        average = total / Double(lastXSolves.count)
+        return average
+    }
+    
+    static func retrieveFromSolveSetAvgOf(_ number: Int = 5, solves: [Solve]) -> Double? {
+        guard solves.count >= number, number >= 3 else {
+            return nil
+        }
+        var lastXSolves = solves[(solves.count - number)...(solves.count - 1)]
+        lastXSolves.sort { $0 > $1 }
+        var average = 0.0
+        var total = 0.0
+        if !lastXSolves.isEmpty {
+            lastXSolves.removeLast()
+            lastXSolves.removeFirst()
+        }
+        for solve in lastXSolves {
             total += solve.timeAsDouble
         }
         average = total / Double(number - 2)
         return average
     }
-    static func retrieveFromSolveSetAvgOf(_ number: Int = 5, solves: [Solve]) -> Double? {
-        guard solves.count >= number, number >= 3 else {
-            print("Not enough solves to compute average")
-            return nil
-        }
-        var lastXSolves = solves[(solves.count - number)...(solves.count - 1)]
-        lastXSolves.sort { $0 > $1 }
-        print("Last \(number) from set")
-        var average = 0.0
-        var total = 0.0
-        for solve in lastXSolves {
-            print(solve.time)
-        }
-        if !lastXSolves.isEmpty {
-            lastXSolves.removeLast()
-            lastXSolves.removeFirst()
-        }
-        print("Best and worst removed")
-        for solve in lastXSolves {
-            print(solve.time)
-            total += solve.timeAsDouble
-        }
-        average = total / Double(number - 2)
-        return average
+    
+    static func getAccessibilityLabelFor(scramble: String) -> String {
+        var accessibilityText = scramble.replacingOccurrences(of: " ", with: "\n \n")
+        accessibilityText = accessibilityText.replacingOccurrences(of: "'", with: "Prime")
+        return accessibilityText
+    }
+    
+    static func makeMovesFromString(cube: Cube, text: String) -> Cube {
+        let cubeCopy = cube.makeMoves(cube.convertStringToMoveList(scramble: text.dropFirst(("Scramble".localized() + ":\n").count).split(separator: " ").map { move in
+            String(move)
+        }))
+        return cubeCopy
     }
 }

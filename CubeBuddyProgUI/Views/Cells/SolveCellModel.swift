@@ -18,9 +18,7 @@ class SolveCellModel: CBBaseTableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = .clear
         setup()
-        CBTableViewCellCreator.createCellSeparator(for: self)
     }
     
     required init?(coder: NSCoder) {
@@ -28,6 +26,7 @@ class SolveCellModel: CBBaseTableViewCell {
     }
     
     private func setup() {
+        backgroundColor = .clear
         puzzleLabel.constrainToEdgePosition(.topRight, in: contentView)
         dateLabel.constrainToEdgePosition(.bottomRight, in: contentView)
         spacerLabel.text = " " // Something interesting I learned from this, even a single white space grants the label
@@ -38,5 +37,6 @@ class SolveCellModel: CBBaseTableViewCell {
             spacerLabel // Will replace this eventually. Just using this to make additional space to keep date label exposed.
         ])
         CBConstraintHelper.constrain(stackView, to: contentView, usingInsets: true)
+        CBTableViewCellCreator.createCellSeparator(for: self)
     }
 }

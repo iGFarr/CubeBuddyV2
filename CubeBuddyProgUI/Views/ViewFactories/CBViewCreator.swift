@@ -42,36 +42,36 @@ class CBViewCreator {
         
         @objc
         func sliderValueChanged() {
-            UserDefaults.standard.setValue(scrambleLengthSlider.value, forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
+            UserDefaultsHelper.setFloatFor(key: UserDefaultsHelper.DefaultKeys.Floats.scrambleLength, value: scrambleLengthSlider.value)
             let sliderValueRoundedDown = Int(floor(scrambleLengthSlider.value))
-            scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length".localized() + ": " + String(sliderValueRoundedDown), size: .small)
-            if timerRunning == false {
-                let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: sliderValueRoundedDown), size: .medium)
+            scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length".localized() + ": \(sliderValueRoundedDown)", size: .small)
+            if !timerRunning {
+                let scrambleText = CBBrain.getAttributedScrambleTextOfLength(sliderValueRoundedDown)
                 scrambleLabel.attributedText = scrambleText
-                var accessibilityText = scrambleText.string.replacingOccurrences(of: " ", with: "\n \n")
-                accessibilityText = accessibilityText.replacingOccurrences(of: "'", with: "Prime")
-                scrambleLabel.accessibilityLabel = accessibilityText
-                if sliderValueRoundedDown < 1 {
+                scrambleLabel.accessibilityLabel = CBBrain.getAccessibilityLabelFor(scramble: scrambleText.string)
+                if sliderValueRoundedDown == 0 {
                     scrambleLabel.isHidden = true
                 } else {
                     scrambleLabel.isHidden = false
                 }
             }
-            var cube = Cube()
-            if let text = scrambleLabel.text {
-                cube = cube.makeMoves(cube.convertStringToMoveList(scramble: text.dropFirst(("Scramble".localized() + ":\n").count).split(separator: " ").map { move in
-                    String(move)
-                }))
-                timerRunning = false
-                self.delegate?.updateCube(cube: cube)
-            }
+            setCubeForGraphic()
         }
         
         @objc
         func stepperValueChanged(){
-            UserDefaults.standard.setValue(xStepper.value, forKey: UserDefaultsHelper.DefaultKeys.customAvgX.rawValue)
+            UserDefaultsHelper.setDoubleFor(key: .customAvgX, value: xStepper.value)
             xForCustomAvg = Int(xStepper.value)
             updateAverages()
+        }
+        
+        func setCubeForGraphic(){
+            var cube = Cube()
+            if let text = scrambleLabel.text {
+                cube = CBBrain.makeMovesFromString(cube: cube, text: text)
+                timerRunning = false
+                self.delegate?.updateCube(cube: cube)
+            }
         }
         
         func createTimerView(for viewController: TimerViewController, usingOptionsBar: Bool = false) {
@@ -81,48 +81,26 @@ class CBViewCreator {
                 self.runningTimerLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: formattedTimerString, size: .large)
             }
             
-            let unselectedColor: UIColor = .CBTheme.secondary ?? .systemGreen
-            let selectedColor: UIColor = .CBTheme.primary ?? .systemBlue
-            puzzleChoiceSegmentedControl.selectedSegmentIndex = 0
-            puzzleChoiceSegmentedControl.selectedSegmentTintColor = .CBTheme.secondary
-            puzzleChoiceSegmentedControl.setTitleTextAttributes([
-                .font: UIFont.CBFonts.returnCustomFont(size: .small),
-                .foregroundColor: unselectedColor
-            ], for: .normal)
-            puzzleChoiceSegmentedControl.setTitleTextAttributes([
-                .font: UIFont.CBFonts.returnCustomFont(size: .small),
-                .foregroundColor: selectedColor
-            ], for: .selected)
-            
-            scrambleLengthSlider.thumbTintColor = .CBTheme.secondary
             scrambleLengthSlider.maximumValue = 40
             scrambleLengthSlider.minimumValue = 0
-            let scrambleLength = UserDefaults.standard.float(forKey: UserDefaultsHelper.DefaultKeys.scrambleLength.rawValue)
+            let scrambleLength = UserDefaultsHelper.getFloatForKeyIfPresent(key: .scrambleLength)
             scrambleLengthSlider.setValue(scrambleLength, animated: false)
-            let stepperInitialValue = UserDefaults.standard.double(forKey: UserDefaultsHelper.DefaultKeys.customAvgX.rawValue)
+            let stepperInitialValue = UserDefaultsHelper.getDoubleForKeyIfPresent(key: .customAvgX)
             xStepper.value = stepperInitialValue
-            xStepper.layer.borderColor = UIColor.CBTheme.secondary?.resolvedColor(with: UITraitCollection.current).cgColor
-            xStepper.layer.borderWidth = 2
-            xStepper.layer.cornerRadius = CBConstants.UI.buttonCornerRadius
-            xStepper.setDecrementImage(xStepper.decrementImage(for: .normal), for: .normal)
-            xStepper.setIncrementImage(xStepper.incrementImage(for: .normal), for: .normal)
-            xStepper.tintColor = .CBTheme.secondary
             xStepper.minimumValue = 3
             scrambleLengthSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
             xStepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)
-            if scrambleLengthSlider.value == 0 {
+            let sliderValueRoundedDown = Int(floor(scrambleLengthSlider.value))
+            if sliderValueRoundedDown == 0 {
                 scrambleLabel.isHidden = true
             }
             
-            let sliderValueRoundedDown = Int(floor(scrambleLengthSlider.value))
             scrambleLengthLabel.attributedText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Scramble Length".localized() + ": " + String(sliderValueRoundedDown), size: .small)
-            let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: sliderValueRoundedDown), size: .medium)
+            let scrambleText = CBBrain.getAttributedScrambleTextOfLength(sliderValueRoundedDown)
             scrambleLabel.attributedText = scrambleText
-            var accessibilityText = scrambleText.string.replacingOccurrences(of: " ", with: "\n \n")
-            accessibilityText = accessibilityText.replacingOccurrences(of: "'", with: "Prime")
-            scrambleLabel.accessibilityLabel = accessibilityText
+            scrambleLabel.accessibilityLabel = CBBrain.getAccessibilityLabelFor(scramble: scrambleText.string)
             
-            func timerButtonViewPressed(completion: (() -> ())? = nil){
+            func timerButtonViewPressed(){
                 let sliderValueRoundedDown = floor(scrambleLengthSlider.value)
                 timer?.invalidate()
                 if self.timerRunning == false && self.timeElapsed == 0.00 {
@@ -131,13 +109,8 @@ class CBViewCreator {
                     }
                     timer?.fire()
                     self.timerRunning = true
-                    if sliderValueRoundedDown != 0 {
-                        scrambleLabel.isHidden = false
-                    } else if sliderValueRoundedDown == 0 {
-                        scrambleLabel.isHidden = true
-                    }
                 } else {
-                    let newSolve = NSManagedObject(entity: NSEntityDescription.entity(forEntityName: "Solve", in: viewController.context) ?? NSEntityDescription(), insertInto: viewController.context)
+                    let newSolve = NSEntityDescription.insertNewObject(forEntityName: "Solve", into: AppDelegate.context)
                     newSolve.setValue(floor(scrambleLengthSlider.value) != 0 ? (scrambleLabel.text ?? "No scramble") : "No Scramble", forKey: "scramble")
                     newSolve.setValue(runningTimerLabel.text ?? "No timer", forKey: "time")
                     newSolve.setValue(self.timeElapsed, forKey: "timeAsDouble")
@@ -147,14 +120,12 @@ class CBViewCreator {
                     recentSolves.append(newSolve as! RetrievableCDObject)
                     let recentSolvesAsSet: NSOrderedSet = .init(array: recentSolves)
                     updateSessionsWithRecentSolvesAsSet(recentSolvesAsSet)
-                    viewController.saveCoreData()
+                    AppDelegate.saveCoreData()
                     updateRecentSessionLabel()
                     updateAverages()
-                    let scrambleText = CBConstants.UI.makeTextAttributedWithCBStyle(text: CBBrain.getScramble(length: Int(sliderValueRoundedDown)), size: .medium)
+                    let scrambleText = CBBrain.getAttributedScrambleTextOfLength(Int(sliderValueRoundedDown))
                     scrambleLabel.attributedText = scrambleText
-                    var accessibilityText = scrambleText.string.replacingOccurrences(of: " ", with: "\n \n")
-                    accessibilityText = accessibilityText.replacingOccurrences(of: "'", with: "Prime")
-                    scrambleLabel.accessibilityLabel = accessibilityText
+                    scrambleLabel.accessibilityLabel = CBBrain.getAccessibilityLabelFor(scramble: scrambleText.string)
                     self.timerRunning = false
                     self.timeElapsed = 0.00
                     viewController.cube = Cube()
@@ -200,11 +171,8 @@ class CBViewCreator {
                 scrambleLengthLabel,
                 puzzleChoiceSegmentedControl
             ])
-            ao5Label.font = UIFont.CBFonts.returnCustomFont(size: .small, textStyle: .headline)
-            aoxLabel.font = UIFont.CBFonts.returnCustomFont(size: .small, textStyle: .headline)
-            ao5CurrentLabel.font = UIFont.CBFonts.returnCustomFont(size: .small, textStyle: .headline)
-            recentSessionTimesLabel.font = UIFont.CBFonts.returnCustomFont(size: .small, textStyle: .headline)
-            recentSessionTimesLabel.numberOfLines = 0
+            let smallHeadlineLabels = [ao5Label, aoxLabel, ao5CurrentLabel, recentSessionTimesLabel]
+            CBLabel.setFontForLabels(smallHeadlineLabels, font: UIFont.CBFonts.returnCustomFont(size: .small, textStyle: .headline))
             
             deleteLastSolveButton.layer.cornerRadius = CBConstants.UI.buttonCornerRadius
             var buttonText = CBConstants.UI.makeTextAttributedWithCBStyle(text: "Delete Last", size: .small)
@@ -301,55 +269,38 @@ class CBViewCreator {
             }
             
             func updateSessionsWithRecentSolvesAsSet(_ solveSet: NSOrderedSet) {
-                let sessionsRequest = SolveSession.createFetchRequest()
-                do {
-                    let results = try viewController.context.fetch(sessionsRequest)
-                    if results.isEmpty {
-                        let newSolveSession = NSManagedObject(entity: NSEntityDescription.entity(forEntityName: "SolveSession", in: viewController.context) ?? NSEntityDescription(), insertInto: viewController.context)
-                        newSolveSession.setValue(solveSet, forKey: "solves")
-                        newSolveSession.setValue(selectedSession, forKey: "sessionId")
-                        viewController.saveCoreData()
-                    }
-                    for (ind, result) in results.enumerated() {
-                        if let result = result as? SolveSession, result.sessionId == selectedSession {
-                            for solve in result.solves {
-                                if let solve = solve as? Solve {
-                                    print("From Session: \(solve.time)")
-                                }
-                            }
-                            result.solves = solveSet
-                            try viewController.context.save()
-                        } else {
-                            let newSolveSession = NSManagedObject(entity: NSEntityDescription.entity(forEntityName: "SolveSession", in: viewController.context) ?? NSEntityDescription(), insertInto: viewController.context)
-                            newSolveSession.setValue(solveSet, forKey: "solves")
-                            newSolveSession.setValue(selectedSession, forKey: "sessionId")
-                            viewController.saveCoreData()
-                        }
-                    }
-                    try viewController.context.save()
-                } catch let error as NSError {
-                    print(error.localizedDescription)
-                }
-                
-                
-                //                if sessions.count < selectedSession {
-                //                    let newSolveSession = NSManagedObject(entity: NSEntityDescription.entity(forEntityName: "SolveSession", in: viewController.context) ?? NSEntityDescription(), insertInto: viewController.context)
-                //                    newSolveSession.setValue(solveSet, forKey: "solves")
-                //                    viewController.saveCoreData()
-                //                } else {
-                //                    let sessionsRequest = SolveSession.createFetchRequest()
-                //                    do {
-                //                        let results = try viewController.context.fetch(sessionsRequest)
-                //                        try viewController.context.save()
-                //                    } catch let error as NSError {
-                //                        print(error.localizedDescription)
-                //                    }
-                //                }
+//                let sessionsRequest = SolveSession.createFetchRequest()
+//                do {
+//                    let results = try AppDelegate.context.fetch(sessionsRequest)
+//                    print("\n\n")
+//                    for result in results {
+//                        if let result = result as? SolveSession, result.sessionId == selectedSession {
+//                            print("Session Id: \(result.sessionId)")
+//                            result.solves = solveSet
+//                            let solves = result.solves
+//                            print("Solve Count: \(solves.count)")
+//                            for solve in solves {
+//                                if let solve = solve as? Solve {
+//                                    print(solve.timeAsDouble)
+//                                }
+//                            }
+//                        }
+//                    }
+//                    if results.isEmpty {
+//                        let newSolveSession = NSEntityDescription.insertNewObject(forEntityName: "SolveSession",
+//                                                                                  into: AppDelegate.context)
+//                        newSolveSession.setValue(solveSet, forKey: "solves")
+//                        newSolveSession.setValue(selectedSession, forKey: "sessionId")
+//                    }
+//                    AppDelegate.saveCoreData()
+//                } catch let error as NSError {
+//                    print(error.localizedDescription)
+//                }
             }
         }
         
         func deleteLastSolve(from vc: UIViewController) {
-            guard let solve = UIViewController.loadCoreData(retrievableObject: Solve()).last as? Solve  else {
+            guard let solve = AppDelegate.loadCoreData(retrievableObject: Solve()).last as? Solve  else {
                 print("No solve to delete")
                 return
             }
@@ -361,7 +312,7 @@ class CBViewCreator {
                 if !self.recentSolves.isEmpty {
                     self.recentSolves.removeLast()
                 }
-                let context = UIViewController().context
+                let context = AppDelegate.context
                 context.delete(solve)
                 do
                 {
@@ -381,7 +332,7 @@ class CBViewCreator {
         }
         
         func deleteAllSolves(from vc: UIViewController) {
-            guard let _ = UIViewController.loadCoreData(retrievableObject: Solve()).last as? Solve  else {
+            guard let _ = AppDelegate.loadCoreData(retrievableObject: Solve()).last as? Solve  else {
                 print("No solve to delete")
                 return
             }
@@ -393,7 +344,7 @@ class CBViewCreator {
                 if !self.recentSolves.isEmpty {
                     self.recentSolves.removeAll()
                 }
-                let context = UIViewController().context
+                let context = AppDelegate.context
                 let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Solve")
                 let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
                 do
@@ -415,7 +366,7 @@ class CBViewCreator {
         }
         
         func updateAverages() {
-            xForCustomAvg = Int(UserDefaults.standard.double(forKey: UserDefaultsHelper.DefaultKeys.customAvgX.rawValue))
+            xForCustomAvg = Int(UserDefaultsHelper.getDoubleForKeyIfPresent(key: .customAvgX))
             if let average = CBBrain.retrieveRecentAverageOf(xForCustomAvg) {
                 let formattedTime = CBBrain.formatTimeForTimerLabel(timeElapsed: average).dropFirst("Time: ".count)
                 aoxLabel.text = "Ao\(xForCustomAvg)(custom-all):\n\(formattedTime)"
@@ -431,7 +382,7 @@ class CBViewCreator {
             }
             
             if let solveSet = recentSolves as? [Solve], let averageOfCurrent = CBBrain.retrieveFromSolveSetAvgOf(solves: solveSet), recentSolves.count >= 5 {
-                let formattedTime = CBBrain.formatTimeForTimerLabel(timeElapsed: averageOfCurrent).dropFirst("Time: ".count)
+                let formattedTime = CBBrain.formatTimeForTimerLabel(timeElapsed: averageOfCurrent, droppingPrefix: true)
                 ao5CurrentLabel.text = "Ao5(current):\n\(formattedTime)"
             } else {
                 ao5CurrentLabel.text = "Ao5(current):\nN/A"
@@ -444,7 +395,7 @@ class CBViewCreator {
             let countToGoTo = recentSolves.count >= 5 ? 5 : recentSolves.count
             for solve in recentSolves.reversed()[0..<countToGoTo] {
                 guard let solve = solve as? Solve else { return }
-                labelText += "\n\(CBBrain.formatTimeForTimerLabel(timeElapsed: solve.timeAsDouble).dropFirst("Time: ".count))"
+                labelText += "\n\(CBBrain.formatTimeForTimerLabel(timeElapsed: solve.timeAsDouble, droppingPrefix: true))"
             }
             recentSessionTimesLabel.text = labelText
         }
@@ -468,12 +419,8 @@ class CBViewCreator {
         showButton.addTapGestureRecognizer {
             let cubeGraphicVC = ScrambledCubeGraphicVC()
             var cube = vc.cube
-            if let text = vc.viewModel?.scrambleLabel.text, vc.cube == Cube() {
-                cube = cube.makeMoves(cube.convertStringToMoveList(scramble: text.dropFirst(("Scramble".localized() + ":\n").count).split(separator: " ").map { move in
-                    String(move)
-                }))
-            } else {
-                cube = vc.cube
+            if let text = vc.viewModel?.scrambleLabel.text {
+                cube = CBBrain.makeMovesFromString(cube: cube, text: text)
             }
             vc.cube = cube
             

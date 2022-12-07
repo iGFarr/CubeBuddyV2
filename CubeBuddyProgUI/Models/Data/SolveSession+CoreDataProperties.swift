@@ -10,7 +10,6 @@ import CoreData
 
 
 extension SolveSession: RetrievableCDObject {
-
     @nonobjc public class func createFetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
         return NSFetchRequest(entityName: "SolveSession")
     }

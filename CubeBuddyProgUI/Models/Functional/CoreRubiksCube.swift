@@ -252,6 +252,7 @@ public struct Cube: CustomStringConvertible, Equatable {
     }
     
     public static func getTileForLetterFrom(_ surface: Surface, letter: Character) -> Tile {
+        // Created by Isaac Farr
         switch letter {
         case "a":
             return surface.a

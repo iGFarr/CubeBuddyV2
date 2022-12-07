@@ -11,6 +11,7 @@ final class CBSlider: UISlider {
     override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
+        thumbTintColor = .CBTheme.secondary
     }
     
     required init(coder: NSCoder) {

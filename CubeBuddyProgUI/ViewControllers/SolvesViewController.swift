@@ -14,13 +14,13 @@ class SolvesViewController: CBBaseTableViewController {
     private let clearAllCell = 1
     override func viewDidLoad() {
         super.viewDidLoad()
-        solves = Self.loadCoreData(retrievableObject: Solve())
+        solves = AppDelegate.loadCoreData(retrievableObject: Solve())
         title = CBConstants.CBMenuPickerPages.solves.rawValue.localized()
         tableView.register(SolveCellModel.self, forCellReuseIdentifier: "solveCell")
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        solves = Self.loadCoreData(retrievableObject: Solve())
+        solves = AppDelegate.loadCoreData(retrievableObject: Solve())
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -82,18 +82,19 @@ extension SolvesViewController {
                 print("No solve to delete")
                 return
             }
-            context.delete(solve)
             solves.remove(at: currentSolveIndex)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            tableView.reloadData()
+            let deleteRequest = NSBatchDeleteRequest(objectIDs: [solve.objectID])
             do
             {
-                try context.save()
+                try AppDelegate.context.execute(deleteRequest)
+                AppDelegate.saveCoreData()
             }
             catch
             {
                 print ("There was an error")
             }
-            tableView.reloadData()
         }
     }
     
@@ -102,8 +103,8 @@ extension SolvesViewController {
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
         do
         {
-            try context.execute(deleteRequest)
-            try context.save()
+            try AppDelegate.context.execute(deleteRequest)
+            AppDelegate.saveCoreData()
         }
         catch
         {
